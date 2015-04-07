@@ -1,6 +1,12 @@
 *.metadata
 *.recommenders
 
+#project Files for Java
+*.project
+*.classpath
+.bin.*
+*.class
+
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
