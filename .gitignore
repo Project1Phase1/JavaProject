@@ -2,6 +2,7 @@
 *.recommenders
 
 #project Files for Java
+*.prefs
 *.project
 *.classpath
 .bin.*
