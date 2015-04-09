@@ -63,7 +63,7 @@ public class FXBanker extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-	    Scene scene = new Scene(getPane(), 650, 650);
+	    Scene scene = new Scene(getPane(), 280, 350);
 	    primaryStage.setTitle("Unrealistic Bank Application"); // Set the stage title
 	    primaryStage.setScene(scene); // Place the scene in the stage
 	    primaryStage.show(); // Display the stage
@@ -79,8 +79,8 @@ public class FXBanker extends Application {
 	  protected BorderPane getPane() {
 
 		  //Declare some UI Controls (Labels, Buttons, Textfields, etc.)
-		  Label lblName = new Label("Enter your name");
-		  Label lblNumber = new Label("Enter a number");
+		 // Label lblName = new Label("Enter your name");
+		 // Label lblNumber = new Label("Enter a number");
 
 		  
 		  Button btnOne =    new Button(" 1. Create Regular account");
@@ -96,13 +96,13 @@ public class FXBanker extends Application {
 		  Button btnEleven = new Button("11. Exit");
 		  
 		  
-		  
+		  /*
 		  Button btnName = new Button("Display Name");
 		  Button btnNumber = new Button("Display Number");
 		  Button btnClear = new Button("Clear");
 		  Button btnExit = new Button("Exit");
 		  btnExit.setStyle("-fx-font: 18 arial; -fx-base: #ff2222;");
-
+			*/
 		  Font sansbold12 = Font.font("SansSerif", FontWeight.BOLD, 13);
 
 		  //TextField txtName = new TextField();
@@ -113,7 +113,7 @@ public class FXBanker extends Application {
 		  //taOutput.setFont(sansbold12);
 
 		  //Create some Panes:
-
+		  /*
 		  //FlowPane adds nodes row by row horizontally or col by col vertically
 		  FlowPane topPane = new FlowPane();
 		  //Sets the top, right, bottom, and left padding around the region's content
@@ -125,7 +125,6 @@ public class FXBanker extends Application {
 		 // topPane.getChildren().addAll(lblName, txtName, lblNumber, txtNumber);
 		  topPane.setAlignment(Pos.CENTER_LEFT);
 
-/*
 		  FlowPane centerPane = new FlowPane();
 		  //centerPane.setPadding(new Insets(11,0,5,0));
 		  centerPane.setHgap(5);
@@ -136,7 +135,8 @@ public class FXBanker extends Application {
 		  //HBpx pane lays out its children in a single horizontal row
 		  //HBox bottomPane = new HBox(4);
 		  VBox centerPane = new VBox(5);
-		  centerPane.setPadding(new Insets(15, 15, 15, 15));
+		  //                           top, right, bottom, left
+		  centerPane.setPadding(new Insets(10, 10, 10, 10));
 		  centerPane.getChildren().addAll(btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnTen, btnEleven);
 		  centerPane.setAlignment(Pos.TOP_LEFT);
 		  //bottomPane.setPadding(new Insets(15,15,15,15));
@@ -146,7 +146,7 @@ public class FXBanker extends Application {
 		  //The following uses a BorderPane: Where nodes are placed in five regions:
 		  //top, bottom, left, right, center
 		  BorderPane mainPane = new BorderPane();
-		  mainPane.setTop(topPane);
+		  //mainPane.setTop(topPane);
 		  mainPane.setCenter(centerPane);
 		  //mainPane.setBottom(bottomPane);
 		  mainPane.setStyle("-fx-border-color: red");
@@ -186,7 +186,7 @@ public class FXBanker extends Application {
 		  //A lambda expression can be viewed as an anonymous class with precise syntax
 		  */
 		  btnOne.setOnAction(e -> {
-			  ActualBanker banker = new ActualBanker();
+			  ActualFXBanker banker = new ActualFXBanker();
 			  banker.createRegularAccount();
 		  });
 		  
@@ -199,7 +199,68 @@ public class FXBanker extends Application {
 		  
 		  
 		  return mainPane;
-	  }	
+	  }
+	  
+	  protected void cust(Stage customerStage) {
+		  Scene customer = new Scene(getCustPane(), 650, 250);
+		    customerStage.setTitle("Create Customer"); // Set the stage title
+		    customerStage.setScene(customer); // Place the scene in the stage
+		    customerStage.show(); // Display the stage
+		  
+	  }
+	  
+	  protected void regular(Stage regularAccount) {
+		  Scene regular = new Scene(getRegularPane(), 650, 350);
+		  regularAccount.setTitle("Create Regular Account");
+		  regularAccount.setScene(regular);
+		  regularAccount.show();
+		 
+	  }
+	  
+	  protected BorderPane getCustPane(){
+		  
+		  
+			  Label lblID = new Label("Enter customer ID");
+			  Label lblName = new Label("Enter customers name");
+			  
+			  TextField txtID = new TextField();
+			  TextField txtName = new TextField();
+			  
+			  Button btnAdd = new Button("Add");
+			  HBox topPane = new HBox(5);
+			  topPane.setPadding(new Insets(15,15,15,15));  
+			  topPane.getChildren().addAll(lblID, txtID, lblName, txtName);
+			  topPane.setAlignment(Pos.BOTTOM_LEFT);
+			  HBox bottomPane = new HBox(5);
+			  bottomPane.setPadding(new Insets(15,15,15,15));;
+			  bottomPane.getChildren().addAll(btnAdd);
+			  
+			  //bottomPane.setPadding(new Insets(15,15,15,15));
+			  //bottomPane.getChildren().addAll(btnName, btnNumber, btnClear, btnExit);
+			  //bottomPane.setAlignment(Pos.CENTER);
+
+			  BorderPane custMainPane = new BorderPane();
+			  custMainPane.setTop(topPane);
+			  //mainPane.setCenter(centerPane);
+			  custMainPane.setBottom(bottomPane);
+			  custMainPane.setStyle("-fx-border-color: red");
+			  
+			  btnAdd.setOnAction(e -> {
+				  ActualFXBanker banker = new ActualFXBanker();
+				  banker.createCustomer(txtID.getText(), txtName.getText());
+			  });
+
+		  return custMainPane;
+	  }
+	  
+	  protected BorderPane getRegularPane(){
+		  
+		  
+		  BorderPane regMainPane = new BorderPane();
+		  
+		  return regMainPane;
+	  }
+	  
 
 }
 
@@ -223,14 +284,11 @@ class ActualFXBanker {
 	 * get customer id and name from user then create customer<br>
 	 * add it to the customer ArrayList<br>
 	 * 
+	 * @param customerID the customer id (String)
+	 * @param customerName the customer name (String)
+	 * 
 	 */
-	public void createCustomer() {
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		System.out.print("Enter customer ID ");
-		String customerID = input.nextLine();
-		System.out.print("Enter customer Name ");
-		String customerName = input.nextLine();
+	public void createCustomer(String customerID, String customerName) {
 		Customer customer = new Customer(customerID, customerName);
 		customers.add(customer);
 	}
@@ -283,7 +341,7 @@ class ActualFXBanker {
 			// if user wants to add one now then get it
 			if (getAnswer.equalsIgnoreCase("y")) {
 				// get customer to use for creating account
-				createCustomer();
+				//createCustomer();
 			} else {
 				// user does not want to add one now. Terminate and return to the menu
 				System.out.print("\nTerminationg create " + type + " account!\n");
@@ -365,7 +423,7 @@ class ActualFXBanker {
 			// determine if the user wants to add customers now
 			if (getAnswer.equalsIgnoreCase("y")) {
 				// create customer
-				createCustomer();
+				//createCustomer();
 			} else {
 				// notify user of choice
 				System.out.print("\nTerminationg create " + type + " account!\n");
@@ -448,7 +506,7 @@ class ActualFXBanker {
 			// determine if the user wants to add customer now
 			if (getAnswer.equalsIgnoreCase("y")) {
 				// create user
-				createCustomer();
+				//createCustomer();
 			} else {
 				// notify user of choice and re-display the menu
 				System.out.print("\nTerminating create " + type + " account!\n");
@@ -460,20 +518,22 @@ class ActualFXBanker {
 		System.out.println("===========================================================================");
 		int counter = 0;
 		for (Customer c: customers) {
-			System.out.print(counter + ") " + c.toString() + "\n");
 			counter++;
+			System.out.print(counter + ") " + c.toString() + "\n");
 		}
 		// get response from user
 		System.out.print("Choose which customer to create "+ type + " account for (1 - " + counter + ") ");
-		int whichCustomer = input.nextInt();
+		int whichCustomer = 0;
 		// validate users input
-		while (whichCustomer > 1 && whichCustomer < counter) {
+		while ((whichCustomer < 1) && (whichCustomer > counter)) {
 			whichCustomer = input.nextInt();
 		}
 		// capture any floating tokens
 		if (input.hasNext()) {
 			skip = input.nextLine();
 		}
+		System.out.println("Check whichCustomer value: " + whichCustomer);
+		skip = input.nextLine();
 		// select the users choice of customer
 		customer = customers.get((whichCustomer - 1));
 		// get account information (Account number, account balance)
