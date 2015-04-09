@@ -278,7 +278,7 @@ class ActualFXBanker {
 		while (customers.isEmpty()) {
 			// no customer so ask if user wants to add one now
 			System.out.print("No customers available to complete task!\n");
-			System.out.print("Add customer? (y/n)");
+			System.out.print("Add customer? (y/n) ");
 			String getAnswer = input.nextLine();
 			// if user wants to add one now then get it
 			if (getAnswer.equalsIgnoreCase("y")) {
@@ -360,7 +360,7 @@ class ActualFXBanker {
 		while (customers.isEmpty()) {
 			// warn user and get response
 			System.out.print("No customers available to complete task!\n");
-			System.out.print("Add customer? (y/n)");
+			System.out.print("Add customer? (y/n) ");
 			String getAnswer = input.nextLine();
 			// determine if the user wants to add customers now
 			if (getAnswer.equalsIgnoreCase("y")) {
