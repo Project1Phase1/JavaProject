@@ -18,7 +18,6 @@ public abstract class Account {
 	private double accountBalance;
 	
 	private Customer customer;
-	
 	public Account(String accountNumber, double accountBalance, Customer customer){
 		this.accountNumber = accountNumber;
 		this.accountBalance = accountBalance;
