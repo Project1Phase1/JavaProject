@@ -74,37 +74,31 @@ public class Gold extends Account {
 
 
 
-	public String makeDeposit(double amount) {
-		String output = "";
+	public boolean makeDeposit(double amount) {
 		if (amount < 0) {
-			output += "Invalid Gold deposit amount! Gold deposit was unsuccessful!\n";
-			return output;
+			return false;
 		}
 		this.setAccountBalance(this.getAccountBalance() + amount);
-		output += "Gold deposit was successful! Added $" + amount + "\n";
-		return output;
+		return true;
 	}
 
-	public String makeWithdrawal(double amount) {
-		String output = "";
+	public boolean makeWithdrawal(double amount) {
 		if (amount < 0) {
-			output += "Invalid Gold withdrawal amount! Gold withdrawal was unsuccessful!\n";
-			return output;
+			return false;
 		}
 		this.setAccountBalance(this.getAccountBalance() - amount);
-		output += "Gold withdrawal was successful! Withdrew $" + amount +"\n";
-		return output;
+		return true;
 	}
 
 	public String toString() {
 		String 
 		output =  "\n===========================================================\n";
 		output += "                        <strong>Gold Account</strong>\n";
-		output += "---------------------------------------\n";
-		output += "Customer: " + this.getCustomer() + "\n";
-		output += "---------------------------------------\n";
+		output += "-------------------------------------------------------\n";
+		output += "Customer:" + this.getCustomer() + "\n";
+		output += "-------------------------------------------------------\n";
 		output += "Account Number: " + this.getAccountNumber() + "\n";
-		output += "Account Balance: " + this.getAccountBalance() + "\n";
+		output += "Account Balance: $" + this.getAccountBalance() + "\n";
 		output += "Interest Rate: " + this.goldInterestRate + "%\n";
 		output += "Total Interest Earned: $" + this.goldInterestAmount + "\n";
 		output += "\n===========================================================\n\n";

@@ -58,7 +58,7 @@ public class Customer {
 	}
 
 	public String toString() {
-		return "\t" + this.customerID + "\t"
+		return "\t" + this.customerID + "\t\t"
 				+ this.customerName;
 	}
 	

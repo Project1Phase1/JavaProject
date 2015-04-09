@@ -72,8 +72,8 @@ public abstract class Account {
 	
 	// abstract methods
 	
-	abstract public String makeDeposit(double amount);
+	abstract public boolean makeDeposit(double amount);
 	
-	abstract public String makeWithdrawal(double amount);
+	abstract public boolean makeWithdrawal(double amount);
 	
 }

@@ -88,41 +88,45 @@ public class Regular extends Account {
 	}
 
 
-
-	public String makeDeposit(double amount) {
-		String output = "";
+	/** make deposit<br><br>
+	 * 
+	 * @param amount the amount of the deposit
+	 * @return true or false<br>was the deposit successful or not
+	 * 
+	 */
+	public boolean makeDeposit(double amount) {
 		if (amount < 0) {
-			output += "\nInvalid Regular deposit amount! Regular depost was unsuccessful!\n";
-			return output;
+			return false;
 		}
 		this.setAccountBalance(this.getAccountBalance() + amount);
-		output += "Regular deposit was successfully applied! Added $" + amount + "\n";
-		return output;
+		return true;
 	}
 
-	public String makeWithdrawal(double amount) {
-		String output = "";
+	/** make withdrawal<br><br>
+	 * 
+	 * @param amount the amount to withdraw
+	 * @return true or false<br>was the withdrawal successful or not
+	 * 
+	 */
+	public boolean makeWithdrawal(double amount) {
 		if (amount < 0) {
-			output += "Invalid Regular withdrawal amount! Regular withdrawal was unsuccessful!\n";
-			return output;
+			return false;
 		} else if (this.getAccountBalance() < amount) {
-			output += "Insufficient funds! Withdrawing available funds ONLY!\n";
 			amount = this.getAccountBalance();
 		}
 		this.setAccountBalance(this.getAccountBalance() - amount);
-		output += "Regular withdrawal successful! Withdrew $" + amount + "\n";
-		return output;
+		return true;
 	}
 
 	public String toString() {
 		String 
 		output =  "\n===========================================================\n";
 		output += "                      <strong>Regular Account</strong>\n";
-		output += "---------------------------------------\n";
-		output += "Customer: " + this.getCustomer() + "\n";
-		output += "---------------------------------------\n";
+		output += "-------------------------------------------------------\n";
+		output += "Customer:" + this.getCustomer() + "\n";
+		output += "-------------------------------------------------------\n";
 		output += "Account Number: " + this.getAccountNumber() + "\n";
-		output += "Account Balance: " + this.getAccountBalance() + "\n";
+		output += "Account Balance: $" + this.getAccountBalance() + "\n";
 		output += "Interest Rate: " + this.regularInterestRate + "%\n";
 		output += "Interest Fee: $" + this.regularFixedCharge + "\n";
 		output += "\nInterest Earned: $" + this.regularInterestAmount;

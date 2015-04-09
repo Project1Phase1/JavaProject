@@ -79,26 +79,21 @@ public class Checking extends Account {
 		this.numberOfTransactions = numberOfTransactions;
 	}
 
-	public String makeDeposit(double amount) {
-		String output = "";
+	public boolean makeDeposit(double amount) {
 		if (amount < 0) {
-			output += "Invalid Deposit amount! Checking deposit unsuccessful!\n";
-			return output;
+			return false;
 		}
 		this.numberOfTransactions++;
 		if (this.numberOfTransactions > 2) {
 			this.checkingTransactionFeeAmount += this.checkingTransactionFee;
 		}
-		output += "Checking deposit was successful! Added $" + amount + "\n";
 		this.setAccountBalance(this.getAccountBalance() + amount);
-		return output;
+		return true;
 	}
 
-	public String makeWithdrawal(double amount) {
-		String output = "";
+	public boolean makeWithdrawal(double amount) {
 		if (amount < 0) {
-			output += "Invalid Withdrawal amount! Checking withdrawal unsuccessful!\n";
-			return output;
+			return false;
 		}
 		this.numberOfTransactions++;
 		if (this.numberOfTransactions > 2) {
@@ -106,22 +101,20 @@ public class Checking extends Account {
 		}
 		if (this.getAccountBalance() < amount) {
 			amount = this.getAccountBalance();
-			output += "Insufficient funds! Withdrawing available funds ONLY!\n";
-		}
+			}
 		this.setAccountBalance(this.getAccountBalance() - amount);
-		output += "Checking withdrawal was successful! Withdrew $" + amount + "\n";
-		return output;
+		return true;
 	}
 	
 	public String toString() {
 		String 
 		output =  "\n===========================================================\n";
 		output += "                      Checking Account\n";
-		output += "---------------------------------------\n";
-		output += "Customer: " + this.getCustomer() + "\n";
-		output += "---------------------------------------\n";
+		output += "-------------------------------------------------------\n";
+		output += "Customer:" + this.getCustomer() + "\n";
+		output += "-------------------------------------------------------\n";
 		output += "Account Number: " + this.getAccountNumber() + "\n";
-		output += "Account Balance: " + this.getAccountBalance() + "\n";
+		output += "Account Balance: $" + this.getAccountBalance() + "\n";
 		output += "Number of Transactions: " + (((this.numberOfTransactions - 2)<0)? this.numberOfTransactions : (this.numberOfTransactions-2))+ "\n";
 		output += "Transaction Fee: $" + this.checkingTransactionFee + "\n";
 		output += "Transaction Fee Amount: $" + this.checkingTransactionFeeAmount + "\n";

@@ -50,9 +50,120 @@ class ActualBanker {
 	public void doBanker() {
 		
 		// menu
+		
+		boolean finished = false;
+
+		while (finished == false)
+		{
+			// Menu Display and Get user input
+			int inputInt = 0;
+			while (inputInt == 0)
+			{
+				inputInt = displayMenuAndGetInput();
+
+				// if the input is out of range
+				if ((inputInt < 1) || (inputInt > 10))
+				{
+					System.out.println("\nThe input is out of range. Please enter 1-10!");
+					System.out.println();
+					inputInt = 0;
+				}
+			} //end while
+
+			// switch to correspondence function
+			switch (inputInt)
+			{
+				case 1:
+					// 1.  Create a Checking Account
+					createCheckingAccount();
+					break;
+				case 2:
+					// 2.  Create a Gold Account
+					createGoldAccount();
+					break;
+				case 3:
+					// 3.  Create a Regular Account
+					createRegularAccount();
+					break;
+				case 4:
+					// 4.  Make a Deposit
+					makeDeposit();
+					break;
+				case 5:
+					// 5.  Make a Withdraw
+					makewithdrawal();
+					break;
+				case 6:
+					// 6.  Display Account Information
+					for (Account a: accounts) {
+						System.out.print(a.toString());
+					}
+					break;
+				case 7:
+					// 7.  Remove an Account
+					removeAccount();
+					break;
+				case 8:
+					// 8.  Apply End of Month Updates
+					eomCalculations(accounts);
+					break;
+				case 9:
+					// 9.  Display Bank Statistics
+					generateStatistics();
+					break;
+				case 10:
+					// 10.  Generate Transaction Report
+					for (Transaction t: transactions) {
+						System.out.print(t.toString());
+					}
+					break;
+				case 11:
+					// exit
+					finished = true;
+					break;
+				default:
+					System.out.println("Invalid Input!");
+					System.out.println("");
+					break;
+			} // end switch
+		} // end while
+		
 		//eomCalculations(reject);
 		
 	}
+	
+	public static int displayMenuAndGetInput()
+	{
+		int inputInt ;
+
+		// Menu Display
+		System.out.println("");
+		System.out.println("     Welcome To Your Banking Center ");
+		System.out.println("     ==============================");
+		System.out.println(" 1.  Create a Checking Account ");
+		System.out.println(" 2.  Create a Gold Account ");
+		System.out.println(" 3.  Create a Regular Account");
+		System.out.println(" 4.  Make a Deposit ");
+		System.out.println(" 5.  Make a Withdraw ");
+		System.out.println(" 6.  Display Account Information ");
+		System.out.println(" 7.  Remove an Account ");
+		System.out.println(" 8.  Apply End of Month Updates ");
+		System.out.println(" 9.  Display Bank Statistics ");
+		System.out.println("10.  Generate Transaction Report ");
+		System.out.println("11.  Exit ");
+		System.out.println("");
+
+		// Get the input from the user
+		System.out.print("Please input your choice (1 - 11): ");
+
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner( System.in );
+
+		inputInt = input.nextInt();
+
+		return inputInt;
+	}
+
 	
 	/** create customer<br><br>
 	 * 
@@ -114,7 +225,7 @@ class ActualBanker {
 		while (customers.isEmpty()) {
 			// no customer so ask if user wants to add one now
 			System.out.print("No customers available to complete task!\n");
-			System.out.print("Add customer? (y/n)");
+			System.out.print("Add customer? (y/n) ");
 			String getAnswer = input.nextLine();
 			// if user wants to add one now then get it
 			if (getAnswer.equalsIgnoreCase("y")) {
@@ -129,34 +240,36 @@ class ActualBanker {
 		// display the available customers to choose from
 		System.out.println("\nChoose the customer for this " + type + " Account");
 		System.out.println("===========================================================================");
-		int counter = 1;
+		int counter = 0;
 		for (Customer c: customers) {
-			System.out.print(counter + ". " + c.toString() + "\n");
 			counter++;
+			System.out.print(counter + ". " + c.toString() + "\n");
 		}
 		// get the account number to use from the user
 		System.out.print("Choose which customer to create " + type + " account for (1 - " + counter + ") ");
-		int whichCustomer = input.nextInt();
+		int whichCustomer = 0;
 		// validate user input
-		while (whichCustomer < 1 || whichCustomer > counter) {
+		while (whichCustomer == 0) {
 			whichCustomer = input.nextInt();
+			if (whichCustomer < 1 || whichCustomer > counter) {
+				System.out.print("Invalid entry. Please try again!!!");
+				whichCustomer = 0;
+			}
 		}
 		// check to see if there is another token and take care of it
-		if (input.hasNext()) {
-			skip = input.nextLine();
-		}
 		// select the customer the user chose
 		customer = customers.get((whichCustomer - 1));
 		// get account information from user (Account number, balance)
 		System.out.print("Enter account number for this " + type + " account: ");
-		String accountNumber = input.nextLine();
-		System.out.print("Ener account Balance: ");
-		double accountBalance = input.nextDouble();
-		// take care of extra tokens
 		if (input.hasNext()) {
 			skip = input.nextLine();
 		}
-		// add the account
+		String accountNumber = input.nextLine();
+		System.out.print("Ener account Balance: ");
+		double accountBalance = 0.0;
+		accountBalance = input.nextDouble();
+		// take care of extra tokens
+			// add the account
 		accounts.add(new Checking(accountNumber, accountBalance, customer));
 		// add transaction to transaction tracker
 		createTransaction(customers.get((whichCustomer - 1)).getCustomerID(), accountNumber, "Opening Checking Account", accountBalance);
@@ -211,17 +324,21 @@ class ActualBanker {
 		// display available customers 
 		System.out.println("\nChoose the customer for this " + type + " account");
 		System.out.println("===========================================================================");
-		int counter = 1;
+		int counter = 0;
 		for (Customer c: customers) {
-			System.out.print(counter + ". " + c.toString() + "\n");
 			counter++;
+			System.out.print(counter + ". " + c.toString() + "\n");
 		}
 		// get users choice
 		System.out.print("Choose which customer to create "+ type + " account for (1 - " + counter + ") ");
-		int whichCustomer = input.nextInt();
-		// validate users input
-		while (whichCustomer < 1 || whichCustomer > counter) {
+		int whichCustomer = 0;
+		// validate user input
+		while (whichCustomer == 0) {
 			whichCustomer = input.nextInt();
+			if (whichCustomer < 1 || whichCustomer > counter) {
+				System.out.print("Invalid entry. Please try again!!!");
+				whichCustomer = 0;
+			}
 		}
 		// determine if there are extra tokens and take care of them
 		if (input.hasNext()) {
@@ -294,17 +411,21 @@ class ActualBanker {
 		// show available customers to choose from
 		System.out.println("\nChoose the customer for this " + type + " account");
 		System.out.println("===========================================================================");
-		int counter = 1;
+		int counter = 0;
 		for (Customer c: customers) {
-			System.out.print(counter + ". " + c.toString() + "\n");
 			counter++;
+			System.out.print(counter + ". " + c.toString() + "\n");
 		}
 		// get response from user
 		System.out.print("Choose which customer to create "+ type + " account for (1 - " + counter + ") ");
-		int whichCustomer = input.nextInt();
-		// validate users input
-		while (whichCustomer < 1 || whichCustomer > counter) {
+		int whichCustomer = 0;
+		// validate user input
+		while (whichCustomer == 0) {
 			whichCustomer = input.nextInt();
+			if (whichCustomer < 1 || whichCustomer > counter) {
+				System.out.print("Invalid entry. Please try again!!!");
+				whichCustomer = 0;
+			}
 		}
 		// capture any floating tokens
 		if (input.hasNext()) {
@@ -393,7 +514,7 @@ class ActualBanker {
 		double amount = input.nextDouble();
 		// create transaction in tracker
 		// add deposit and notify user
-		System.out.print(account.makeDeposit(amount));
+		System.out.print(((account.makeDeposit(amount))? "Deposit successful" : "Deposit unsuccessful"));
 		createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, amount);
 	}
 
@@ -463,7 +584,7 @@ class ActualBanker {
 		// create transaction in tracker
 		createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, amount);
 		// add deposit and notify user
-		System.out.print(account.makeDeposit(amount));
+		System.out.print(((account.makeDeposit(amount))? "Withdrawal successful" : "Withdrawal unsuccessful"));
 	}
 
 	/** remove account<br><br>
