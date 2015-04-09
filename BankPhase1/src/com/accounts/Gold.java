@@ -1,17 +1,18 @@
 /**
+ * @mentor Professor Dr. Awny Alnusair<br><br>
+ * @college Indiana University Kokomo<br><br><br>
+ * @course INFO-211 Informatics II<br><br>
  * 
+ * 
+ * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
+ * Apr 6, 2015<br>
+ * Banker.java<br>
+ *
  */
 package com.accounts;
 
 import com.customers.Customer;
 
-/**
- * @author Theral Jessop<br>
- * Apr 7, 2015<br>
- * Gold.java<br>
- * Copyright (c) 2015 by Theral Jessop. All rights reserved.<br>
- *
- */
 public class Gold extends Account {
 	private double goldInterestAmount;
 	private double goldInterestRate;

@@ -12,35 +12,199 @@
 package com.banker;
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
 import com.accounts.*;
 import com.customers.*;
 import com.transactions.*;
 import com.utilities.*;
-/**
- * @mentor Professor Dr. Awny Alnusair<br><br>
- * @college Indiana University Kokomo<br><br><br>
- * @course INFO-211 Informatics II<br><br>
+
+/** client application<br>
+ * displays a menu and all 
  * 
  * 
- * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
- * Apr 6, 2015<br>
- * Banker.java<br>
+ * 
+ * @mentor Professor Dr. Awny Alnusair<br>
+ * @college Indiana University Kokomo<br><br>
+ * @course INFO-211 Informatics II<br>
+ * 
+ * 
+ * @authors Ian Holtson, Jeremiah McKinney, Theral Jessop<br>
+ * Apr 8, 2015<br>
+ * FXBanker.java<br>
  *
  */
-public class Banker {
+@SuppressWarnings("unused")
+public class FXBanker extends Application {
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ActualBanker banker = new ActualBanker();
+		 launch(args);
+	}
+
+	@Override
+	public void start(Stage primaryStage) {
+	    Scene scene = new Scene(getPane(), 650, 650);
+	    primaryStage.setTitle("Unrealistic Bank Application"); // Set the stage title
+	    primaryStage.setScene(scene); // Place the scene in the stage
+	    primaryStage.show(); // Display the stage
+		
+		
+		
+		/*
+		ActualFXBanker banker = new ActualFXBanker();
 		banker.doBanker();
+		*/
 	}
 	
+	  protected BorderPane getPane() {
+
+		  //Declare some UI Controls (Labels, Buttons, Textfields, etc.)
+		  Label lblName = new Label("Enter your name");
+		  Label lblNumber = new Label("Enter a number");
+
+		  
+		  Button btnOne =    new Button(" 1. Create Regular account");
+		  Button btnTwo =    new Button(" 2. Create Gold account");
+		  Button btnThree =  new Button(" 3. Create Checking account");
+		  Button btnFour =   new Button(" 4. Deposit money into a choosen account");
+		  Button btnFive =   new Button(" 5. Withdraw money from a choosen account");
+		  Button btnSix =    new Button(" 6. Display account information");
+		  Button btnSeven =  new Button(" 7. Remove a a choosen account");
+		  Button btnEight =  new Button(" 8. EOM Calculations");
+		  Button btnNine =   new Button(" 9. Generate Statistics");
+		  Button btnTen =    new Button("10. Generate Transaction report");
+		  Button btnEleven = new Button("11. Exit");
+		  
+		  
+		  
+		  Button btnName = new Button("Display Name");
+		  Button btnNumber = new Button("Display Number");
+		  Button btnClear = new Button("Clear");
+		  Button btnExit = new Button("Exit");
+		  btnExit.setStyle("-fx-font: 18 arial; -fx-base: #ff2222;");
+
+		  Font sansbold12 = Font.font("SansSerif", FontWeight.BOLD, 13);
+
+		  //TextField txtName = new TextField();
+		  //TextField txtNumber = new TextField();
+		  //TextArea taOutput = new TextArea();
+		  //taOutput.setPrefRowCount(5);
+		  //taOutput.setPrefColumnCount(35);
+		  //taOutput.setFont(sansbold12);
+
+		  //Create some Panes:
+
+		  //FlowPane adds nodes row by row horizontally or col by col vertically
+		  FlowPane topPane = new FlowPane();
+		  //Sets the top, right, bottom, and left padding around the region's content
+		  topPane.setPadding(new Insets(11,12,13,14));
+		  //Set the amount of horizontal space between each node
+		  topPane.setHgap(5);
+		  //Set the amount of vertical space between each node
+		  topPane.setVgap(5);
+		 // topPane.getChildren().addAll(lblName, txtName, lblNumber, txtNumber);
+		  topPane.setAlignment(Pos.CENTER_LEFT);
+
+/*
+		  FlowPane centerPane = new FlowPane();
+		  //centerPane.setPadding(new Insets(11,0,5,0));
+		  centerPane.setHgap(5);
+		  centerPane.setVgap(5);
+		  centerPane.getChildren().add(taOutput);
+		  centerPane.setAlignment(Pos.CENTER);
+*/
+		  //HBpx pane lays out its children in a single horizontal row
+		  //HBox bottomPane = new HBox(4);
+		  VBox centerPane = new VBox(5);
+		  centerPane.setPadding(new Insets(15, 15, 15, 15));
+		  centerPane.getChildren().addAll(btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnTen, btnEleven);
+		  centerPane.setAlignment(Pos.TOP_LEFT);
+		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  //bottomPane.getChildren().addAll(btnName, btnNumber, btnClear, btnExit);
+		  //bottomPane.setAlignment(Pos.CENTER);
+
+		  //The following uses a BorderPane: Where nodes are placed in five regions:
+		  //top, bottom, left, right, center
+		  BorderPane mainPane = new BorderPane();
+		  mainPane.setTop(topPane);
+		  mainPane.setCenter(centerPane);
+		  //mainPane.setBottom(bottomPane);
+		  mainPane.setStyle("-fx-border-color: red");
+
+		  /*
+		  // handle events go here
+		  
+		  //Handling button click events:
+		  //Buttons have an onAction Property which sets a handler for handling button actions:
+		  btnName.setOnAction(new EventHandler<ActionEvent>() {
+			    @Override public void handle(ActionEvent e) {
+					String name = txtName.getText();
+					taOutput.setText("The name you entered is: " + name);
+			    }
+			});
+
+		  btnNumber.setOnAction(new EventHandler<ActionEvent>() {
+			    @Override public void handle(ActionEvent e) {
+					try{
+						double num = Double.parseDouble(txtNumber.getText());
+						taOutput.appendText("\nSquare root of your number is: " + Math.sqrt(num));
+				}
+				catch(NumberFormatException a){
+						JOptionPane.showMessageDialog(null, "You must enter a number", "Wrong Input", JOptionPane.INFORMATION_MESSAGE);
+				}
+			    }
+			});
+
+
+		  btnClear.setOnAction(new EventHandler<ActionEvent>() {
+			    @Override public void handle(ActionEvent e) {
+				  	taOutput.clear();
+			    }
+			});
+		  
+		  //You can also use the new Java 8 Lambda expression feature as follows:
+		  //A lambda expression can be viewed as an anonymous class with precise syntax
+		  */
+		  btnOne.setOnAction(e -> {
+			  ActualBanker banker = new ActualBanker();
+			  banker.createRegularAccount();
+		  });
+		  
+		  btnEleven.setOnAction(e -> {//code for processing event e
+				  	JOptionPane.showMessageDialog(null, "Exiting!", "Goodbye", JOptionPane.INFORMATION_MESSAGE);
+					System.exit( 0 ); 
+					//class System is part of the Java.lang package thats imported automatically for every java program.
+					//exit: is a method that terminate any application that has graphical user interface components
+			});
+		  
+		  
+		  return mainPane;
+	  }	
 
 }
 
 
-class ActualBanker {
+class ActualFXBanker {
 	ArrayList<Account> accounts = new ArrayList<Account>();
 	ArrayList<Account> reject = new ArrayList<Account>(); // eom accounts that had problems while processing
 	ArrayList<Customer> customers = new ArrayList<Customer>();
@@ -129,7 +293,7 @@ class ActualBanker {
 		// display the available customers to choose from
 		System.out.println("\nChoose the customer for this " + type + " Account");
 		System.out.println("===========================================================================");
-		int counter = 1;
+		int counter = 0;
 		for (Customer c: customers) {
 			System.out.print(counter + ". " + c.toString() + "\n");
 			counter++;
@@ -138,7 +302,7 @@ class ActualBanker {
 		System.out.print("Choose which customer to create " + type + " account for (1 - " + counter + ") ");
 		int whichCustomer = input.nextInt();
 		// validate user input
-		while (whichCustomer < 1 || whichCustomer > counter) {
+		while (whichCustomer < 1 && whichCustomer > counter) {
 			whichCustomer = input.nextInt();
 		}
 		// check to see if there is another token and take care of it
@@ -211,7 +375,7 @@ class ActualBanker {
 		// display available customers 
 		System.out.println("\nChoose the customer for this " + type + " account");
 		System.out.println("===========================================================================");
-		int counter = 1;
+		int counter = 0;
 		for (Customer c: customers) {
 			System.out.print(counter + ". " + c.toString() + "\n");
 			counter++;
@@ -220,7 +384,7 @@ class ActualBanker {
 		System.out.print("Choose which customer to create "+ type + " account for (1 - " + counter + ") ");
 		int whichCustomer = input.nextInt();
 		// validate users input
-		while (whichCustomer < 1 || whichCustomer > counter) {
+		while (whichCustomer < 1 && whichCustomer > counter) {
 			whichCustomer = input.nextInt();
 		}
 		// determine if there are extra tokens and take care of them
@@ -279,7 +443,7 @@ class ActualBanker {
 		while (customers.isEmpty()) {
 			// notify user and get response
 			System.out.print("No customers available to complete task!\n");
-			System.out.print("Add customer? (y/n)");
+			System.out.print("Add customer? (y/n) ");
 			String getAnswer = input.nextLine();
 			// determine if the user wants to add customer now
 			if (getAnswer.equalsIgnoreCase("y")) {
@@ -287,23 +451,23 @@ class ActualBanker {
 				createCustomer();
 			} else {
 				// notify user of choice and re-display the menu
-				System.out.print("\nTerminationg create " + type + " account!\n");
+				System.out.print("\nTerminating create " + type + " account!\n");
 				return;
 			}
 		}
 		// show available customers to choose from
 		System.out.println("\nChoose the customer for this " + type + " account");
 		System.out.println("===========================================================================");
-		int counter = 1;
+		int counter = 0;
 		for (Customer c: customers) {
-			System.out.print(counter + ". " + c.toString() + "\n");
+			System.out.print(counter + ") " + c.toString() + "\n");
 			counter++;
 		}
 		// get response from user
 		System.out.print("Choose which customer to create "+ type + " account for (1 - " + counter + ") ");
 		int whichCustomer = input.nextInt();
 		// validate users input
-		while (whichCustomer < 1 || whichCustomer > counter) {
+		while (whichCustomer > 1 && whichCustomer < counter) {
 			whichCustomer = input.nextInt();
 		}
 		// capture any floating tokens
