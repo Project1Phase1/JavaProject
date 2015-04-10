@@ -121,7 +121,7 @@ public class Regular extends Account {
 	public String toString() {
 		String 
 		output =  "\n===========================================================\n";
-		output += "                      <strong>Regular Account</strong>\n";
+		output += "                      Regular Account\n";
 		output += "-------------------------------------------------------\n";
 		output += "Customer:" + this.getCustomer() + "\n";
 		output += "-------------------------------------------------------\n";
@@ -129,7 +129,7 @@ public class Regular extends Account {
 		output += "Account Balance: $" + this.getAccountBalance() + "\n";
 		output += "Interest Rate: " + this.regularInterestRate + "%\n";
 		output += "Interest Fee: $" + this.regularFixedCharge + "\n";
-		output += "\nInterest Earned: $" + this.regularInterestAmount;
+		output += "\nInterest Earned (ytd): $" + this.regularInterestAmount;
 		output += "\n===========================================================\n\n";
 		return output;
 	}

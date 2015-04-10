@@ -41,7 +41,17 @@ public class Transaction {
 		this.createDate = createDate;
 		this.customerID = customerID;
 		this.accountNumber = accountNumber;
+		this.description = description;
 		this.amount = amount;
+		this.transactionNumber = transactionNumber;
+	}
+	
+	public Transaction(java.util.Date createDate, String description, int transactionNumber) {
+		this.createDate = createDate;
+		this.customerID = null;
+		this.accountNumber = null;
+		this.description = description;
+		this.amount = -1.0;
 		this.transactionNumber = transactionNumber;
 	}
 
@@ -130,16 +140,16 @@ public class Transaction {
 	}
 	
 	public String toString() {
-		String output = "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-		output += "                     Transactions\n";
-		output += "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-		output += "Transaction Date: " + this.createDate + "\n";
-		output += "Customer ID: " + this.customerID + "\n";
-		output += "Account Number: " + this.accountNumber + "\n";
-		output += "Description: " + this.description + "\n";
-		output += "Amount: $" + this.amount + "\n";
-		output += "Transaction Number: " + this.transactionNumber + "\n";
-		output += "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-		return output;
+		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("                     Transactions\n");
+		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("Transaction Date: " + this.createDate + "\n");
+		System.out.print("Customer ID: " + this.customerID + "\n");
+		System.out.print("Account Number: " + this.accountNumber + "\n");
+		System.out.print("Description: " + this.description + "\n");
+		System.out.printf("%s %12.2f %s", "Amount: $", this.amount, "\n");
+		System.out.print("Transaction Number: " + this.transactionNumber + "\n");
+		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		return "";
 	}
 }

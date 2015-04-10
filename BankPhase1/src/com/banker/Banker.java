@@ -10,8 +10,9 @@
  *
  */
 package com.banker;
-import java.util.*;
 
+import java.util.*;
+import javax.swing.*;
 import com.accounts.*;
 import com.customers.*;
 import com.transactions.*;
@@ -46,6 +47,7 @@ class ActualBanker {
 	ArrayList<Customer> customers = new ArrayList<Customer>();
 	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	BankUtilities bu = new BankUtilities();
+	static int menuItems;
 	
 	public void doBanker() {
 		
@@ -62,9 +64,9 @@ class ActualBanker {
 				inputInt = displayMenuAndGetInput();
 
 				// if the input is out of range
-				if ((inputInt < 1) || (inputInt > 10))
+				if ((inputInt < 1) || (inputInt > menuItems))
 				{
-					System.out.println("\nThe input is out of range. Please enter 1-10!");
+					System.out.println("\nThe input is out of range. Please enter 1 - " + menuItems + "!");
 					System.out.println();
 					inputInt = 0;
 				}
@@ -74,51 +76,83 @@ class ActualBanker {
 			switch (inputInt)
 			{
 				case 1:
-					// 1.  Create a Checking Account
-					createCheckingAccount();
+					// 1.  Create a Customer
+					createCustomer();
 					break;
 				case 2:
-					// 2.  Create a Gold Account
-					createGoldAccount();
+					// 2.  Create a Checking Account
+					createCheckingAccount();
 					break;
 				case 3:
-					// 3.  Create a Regular Account
-					createRegularAccount();
+					// 3.  Create a Gold Account
+					createGoldAccount();
 					break;
 				case 4:
-					// 4.  Make a Deposit
-					makeDeposit();
+					// 4.  Create a Regular Account
+					createRegularAccount();
 					break;
 				case 5:
-					// 5.  Make a Withdraw
-					makewithdrawal();
+					// 5.  Make a Deposit
+					makeDeposit();
 					break;
 				case 6:
-					// 6.  Display Account Information
+					// 6.  Make a Withdraw
+					makewithdrawal();
+					break;
+				case 7:
+					// 7.  Display Customer Information
+					if (customers.size() == 0) {
+						break;
+					}
+					int counter = 0;
+					double totalAccounts = 0.0;
+					System.out.print("\n\n===========================================================\n");
+					System.out.print("                         Customers\n");
+					System.out.print("                       -------------\n\n");
+					for (Customer c: customers) {
+						for (Account a: accounts) {
+							if (a.getCustomer() == c) {
+								counter++;
+								totalAccounts += a.getAccountBalance();
+							}
+						}
+						totalAccounts = (((totalAccounts % 1) > 0.5)? (((Math.ceil((((totalAccounts)*100))))/100)) :  (((Math.floor((((totalAccounts)*100))))/100)));
+						System.out.printf("%s %d %s %12.2f %s", c.toString() + "\t\t# Accounts ", counter, "\t\tTotal Balance $", totalAccounts, "\n");
+						totalAccounts = 0.0;
+						counter = 0;
+					}
+					System.out.print("\n===========================================================\n\n");
+					break;
+				case 8:
+					// 8.  Display Account Information
 					for (Account a: accounts) {
 						System.out.print(a.toString());
 					}
 					break;
-				case 7:
-					// 7.  Remove an Account
+				case 9:
+					// 9.  Remove an Account
 					removeAccount();
 					break;
-				case 8:
-					// 8.  Apply End of Month Updates
-					eomCalculations(accounts);
-					break;
-				case 9:
-					// 9.  Display Bank Statistics
-					generateStatistics();
-					break;
 				case 10:
-					// 10.  Generate Transaction Report
-					for (Transaction t: transactions) {
-						System.out.print(t.toString());
-					}
+					// 10.  Remove a Customer
+					removeCustomer();
 					break;
 				case 11:
-					// exit
+					// 11.  Apply End of Month Updates
+					eomCalculations(accounts);
+					break;
+				case 12:
+					// 12.  Display Bank Statistics
+					generateStatistics();
+					break;
+				case 13:
+					// 13.  Generate Transaction Report
+					for (Transaction t: transactions) {
+						t.toString();
+					}
+					break;
+				case 14:
+					// 14.  exit
 					finished = true;
 					break;
 				default:
@@ -137,24 +171,32 @@ class ActualBanker {
 		int inputInt ;
 
 		// Menu Display
-		System.out.println("");
+		String[] dispMenu = new String[14];
+		dispMenu[0] = "Create a Customer ";
+		dispMenu[1] = "Create a Checking Account ";
+		dispMenu[2] = "Create a Gold Account ";
+		dispMenu[3] = "Create a Regular Account ";
+		dispMenu[4] = "Make a Deposit ";
+		dispMenu[5] = "Make a Withdraw ";
+		dispMenu[6] = "Display Customer Information";
+		dispMenu[7] = "Display Account Information ";
+		dispMenu[8] = "Remove an Account ";
+		dispMenu[9] = "Remove a Customer ";
+		dispMenu[10] = "Apply End of Month Updates ";
+		dispMenu[11] = "Display Bank Statistics ";
+		dispMenu[12] = "Generate Transaction Report ";
+		dispMenu[13] = "Exit ";
+		menuItems = dispMenu.length;
+		System.out.println();
 		System.out.println("     Welcome To Your Banking Center ");
 		System.out.println("     ==============================");
-		System.out.println(" 1.  Create a Checking Account ");
-		System.out.println(" 2.  Create a Gold Account ");
-		System.out.println(" 3.  Create a Regular Account");
-		System.out.println(" 4.  Make a Deposit ");
-		System.out.println(" 5.  Make a Withdraw ");
-		System.out.println(" 6.  Display Account Information ");
-		System.out.println(" 7.  Remove an Account ");
-		System.out.println(" 8.  Apply End of Month Updates ");
-		System.out.println(" 9.  Display Bank Statistics ");
-		System.out.println("10.  Generate Transaction Report ");
-		System.out.println("11.  Exit ");
+		for (int x = 0; x < dispMenu.length; x++) {
+			System.out.println(((x < 9)? " " + (x + 1) + ".   " + dispMenu[x] : (x + 1) + ".   " + dispMenu[x]));
+		}
 		System.out.println("");
 
 		// Get the input from the user
-		System.out.print("Please input your choice (1 - 11): ");
+		System.out.print("Please input your choice (1 - " + (dispMenu.length) + "): ");
 
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner( System.in );
@@ -182,6 +224,65 @@ class ActualBanker {
 		customers.add(customer);
 	}
 	
+	public Customer getCustomer(String type) {
+		// clear warning of input not closed and declare scanner input
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		// clear skip unused warning and set up token capture variable
+		@SuppressWarnings("unused")
+		String skip;
+		// declare customer variable
+		Customer customer;
+		// are the customers empty
+		while (customers.isEmpty()) {
+			// notify user and get response
+			System.out.print("No customers available to complete task!\n");
+			System.out.print("Add customer? (y/n) ");
+			String getAnswer = input.nextLine();
+			// determine if the user wants to add customer now
+			if (getAnswer.equalsIgnoreCase("y")) {
+				// create user
+				createCustomer();
+			} else {
+				// notify user of choice and re-display the menu
+				System.out.print("\nTerminationg create " + type + " account!\n");
+				return null;
+			}
+		}
+		// show available customers to choose from
+		System.out.println("\nChoose the customer for this " + type + " account");
+		System.out.println("===========================================================================");
+		int counter = 0;
+		System.out.print("0.) Create New Customer\n");
+		System.out.print("    -------------------\n");
+		for (Customer c: customers) {
+			counter++;
+			System.out.print(counter + ".) " + c.toString() + "\n");
+		}
+		// get response from user
+		System.out.print("Choose which customer to create "+ type + " account for (0 - " + counter + ") ");
+		int whichCustomer = -1;
+		// validate user input
+		while (whichCustomer == -1) {
+			whichCustomer = input.nextInt();
+			if (whichCustomer < 0 || whichCustomer > counter) {
+				System.out.print("Invalid entry. Please try again!!!");
+				whichCustomer = -1;
+			}
+		}
+		if (whichCustomer == 0) {
+			// create new customer
+			createCustomer();
+			customer = customers.get(customers.size()-1);
+			whichCustomer = customers.size();
+		} else {
+			// select the users choice of customer
+			customer = customers.get((whichCustomer - 1));
+		}
+		return customer;
+
+	}
+	
 	/** create transactions
 	 * 
 	 * @param customerID String
@@ -191,6 +292,10 @@ class ActualBanker {
 	 */
 	public void createTransaction(String customerID, String accountNumber, String description, double amount) {
 		transactions.add(new Transaction(new java.util.Date(), customerID, accountNumber, description, amount, bu.generateUniqueTransNumber()));
+	}
+	
+	public void createCustomerTransaction(String description) {
+		transactions.add(new Transaction(new java.util.Date(), description, bu.generateUniqueTransNumber()));
 	}
 	
 	/** create checking account<br><br>
@@ -211,59 +316,19 @@ class ActualBanker {
 	 * 
 	 */
 	public void createCheckingAccount() {
-		// declare a portable string
-		String type = "Checking";
-		// clear the input not closed warning and create a scanner input
+		// declare the type of account string
+		String typeAccount = "Checking";
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-		// clear the skip not used warning and create a skip value for remaining tokens
 		@SuppressWarnings("unused")
-		String skip;
-		// declare a customer variable to check against available customers
+		String skip = "";
 		Customer customer;
-		// are there any customers available to choose from?
-		while (customers.isEmpty()) {
-			// no customer so ask if user wants to add one now
-			System.out.print("No customers available to complete task!\n");
-			System.out.print("Add customer? (y/n) ");
-			String getAnswer = input.nextLine();
-			// if user wants to add one now then get it
-			if (getAnswer.equalsIgnoreCase("y")) {
-				// get customer to use for creating account
-				createCustomer();
-			} else {
-				// user does not want to add one now. Terminate and return to the menu
-				System.out.print("\nTerminationg create " + type + " account!\n");
-				return;
-			}
+		customer = getCustomer(typeAccount);
+		if (customer==null) {
+			return;
 		}
-		// display the available customers to choose from
-		System.out.println("\nChoose the customer for this " + type + " Account");
-		System.out.println("===========================================================================");
-		int counter = 0;
-		for (Customer c: customers) {
-			counter++;
-			System.out.print(counter + ". " + c.toString() + "\n");
-		}
-		// get the account number to use from the user
-		System.out.print("Choose which customer to create " + type + " account for (1 - " + counter + ") ");
-		int whichCustomer = 0;
-		// validate user input
-		while (whichCustomer == 0) {
-			whichCustomer = input.nextInt();
-			if (whichCustomer < 1 || whichCustomer > counter) {
-				System.out.print("Invalid entry. Please try again!!!");
-				whichCustomer = 0;
-			}
-		}
-		// check to see if there is another token and take care of it
-		// select the customer the user chose
-		customer = customers.get((whichCustomer - 1));
 		// get account information from user (Account number, balance)
-		System.out.print("Enter account number for this " + type + " account: ");
-		if (input.hasNext()) {
-			skip = input.nextLine();
-		}
+		System.out.print("Enter " + typeAccount + " account number: ");
 		String accountNumber = input.nextLine();
 		System.out.print("Ener account Balance: ");
 		double accountBalance = 0.0;
@@ -272,9 +337,9 @@ class ActualBanker {
 			// add the account
 		accounts.add(new Checking(accountNumber, accountBalance, customer));
 		// add transaction to transaction tracker
-		createTransaction(customers.get((whichCustomer - 1)).getCustomerID(), accountNumber, "Opening Checking Account", accountBalance);
+		createTransaction(customer.getCustomerID(), accountNumber, "Opening "+ typeAccount + " Account", accountBalance);
 		// notify user of account creation
-		System.out.println("\n" + type + " account successfully created!\n");
+		System.out.println("\n" + typeAccount + " account successfully created!\n");
 	}
 
 	/** create gold account<br><br>
@@ -296,71 +361,25 @@ class ActualBanker {
 	 */
 	public void createGoldAccount() {
 		// declare a portable string
-		String type = "Gold";
-		// clear the input not closed warning and create a scanner input
+		String typeAccount = "Gold";
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-		// clear the skip unused warning and set up a extra token capture
 		@SuppressWarnings("unused")
-		String skip;
-		// declare customer
+		String skip = "";
 		Customer customer;
-		// check to see if there are any customers available
-		while (customers.isEmpty()) {
-			// warn user and get response
-			System.out.print("No customers available to complete task!\n");
-			System.out.print("Add customer? (y/n)");
-			String getAnswer = input.nextLine();
-			// determine if the user wants to add customers now
-			if (getAnswer.equalsIgnoreCase("y")) {
-				// create customer
-				createCustomer();
-			} else {
-				// notify user of choice
-				System.out.print("\nTerminationg create " + type + " account!\n");
-				return;
-			}
-		}
-		// display available customers 
-		System.out.println("\nChoose the customer for this " + type + " account");
-		System.out.println("===========================================================================");
-		int counter = 0;
-		for (Customer c: customers) {
-			counter++;
-			System.out.print(counter + ". " + c.toString() + "\n");
-		}
-		// get users choice
-		System.out.print("Choose which customer to create "+ type + " account for (1 - " + counter + ") ");
-		int whichCustomer = 0;
-		// validate user input
-		while (whichCustomer == 0) {
-			whichCustomer = input.nextInt();
-			if (whichCustomer < 1 || whichCustomer > counter) {
-				System.out.print("Invalid entry. Please try again!!!");
-				whichCustomer = 0;
-			}
-		}
-		// determine if there are extra tokens and take care of them
-		if (input.hasNext()) {
-			skip = input.nextLine();
-		}
-		// get customer selected for account creation
-		customer = customers.get((whichCustomer - 1));
+		customer = getCustomer(typeAccount);
 		// get account information (Account number, account balance)
-		System.out.print("Enter account number for this  account: ");
+		System.out.print("Enter " + typeAccount + " account number: ");
 		String accountNumber = input.nextLine();
 		System.out.print("Ener account Balance: ");
-		double accountBalance = input.nextDouble();
-		// capture floating tokens
-		if (input.hasNext()) {
-			skip = input.nextLine();
-		}
+		double accountBalance = 0.0;
+		accountBalance = input.nextDouble();
 		// add account
 		accounts.add(new Gold(accountNumber, accountBalance, customer));
 		// create a record of the transaction
-		createTransaction(customers.get((whichCustomer - 1)).getCustomerID(), accountNumber, "Opening Gold Account", accountBalance);
+		createTransaction(customer.getCustomerID(), accountNumber, "Opening " + typeAccount + " Account", accountBalance);
 		// notify user of success
-		System.out.println("\n" + type + " account successfully created!\n");
+		System.out.println("\n" + typeAccount + " account successfully created!\n");
 	
 	}
 
@@ -383,71 +402,33 @@ class ActualBanker {
 	 */
 	public void createRegularAccount() {
 		// declare a portable string
-		String type = "Regular";
-		// clear warning of input not closed and declare scanner input
+		String typeAccount = "Regular";
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-		// clear skip unused warning and set up token capture variable
 		@SuppressWarnings("unused")
-		String skip;
-		// declare customer variable
+		String skip = "";
 		Customer customer;
-		// are the customers empty
-		while (customers.isEmpty()) {
-			// notify user and get response
-			System.out.print("No customers available to complete task!\n");
-			System.out.print("Add customer? (y/n)");
-			String getAnswer = input.nextLine();
-			// determine if the user wants to add customer now
-			if (getAnswer.equalsIgnoreCase("y")) {
-				// create user
-				createCustomer();
-			} else {
-				// notify user of choice and re-display the menu
-				System.out.print("\nTerminationg create " + type + " account!\n");
-				return;
-			}
-		}
-		// show available customers to choose from
-		System.out.println("\nChoose the customer for this " + type + " account");
-		System.out.println("===========================================================================");
-		int counter = 0;
-		for (Customer c: customers) {
-			counter++;
-			System.out.print(counter + ". " + c.toString() + "\n");
-		}
-		// get response from user
-		System.out.print("Choose which customer to create "+ type + " account for (1 - " + counter + ") ");
-		int whichCustomer = 0;
-		// validate user input
-		while (whichCustomer == 0) {
-			whichCustomer = input.nextInt();
-			if (whichCustomer < 1 || whichCustomer > counter) {
-				System.out.print("Invalid entry. Please try again!!!");
-				whichCustomer = 0;
-			}
-		}
-		// capture any floating tokens
-		if (input.hasNext()) {
-			skip = input.nextLine();
-		}
-		// select the users choice of customer
-		customer = customers.get((whichCustomer - 1));
+		customer = getCustomer(typeAccount);
 		// get account information (Account number, account balance)
-		System.out.print("Enter account number for this  account: ");
+		System.out.print("Enter " + typeAccount + " account number: ");
 		String accountNumber = input.nextLine();
 		System.out.print("Ener account Balance: ");
-		double accountBalance = input.nextDouble();
-		// suppress any extra tokens
-		if (input.hasNext()) {
-			skip = input.nextLine();
+		boolean isOk = false;
+		double accountBalance = 0.0;
+		while (!isOk) {
+			try {
+				accountBalance = input.nextDouble();
+				isOk = true;
+			} catch (InputMismatchException e) {
+				JOptionPane.showMessageDialog(null, "Invalid entry detected! Please try again!");
+			}
 		}
 		// create account
-		accounts.add(new Gold(accountNumber, accountBalance, customer));
+		accounts.add(new Regular(accountNumber, accountBalance, customer));
 		// add transaction to transaction tracker
-		createTransaction(customers.get((whichCustomer - 1)).getCustomerID(), accountNumber, "Opening Regular Account", accountBalance);
+		createTransaction(customer.getCustomerID(), accountNumber, "Opening Regular Account", accountBalance);
 		// notify user of success
-		System.out.println("\n" + type + " account successfully created!\n");
+		System.out.println("\n" + typeAccount + " account successfully created!\n");
 	}
 	
 	/** create make deposit<br><br>
@@ -651,6 +632,47 @@ class ActualBanker {
 		// Notify user that account was removed
 		System.out.print("\nSuccessfully removed account!\n");
 	}
+	
+	public void removeCustomer() {
+		// check to see if there any customers
+		if (customers.isEmpty()) {
+			System.out.println("There are no customers to remove!\nTerminating remove customer!\n");
+			return;
+		}
+		// clear input not closed warning and declare scanner input
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		// present customer information to user and get response
+		System.out.print("                         Remove Customer");
+		System.out.print("\n=============================================================\n");
+		int counter = 1;
+		System.out.print("Available customers\n-----------------------------------------\n");
+		// list available customers in a menu style
+		for (Customer c: customers) {
+			System.out.print(counter + ".) " + c.toString() + "\n");
+			counter++;
+		}
+		// get users choice
+		System.out.print("\nChoose which customer to remove: (1 - " + counter + ")");
+		int whichAccount = 0;
+		// validate users choice
+		while (whichAccount < 1 || whichAccount > counter) {
+			whichAccount = input.nextInt();
+		}
+		// lower choice to array type value (starts at 0)
+		whichAccount -= 1;
+		Customer customer;
+		customer = customers.get(whichAccount);
+		// set description to customer ID and customer name along with "Removed"
+		String description = customer.getCustomerID() + " " + customer.getCustomerName() + " Removed";
+		// remove customer
+		customers.remove(customer);
+		// add customer removal to transactions
+		createCustomerTransaction(description);
+		// Notify user that customer was removed
+		System.out.print("\nSuccessfully removed customer!\n");
+
+	}
 
 	/** end of month (eom) calculations<br><br>
 	 * 
@@ -757,14 +779,15 @@ class ActualBanker {
 		// number of zero balance accounts
 		// average balance of the accounts
 		// largest balance accounts
-		int numAccounts = 0;
-		double sumAccounts = 0.0;
-		int numZeroAccounts = 0;
-		double avgAccounts = 0.0;
-		double largestAccount = 0;
-		int indexLargest = 0;
+		int numAccounts = 0, numRegularAccounts = 0, numCheckingAccounts = 0, numGoldAccounts = 0;
+		double sumAccounts = 0.0, sumRegularAccounts = 0.0, sumCheckingAccounts = 0.0, sumGoldAccounts = 0.0;
+		int numZeroAccounts = 0, numRegularZeroAccounts = 0, numCheckingZeroAccounts = 0, numGoldZeroAccounts = 0;
+		double avgAccounts = 0.0, avgRegularAccounts = 0.0, avgCheckingAccounts = 0.0, avgGoldAccounts = 0.0;
+		double largestAccount = 0, largestRegularAccount = 0, largestCheckingAccount = 0, largestGoldAccount = 0;
+		int indexLargest = 0, indexLargestRegular = 0, indexLargestChecking = 0, indexLargestGold = 0;
 		numAccounts = accounts.size();
-		for (int x = 0; x <= accounts.size(); x++) {
+		for (int x = 0; x < accounts.size(); x++) {
+//------------------------------------Total---------------------------			
 			sumAccounts += accounts.get(x).getAccountBalance();
 			if (accounts.get(x).getAccountBalance() == 0.0) {
 				numZeroAccounts++;
@@ -773,15 +796,81 @@ class ActualBanker {
 				largestAccount = accounts.get(x).getAccountBalance();
 				indexLargest = x;
 			}
+//-----------------------------------Gold-----------------------------
+			if(accounts.get(x) instanceof Gold) {
+				if (accounts.get(x).getAccountBalance() == 0.0) {
+					numGoldZeroAccounts++;
+				}
+				if (accounts.get(x).getAccountBalance() > largestGoldAccount) {
+					largestGoldAccount = accounts.get(x).getAccountBalance();
+					indexLargestGold = x;
+				}
+			}
+//----------------------------------Regular-----------------------------
+			if (accounts.get(x) instanceof Regular) {
+				if (accounts.get(x).getAccountBalance() == 0.0) {
+					numRegularZeroAccounts++;
+				}
+				if (accounts.get(x).getAccountBalance() > largestRegularAccount) {
+					largestRegularAccount = accounts.get(x).getAccountBalance();
+					indexLargestRegular = x;
+				}
+			}
+//--------------------------------Checking-----------------------------
+			if (accounts.get(x) instanceof Checking) {
+				if (accounts.get(x).getAccountBalance() == 0.0) {
+					numCheckingZeroAccounts++;
+				}
+				if (accounts.get(x).getAccountBalance() > largestCheckingAccount) {
+					largestCheckingAccount = accounts.get(x).getAccountBalance();
+					indexLargestChecking = x;
+				}
+			}
+			
 		}
-		avgAccounts = (Math.floor(((sumAccounts / numAccounts)*100.0)))/100.0;
+		avgAccounts = (Math.floor(((sumAccounts / numAccounts) * 100.0))) / 100.0;
+		avgGoldAccounts = (Math.floor(((sumGoldAccounts / numGoldAccounts) * 100.0))) / 100.0;
+		avgRegularAccounts = (Math.floor(((sumRegularAccounts / numRegularAccounts) * 100.0))) / 100.0;
+		avgCheckingAccounts = (Math.floor(((sumCheckingAccounts / numCheckingAccounts) * 100.0))) / 100.0;
 		System.out.print("\n                            Statistics\n");
 		System.out.print("===============================================================\n");
+		System.out.print("                    -----------------------\n");
+		System.out.print("                     Total All Accounts\n");
+		System.out.print("                    -----------------------\n");
 		System.out.print("\nNumber of accounts: " + numAccounts);
 		System.out.print("\n\nTotal assets of all accounts: $" + sumAccounts);
 		System.out.print("\n\nNumber of accounts with zero balance: "+ numZeroAccounts);
 		System.out.print("\n\nAverage balance of the accounts: $" + avgAccounts);
 		System.out.print("\n\nAccount with the largest balance: " + accounts.get(indexLargest).getAccountNumber() + " $" + accounts.get(indexLargest).getAccountBalance());
+		System.out.print("\n\n");
+		System.out.print("                   -----------------------\n");
+		System.out.print("                    Total Gold Accounts\n");
+		System.out.print("                   -----------------------\n");
+		System.out.print("\nNumber of accounts: " + numGoldAccounts);
+		System.out.print("\n\nTotal assets of all accounts: $" + sumGoldAccounts);
+		System.out.print("\n\nNumber of accounts with zero balance: "+ numGoldZeroAccounts);
+		System.out.print("\n\nAverage balance of the accounts: $" + avgGoldAccounts);
+		System.out.print("\n\nAccount with the largest balance: " + accounts.get(indexLargestGold).getAccountNumber() + " $" + accounts.get(indexLargestGold).getAccountBalance());
+		System.out.print("\n\n");
+		System.out.print("                  ---------------------------\n");
+		System.out.print("                    Total Regular Accounts\n");
+		System.out.print("                  ---------------------------\n");
+		System.out.print("\nNumber of accounts: " + numRegularAccounts);
+		System.out.print("\n\nTotal assets of all accounts: $" + sumRegularAccounts);
+		System.out.print("\n\nNumber of accounts with zero balance: "+ numRegularZeroAccounts);
+		System.out.print("\n\nAverage balance of the accounts: $" + avgRegularAccounts);
+		System.out.print("\n\nAccount with the largest balance: " + accounts.get(indexLargestRegular).getAccountNumber() + " $" + accounts.get(indexLargestRegular).getAccountBalance());
+		System.out.print("\n\n");
+		System.out.print("                  -----------------------------\n");
+		System.out.print("                    Total Checking Accounts\n");
+		System.out.print("                  -----------------------------\n");
+		System.out.print("\nNumber of accounts: " + numCheckingAccounts);
+		System.out.print("\n\nTotal assets of all accounts: $" + sumCheckingAccounts);
+		System.out.print("\n\nNumber of accounts with zero balance: "+ numCheckingZeroAccounts);
+		System.out.print("\n\nAverage balance of the accounts: $" + avgCheckingAccounts);
+		System.out.print("\n\nAccount with the largest balance: " + accounts.get(indexLargestChecking).getAccountNumber() + " $" + accounts.get(indexLargestChecking).getAccountBalance());
+		
+		
 		System.out.print("\n\n===============================================================\n");
 		
 	}

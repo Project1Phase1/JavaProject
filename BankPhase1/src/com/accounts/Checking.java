@@ -117,7 +117,7 @@ public class Checking extends Account {
 		output += "Account Balance: $" + this.getAccountBalance() + "\n";
 		output += "Number of Transactions: " + (((this.numberOfTransactions - 2)<0)? this.numberOfTransactions : (this.numberOfTransactions-2))+ "\n";
 		output += "Transaction Fee: $" + this.checkingTransactionFee + "\n";
-		output += "Transaction Fee Amount: $" + this.checkingTransactionFeeAmount + "\n";
+		output += "Transaction Fee Amount (this month): $" + this.checkingTransactionFeeAmount + "\n";
 		output += "\n===========================================================\n\n";
 		return output;
 	}

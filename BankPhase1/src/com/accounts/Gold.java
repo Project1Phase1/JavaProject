@@ -93,14 +93,14 @@ public class Gold extends Account {
 	public String toString() {
 		String 
 		output =  "\n===========================================================\n";
-		output += "                        <strong>Gold Account</strong>\n";
+		output += "                        Gold Account\n";
 		output += "-------------------------------------------------------\n";
 		output += "Customer:" + this.getCustomer() + "\n";
 		output += "-------------------------------------------------------\n";
 		output += "Account Number: " + this.getAccountNumber() + "\n";
 		output += "Account Balance: $" + this.getAccountBalance() + "\n";
 		output += "Interest Rate: " + this.goldInterestRate + "%\n";
-		output += "Total Interest Earned: $" + this.goldInterestAmount + "\n";
+		output += "Interest Earned (ytd): $" + this.goldInterestAmount + "\n";
 		output += "\n===========================================================\n\n";
 		return output;
 	}
