@@ -37,6 +37,27 @@ import com.customers.*;
 import com.transactions.*;
 import com.utilities.*;
 
+/* to setup the javadoc so that you can see the docs for coding FX
+ * open JRE System Library [jdk1.8.0_**] and find the jar file
+ * jfxrt.jar and right click open properties select javadoc location
+ * and in the javadoc URL javadoc location path:
+ * enter http://docs.oracle.com/javase/8/javafx/api/
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+
 /** client application<br>
  * displays a menu and all 
  * 

@@ -10,23 +10,15 @@
  *
  */
 
-/* Tasks that need to be finished before submission
+/* -------------------Tasks that need done ---------------------------
+ * Tasks that need to be finished before submission
+ * -------------------------------------------------------------------
  * 
- * 1. Correct the formating on the Statistics method
- * 2. Add try / catch to all input areas. Wherever a scanner gets input from user
- * 
- * 
- * 
- * 
+ * 1. Correct the formating on the Statistics method <FINISHED - Theral>
+ * 2. Add try / catch to all input areas. Wherever a scanner gets input from user <Ian is working on this>
  * 
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
+ * ------------Ongoing tasks---------------
  * Finish testing the entire application from start to finish
  * 
  */
@@ -808,8 +800,10 @@ class ActualBanker {
 	
 	/** generate statistics<br><br>
 	 * 
-	 * loop through the accounts and get the largest amount, account with<br>
-	 * largest balance, amount of all the accounts, number of zero balance accounts,<br>
+	 * loop through the accounts and get:<br>
+	 * largest amount<br>
+	 * account with largest balance<br>
+	 * amount of all the accounts, number of zero balance accounts,<br>
 	 * average balance of the accounts<br><br>
 	 * 
 	 * Display them in a nice manner
