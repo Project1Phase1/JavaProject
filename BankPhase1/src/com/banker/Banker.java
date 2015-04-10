@@ -878,10 +878,12 @@ class ActualBanker {
 			}
 			
 		}
+//-------------------------------calculate averages----------------------------		
 		avgAccounts = (Math.floor(((sumAccounts / numAccounts) * 100.0))) / 100.0;
 		avgGoldAccounts = (Math.floor(((sumGoldAccounts / numGoldAccounts) * 100.0))) / 100.0;
 		avgRegularAccounts = (Math.floor(((sumRegularAccounts / numRegularAccounts) * 100.0))) / 100.0;
 		avgCheckingAccounts = (Math.floor(((sumCheckingAccounts / numCheckingAccounts) * 100.0))) / 100.0;
+//------------------------------------display results-----------------------------------
 		System.out.print("\n                            Statistics\n");
 		System.out.print("===============================================================\n");
 		System.out.print("                    -----------------------\n");
@@ -891,7 +893,7 @@ class ActualBanker {
 		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumAccounts);
 		System.out.print("\n\nNumber of accounts with zero balance: "+ numZeroAccounts);
 		System.out.print("\n\nAverage balance of the accounts: $" + avgAccounts);
-		System.out.printf("%s %d %s %12.2f", "\n\nAccount with the largest balance: ", accounts.get(indexLargest).getAccountNumber(), " $", accounts.get(indexLargest).getAccountBalance());
+		System.out.printf("%s %12.2f", "\n\nAccount with the largest balance: " + accounts.get(indexLargest).getAccountNumber() + " $", accounts.get(indexLargest).getAccountBalance());
 		System.out.print("\n\n");
 		System.out.print("                   -----------------------\n");
 		System.out.print("                    Total Gold Accounts\n");
@@ -900,26 +902,25 @@ class ActualBanker {
 		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumGoldAccounts);
 		System.out.print("\n\nNumber of accounts with zero balance: "+ numGoldZeroAccounts);
 		System.out.printf("%s %12.2f", "\n\nAverage balance of the accounts: $", avgGoldAccounts);
-		System.out.printf("%s %s %12.2f", "\n\nAccount with the largest balance: ", accounts.get(indexLargestGold).getAccountNumber() + " $", accounts.get(indexLargestGold).getAccountBalance());
+		System.out.printf("%s %12.2f", "\n\nAccount with the largest balance: " + accounts.get(indexLargestGold).getAccountNumber() + " $", accounts.get(indexLargestGold).getAccountBalance());
 		System.out.print("\n\n");
-/////--------------------------------------------------------------------------------start here ----------------------
 		System.out.print("                  ---------------------------\n");
 		System.out.print("                    Total Regular Accounts\n");
 		System.out.print("                  ---------------------------\n");
 		System.out.print("\nNumber of accounts: " + numRegularAccounts);
-		System.out.print("\n\nTotal assets of all accounts: $" + sumRegularAccounts);
+		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumRegularAccounts);
 		System.out.print("\n\nNumber of accounts with zero balance: "+ numRegularZeroAccounts);
 		System.out.print("\n\nAverage balance of the accounts: $" + avgRegularAccounts);
-		System.out.print("\n\nAccount with the largest balance: " + accounts.get(indexLargestRegular).getAccountNumber() + " $" + accounts.get(indexLargestRegular).getAccountBalance());
+		System.out.printf("%s $12.2f", "\n\nAccount with the largest balance: " + accounts.get(indexLargestRegular).getAccountNumber() + " $", accounts.get(indexLargestRegular).getAccountBalance());
 		System.out.print("\n\n");
 		System.out.print("                  -----------------------------\n");
 		System.out.print("                    Total Checking Accounts\n");
 		System.out.print("                  -----------------------------\n");
 		System.out.print("\nNumber of accounts: " + numCheckingAccounts);
-		System.out.print("\n\nTotal assets of all accounts: $" + sumCheckingAccounts);
+		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumCheckingAccounts);
 		System.out.print("\n\nNumber of accounts with zero balance: "+ numCheckingZeroAccounts);
-		System.out.print("\n\nAverage balance of the accounts: $" + avgCheckingAccounts);
-		System.out.print("\n\nAccount with the largest balance: " + accounts.get(indexLargestChecking).getAccountNumber() + " $" + accounts.get(indexLargestChecking).getAccountBalance());
+		System.out.printf("%s %12.2f", "\n\nAverage balance of the accounts: $", avgCheckingAccounts);
+		System.out.printf("%s %12.2f", "\n\nAccount with the largest balance: " + accounts.get(indexLargestChecking).getAccountNumber() + " $", accounts.get(indexLargestChecking).getAccountBalance());
 		
 		
 		System.out.print("\n\n===============================================================\n");
