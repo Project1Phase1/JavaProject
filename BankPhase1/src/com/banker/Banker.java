@@ -184,7 +184,7 @@ class ActualBanker {
 		dispMenu[9] = "Remove a Customer ";
 		dispMenu[10] = "Apply End of Month Updates ";
 		dispMenu[11] = "Display Bank Statistics ";
-		dispMenu[12] = "Generate Transaction Report "; 
+		dispMenu[12] = "Generate Transaction Report ";
 		dispMenu[13] = "Exit ";
 		menuItems = dispMenu.length;
 		System.out.println();
