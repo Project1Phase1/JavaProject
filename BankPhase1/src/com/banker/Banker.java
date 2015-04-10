@@ -887,3 +887,32 @@ class ActualBanker {
 		
 	}
 }
+
+/*
+ * 										CUSTOMER INFORMATION
+ * CUSTOMERS
+ * LK4344 Luke Kyle
+ * MV5613 Mary Valinski
+ * OX1121 Oienta Xau
+ * VC1314 Victoria Chow
+ * 
+ * 
+ * ACCOUNTS
+ * Gold
+ * 	GA43245643		4600.00		Oienta Xau
+ * 	GA15436453		1200.00		Mary Valinski
+ * 	GA44369945		0.0			Victoria Chow
+ * 
+ * Regular
+ *  RA11436453		300.00		Luke Kyle
+ *  RA43146345		275.43		Mary Valinski
+ *  RA34331436		527.68		Oienta Xau
+ *  RA94964394		0.0			Victoria Chow
+ *  
+ * Checking
+ *  CA55451345		25.00		Oienta Xau
+ *  CA93464345		145.16		Luke Kyle
+ *  CA99474135		987.89		Mary Valinski
+ *  CA16439459		0.0			Victoria Chow
+
+ */
