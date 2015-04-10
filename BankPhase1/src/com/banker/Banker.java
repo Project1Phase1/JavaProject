@@ -789,7 +789,7 @@ class ActualBanker {
 		double sumAccounts = 0.0, sumRegularAccounts = 0.0, sumCheckingAccounts = 0.0, sumGoldAccounts = 0.0;
 		int numZeroAccounts = 0, numRegularZeroAccounts = 0, numCheckingZeroAccounts = 0, numGoldZeroAccounts = 0;
 		double avgAccounts = 0.0, avgRegularAccounts = 0.0, avgCheckingAccounts = 0.0, avgGoldAccounts = 0.0;
-		double largestAccount = 0, largestRegularAccount = 0, largestCheckingAccount = 0, largestGoldAccount = 0;
+		double largestAccount = 0.0, largestRegularAccount = 0.0, largestCheckingAccount = 0.0, largestGoldAccount = 0.0;
 		int indexLargest = 0, indexLargestRegular = 0, indexLargestChecking = 0, indexLargestGold = 0;
 		numAccounts = accounts.size();
 		for (int x = 0; x < accounts.size(); x++) {
@@ -804,6 +804,8 @@ class ActualBanker {
 			}
 //-----------------------------------Gold-----------------------------
 			if(accounts.get(x) instanceof Gold) {
+				numGoldAccounts++;
+				sumGoldAccounts += accounts.get(x).getAccountBalance();
 				if (accounts.get(x).getAccountBalance() == 0.0) {
 					numGoldZeroAccounts++;
 				}
@@ -814,6 +816,8 @@ class ActualBanker {
 			}
 //----------------------------------Regular-----------------------------
 			if (accounts.get(x) instanceof Regular) {
+				numRegularAccounts++;
+				sumRegularAccounts += accounts.get(x).getAccountBalance();
 				if (accounts.get(x).getAccountBalance() == 0.0) {
 					numRegularZeroAccounts++;
 				}
@@ -824,6 +828,8 @@ class ActualBanker {
 			}
 //--------------------------------Checking-----------------------------
 			if (accounts.get(x) instanceof Checking) {
+				numCheckingAccounts++;
+				sumCheckingAccounts += accounts.get(x).getAccountBalance();
 				if (accounts.get(x).getAccountBalance() == 0.0) {
 					numCheckingZeroAccounts++;
 				}
