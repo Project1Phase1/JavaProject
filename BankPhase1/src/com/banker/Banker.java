@@ -9,6 +9,37 @@
  * Banker.java<br>
  *
  */
+
+/* Tasks that need to be finished before submission
+ * 
+ * 1. Correct the formating on the Statistics method
+ * 2. Add try / catch to all input areas. Wherever a scanner gets input from user
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * Finish testing the entire application from start to finish
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
 package com.banker;
 
 import java.util.*;
@@ -107,8 +138,8 @@ class ActualBanker {
 					int counter = 0;
 					double totalAccounts = 0.0;
 					System.out.print("\n\n===========================================================\n");
-					System.out.print("                         Customers\n");
-					System.out.print("                       -------------\n\n");
+					System.out.print("                         Customers " + (customers.size() - 1) + "\n");
+					System.out.print("                    ------------------\n\n");
 					for (Customer c: customers) {
 						for (Account a: accounts) {
 							if (a.getCustomer() == c) {
@@ -850,20 +881,21 @@ class ActualBanker {
 		System.out.print("                     Total All Accounts\n");
 		System.out.print("                    -----------------------\n");
 		System.out.print("\nNumber of accounts: " + numAccounts);
-		System.out.print("\n\nTotal assets of all accounts: $" + sumAccounts);
+		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumAccounts);
 		System.out.print("\n\nNumber of accounts with zero balance: "+ numZeroAccounts);
 		System.out.print("\n\nAverage balance of the accounts: $" + avgAccounts);
-		System.out.print("\n\nAccount with the largest balance: " + accounts.get(indexLargest).getAccountNumber() + " $" + accounts.get(indexLargest).getAccountBalance());
+		System.out.printf("%s %d %s %12.2f", "\n\nAccount with the largest balance: ", accounts.get(indexLargest).getAccountNumber(), " $", accounts.get(indexLargest).getAccountBalance());
 		System.out.print("\n\n");
 		System.out.print("                   -----------------------\n");
 		System.out.print("                    Total Gold Accounts\n");
 		System.out.print("                   -----------------------\n");
 		System.out.print("\nNumber of accounts: " + numGoldAccounts);
-		System.out.print("\n\nTotal assets of all accounts: $" + sumGoldAccounts);
+		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumGoldAccounts);
 		System.out.print("\n\nNumber of accounts with zero balance: "+ numGoldZeroAccounts);
-		System.out.print("\n\nAverage balance of the accounts: $" + avgGoldAccounts);
-		System.out.print("\n\nAccount with the largest balance: " + accounts.get(indexLargestGold).getAccountNumber() + " $" + accounts.get(indexLargestGold).getAccountBalance());
+		System.out.printf("%s %12.2f", "\n\nAverage balance of the accounts: $", avgGoldAccounts);
+		System.out.printf("%s %s %12.2f", "\n\nAccount with the largest balance: ", accounts.get(indexLargestGold).getAccountNumber() + " $", accounts.get(indexLargestGold).getAccountBalance());
 		System.out.print("\n\n");
+/////--------------------------------------------------------------------------------start here ----------------------
 		System.out.print("                  ---------------------------\n");
 		System.out.print("                    Total Regular Accounts\n");
 		System.out.print("                  ---------------------------\n");
