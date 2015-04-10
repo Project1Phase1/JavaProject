@@ -368,6 +368,9 @@ class ActualBanker {
 		String skip = "";
 		Customer customer;
 		customer = getCustomer(typeAccount);
+		if (customer==null) {
+			return;
+		}		
 		// get account information (Account number, account balance)
 		System.out.print("Enter " + typeAccount + " account number: ");
 		String accountNumber = input.nextLine();
@@ -409,6 +412,9 @@ class ActualBanker {
 		String skip = "";
 		Customer customer;
 		customer = getCustomer(typeAccount);
+		if (customer==null) {
+			return;
+		}
 		// get account information (Account number, account balance)
 		System.out.print("Enter " + typeAccount + " account number: ");
 		String accountNumber = input.nextLine();
