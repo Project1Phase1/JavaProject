@@ -199,7 +199,7 @@ class ActualBanker {
 	
 	public static int displayMenuAndGetInput()
 	{
-		int inputInt ;
+		int inputInt = 0 ;
 
 		// Menu Display
 		String[] dispMenu = new String[14];
@@ -213,10 +213,10 @@ class ActualBanker {
 		dispMenu[7] = "Display Account Information ";
 		dispMenu[8] = "Remove an Account ";
 		dispMenu[9] = "Remove a Customer ";
-		dispMenu[10] = "Apply End of Month Updates ";
-		dispMenu[11] = "Display Bank Statistics ";
-		dispMenu[12] = "Generate Transaction Report ";
-		dispMenu[13] = "Exit ";
+		dispMenu[10] ="Apply End of Month Updates ";
+		dispMenu[11] ="Display Bank Statistics ";
+		dispMenu[12] ="Generate Transaction Report ";
+		dispMenu[13] ="Exit ";
 		menuItems = dispMenu.length;
 		System.out.println();
 		System.out.println("     Welcome To Your Banking Center ");
@@ -231,9 +231,16 @@ class ActualBanker {
 
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner( System.in );
-
-		inputInt = input.nextInt();
-
+//Try-catch for Scanner input sections (remember to set inputInt = 0)
+		boolean validateInput=true;
+		while (validateInput) {
+			try  {
+				inputInt = input.nextInt();
+				validateInput=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter Integer Value");
+			}
+		}
 		return inputInt;
 	}
 
@@ -714,7 +721,7 @@ class ActualBanker {
 	/** end of month (eom) calculations<br><br>
 	 * 
 	 * this will allow for processing not only the accounts<br>
-	 * but also the rejects from running the eom<br>
+	 * but <strong>also</strong> the rejects from running the eom<br>
 	 * 
 	 * 
 	 * @param process the ArrayList
@@ -922,26 +929,26 @@ class ActualBanker {
 
 /*
  * 										CUSTOMER INFORMATION
- * CUSTOMERS
+ * CUSTOMERS:
  * LK4344 Luke Kyle
  * MV5613 Mary Valinski
  * OX1121 Oienta Xau
  * VC1314 Victoria Chow
  * 
  * 
- * ACCOUNTS
- * Gold
+ * ACCOUNTS:
+ * Gold---
  * 	GA43245643		4600.00		Oienta Xau
  * 	GA15436453		1200.00		Mary Valinski
  * 	GA44369945		0.0			Victoria Chow
  * 
- * Regular
+ * Regular---
  *  RA11436453		300.00		Luke Kyle
  *  RA43146345		275.43		Mary Valinski
  *  RA34331436		527.68		Oienta Xau
  *  RA94964394		0.0			Victoria Chow
  *  
- * Checking
+ * Checking---
  *  CA55451345		25.00		Oienta Xau
  *  CA93464345		145.16		Luke Kyle
  *  CA99474135		987.89		Mary Valinski
