@@ -260,8 +260,30 @@ class ActualBanker {
 		System.out.print("\n==================================================================================================================================\n");
 		System.out.print("                                                                  Accounts\n");
 		System.out.print("                                                    ------------------------------\n");
-		System.out.printf("%12s %-55s %-13s %s %s %-14s %s", "        ", "            Customer Information", "   Balance", "# of Transactions", "Transaction Fee", "Total Fee","\n");  
+		//System.out.printf("%12s %-55s %12s %s %s %14s %s", "        ", "            Customer Information", "Balance", "# of Transactions", "Transaction Fee", "Total Fee","\n");  
+		int chkCounter = 1, regCounter = 1, gldCounter = 1;
 		for (Account a: accounts) {
+			
+			if (a instanceof Checking) {
+				if (chkCounter == 1) {
+					System.out.printf("%12s %-55s %12s %s %s %14s\n", "        ", "            Customer Information", "Balance", "# of Transactions", "Transaction Fee", "Total Fee");
+					chkCounter++;
+				}
+			}
+			if (a instanceof Regular) {
+				if (regCounter == 1) {
+					//System.out.printf("%12s %-55s %12.2f %s %10% %3s %12.2f %6s %12.2f %s", "Regular", this.getCustomer(), this.getAccountBalance(), "", this.getRegularInterestRate(), "", this.getRegularFixedCharge(), "", this.getRegularInterestAmount(),"\n");
+					System.out.printf("%12s %-55s %12s %s %s %14s\n", "        ", "            Customer Information", "Balance", "     Inerest Rate", "     Fixed Charge", "Total Interest");
+					regCounter++;
+				}
+			}
+			if (a instanceof Gold) {
+				if (gldCounter == 1) {
+					//System.out.printf("%12s %-55s %12.2f %s %10% %3s %12.2f %s", "Regular", this.getCustomer(), this.getAccountBalance(), "", this.getGoldInterestRate(), "", this.getGoldInterestAmount(),"\n");
+					System.out.printf("%12s %-55s %12s %s %s\n", "        ", "            Customer Information", "Balance", "     Interest Rate", "Transaction Amount");
+					gldCounter++;
+				}
+			}
 			a.toString();
 		}
 	}
