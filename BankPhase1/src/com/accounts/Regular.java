@@ -119,6 +119,12 @@ public class Regular extends Account {
 	}
 
 	public String toString() {
+		System.out.printf("%12s %-55s %12.2f %s %10.2f%% %3s %12.2f %6s %12.2f\n", "Regular", this.getCustomer(), this.getAccountBalance(), "", this.getRegularInterestRate(), "", this.getRegularFixedCharge(), "", this.getRegularInterestAmount());
+		return "";
+	}
+
+}
+/*
 		System.out.print("\n===========================================================\n");
 		System.out.print("                      Regular Account\n");
 		System.out.print("-------------------------------------------------------\n");
@@ -130,7 +136,4 @@ public class Regular extends Account {
 		System.out.print("Interest Fee: $" + this.regularFixedCharge + "\n");
 		System.out.print("\nInterest Earned (ytd): $" + this.regularInterestAmount);
 		System.out.print("\n===========================================================\n\n");
-		return "";
-	}
-
-}
+*/
