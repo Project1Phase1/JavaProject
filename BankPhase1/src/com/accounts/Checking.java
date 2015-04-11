@@ -107,9 +107,11 @@ public class Checking extends Account {
 	}
 	
 	public String toString() {
-		System.out.print("\n===========================================================\n");
-		System.out.print("                      Checking Account\n");
-		System.out.print("-------------------------------------------------------\n");
+		System.out.printf("%12s %-55s %12.2f %s %10d %4s %12.2f %6s %12.2f %s", "Checking", this.getCustomer(), this.getAccountBalance(), "", this.getNumberOfTransactions(), "", this.getCheckingTransactionFee(), "", this.getCheckingTransactionFeeAmount(),"\n");
+		return "    ";
+	}
+}
+/*
 		System.out.print("Customer:" + this.getCustomer() + "\n");
 		System.out.print("-------------------------------------------------------\n");
 		System.out.print("Account Number: " + this.getAccountNumber() + "\n");
@@ -118,6 +120,4 @@ public class Checking extends Account {
 		System.out.printf("%s %12.2f %s", "Transaction Fee: $", this.checkingTransactionFee, "\n");
 		System.out.printf("%s %12.2f %s", "Transaction Fee Amount (this month): $", this.checkingTransactionFeeAmount, "\n");
 		System.out.print("\n===========================================================\n\n");
-		return "";
-	}
-}
+*/

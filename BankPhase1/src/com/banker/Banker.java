@@ -26,7 +26,9 @@
 package com.banker;
 
 import java.util.*;
+
 import javax.swing.*;
+
 import com.accounts.*;
 import com.customers.*;
 import com.transactions.*;
@@ -233,6 +235,7 @@ class ActualBanker {
 		System.out.print("\n\n=======================================================================================================================\n");
 		System.out.print("                                                       Customers " + customers.size() + "\n");
 		System.out.print("                                                 -------------------\n\n");
+		System.out.printf("%12s %-55s %s %s %s %s", "", "                      Customer Information", "|", "# of Accounts", "|", " Total  Balance\n");
 		for (Customer c: customers) {
 			for (Account a: accounts) {
 				if (a.getCustomer() == c) {
@@ -241,7 +244,7 @@ class ActualBanker {
 				}
 			}
 			totalAccounts = (((totalAccounts % 1) > 0.5)? (((Math.ceil((((totalAccounts)*100))))/100)) :  (((Math.floor((((totalAccounts)*100))))/100)));
-			System.out.printf("%12s %-35s %s %4d %s %12.2f %s", " ",  c.toString(), "\t: # Accounts ", counter, ":\tTotal Balance $", totalAccounts, "\n");
+			System.out.printf("%12s %-55s %s %7d %10s %12.2f %s", "",  c.toString(), "|", counter, "|  $", totalAccounts, "\n");
 			totalAccounts = 0.0;
 			counter = 0;
 		}
@@ -254,6 +257,10 @@ class ActualBanker {
 			System.out.print("\nNo accounts to display!\n\n");
 			return;
 		}
+		System.out.print("\n==================================================================================================================================\n");
+		System.out.print("                                                                  Accounts\n");
+		System.out.print("                                                    ------------------------------\n");
+		System.out.printf("%12s %-55s %-13s %s %s %-14s %s", "        ", "            Customer Information", "   Balance", "# of Transactions", "Transaction Fee", "Total Fee","\n");  
 		for (Account a: accounts) {
 			a.toString();
 		}
@@ -962,6 +969,13 @@ class ActualBanker {
 }
 
 /*
+ * This information is to try and stay as consistent as possible
+ * in the testing and the effectiveness of the entries.
+ * 
+ * I don't really think there will be very much deviation from the ones listed
+ * but if you know of other ways to enter and still be effective in the testing
+ * then please feel free to add them here.
+ * 
  * 										CUSTOMER INFORMATION
  * CUSTOMERS:
  * LK4344 Luke Kyle
