@@ -119,19 +119,18 @@ public class Regular extends Account {
 	}
 
 	public String toString() {
-		String 
-		output =  "\n===========================================================\n";
-		output += "                      Regular Account\n";
-		output += "-------------------------------------------------------\n";
-		output += "Customer:" + this.getCustomer() + "\n";
-		output += "-------------------------------------------------------\n";
-		output += "Account Number: " + this.getAccountNumber() + "\n";
-		output += "Account Balance: $" + this.getAccountBalance() + "\n";
-		output += "Interest Rate: " + this.regularInterestRate + "%\n";
-		output += "Interest Fee: $" + this.regularFixedCharge + "\n";
-		output += "\nInterest Earned (ytd): $" + this.regularInterestAmount;
-		output += "\n===========================================================\n\n";
-		return output;
+		System.out.print("\n===========================================================\n");
+		System.out.print("                      Regular Account\n");
+		System.out.print("-------------------------------------------------------\n");
+		System.out.print("Customer:" + this.getCustomer() + "\n");
+		System.out.print("-------------------------------------------------------\n");
+		System.out.print("Account Number: " + this.getAccountNumber() + "\n");
+		System.out.print("Account Balance: $" + this.getAccountBalance() + "\n");
+		System.out.print("Interest Rate: " + this.regularInterestRate + "%\n");
+		System.out.print("Interest Fee: $" + this.regularFixedCharge + "\n");
+		System.out.print("\nInterest Earned (ytd): $" + this.regularInterestAmount);
+		System.out.print("\n===========================================================\n\n");
+		return "";
 	}
 
 }

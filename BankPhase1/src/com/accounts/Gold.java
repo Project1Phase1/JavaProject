@@ -91,17 +91,16 @@ public class Gold extends Account {
 	}
 
 	public String toString() {
-		String 
-		output =  "\n===========================================================\n";
-		output += "                        Gold Account\n";
-		output += "-------------------------------------------------------\n";
-		output += "Customer:" + this.getCustomer() + "\n";
-		output += "-------------------------------------------------------\n";
-		output += "Account Number: " + this.getAccountNumber() + "\n";
-		output += "Account Balance: $" + this.getAccountBalance() + "\n";
-		output += "Interest Rate: " + this.goldInterestRate + "%\n";
-		output += "Interest Earned (ytd): $" + this.goldInterestAmount + "\n";
-		output += "\n===========================================================\n\n";
-		return output;
+		System.out.print("\n===========================================================\n");
+		System.out.print("                        Gold Account\n");
+		System.out.print("-------------------------------------------------------\n");
+		System.out.print("Customer:" + this.getCustomer() + "\n");
+		System.out.print("-------------------------------------------------------\n");
+		System.out.print("Account Number: " + this.getAccountNumber() + "\n");
+		System.out.printf("%s %12.2f %s", "Account Balance: $", this.getAccountBalance(), "\n");
+		System.out.print("Interest Rate: " + this.goldInterestRate + "%\n");
+		System.out.printf("%s %12.2f %s", "Interest Earned (ytd): $", this.goldInterestAmount, "\n");
+		System.out.print("\n===========================================================\n\n");
+		return "";
 	}
 }

@@ -83,7 +83,7 @@ public class Checking extends Account {
 		if (amount < 0) {
 			return false;
 		}
-		this.numberOfTransactions++;
+		this.setNumberOfTransactions(this.getNumberOfTransactions() + 1);
 		if (this.numberOfTransactions > 2) {
 			this.checkingTransactionFeeAmount += this.checkingTransactionFee;
 		}
@@ -95,7 +95,7 @@ public class Checking extends Account {
 		if (amount < 0) {
 			return false;
 		}
-		this.numberOfTransactions++;
+		this.setNumberOfTransactions(this.getNumberOfTransactions() + 1);
 		if (this.numberOfTransactions > 2) {
 			this.checkingTransactionFeeAmount += this.checkingTransactionFee;
 		}
@@ -107,18 +107,17 @@ public class Checking extends Account {
 	}
 	
 	public String toString() {
-		String 
-		output =  "\n===========================================================\n";
-		output += "                      Checking Account\n";
-		output += "-------------------------------------------------------\n";
-		output += "Customer:" + this.getCustomer() + "\n";
-		output += "-------------------------------------------------------\n";
-		output += "Account Number: " + this.getAccountNumber() + "\n";
-		output += "Account Balance: $" + this.getAccountBalance() + "\n";
-		output += "Number of Transactions: " + (((this.numberOfTransactions - 2)<0)? this.numberOfTransactions : (this.numberOfTransactions-2))+ "\n";
-		output += "Transaction Fee: $" + this.checkingTransactionFee + "\n";
-		output += "Transaction Fee Amount (this month): $" + this.checkingTransactionFeeAmount + "\n";
-		output += "\n===========================================================\n\n";
-		return output;
+		System.out.print("\n===========================================================\n");
+		System.out.print("                      Checking Account\n");
+		System.out.print("-------------------------------------------------------\n");
+		System.out.print("Customer:" + this.getCustomer() + "\n");
+		System.out.print("-------------------------------------------------------\n");
+		System.out.print("Account Number: " + this.getAccountNumber() + "\n");
+		System.out.printf("%s %12.2f %s", "Account Balance: $", this.getAccountBalance(), "\n");
+		System.out.print("Number of Transactions: " + this.numberOfTransactions + "\n");
+		System.out.printf("%s %12.2f %s", "Transaction Fee: $", this.checkingTransactionFee, "\n");
+		System.out.printf("%s %12.2f %s", "Transaction Fee Amount (this month): $", this.checkingTransactionFeeAmount, "\n");
+		System.out.print("\n===========================================================\n\n");
+		return "";
 	}
 }
