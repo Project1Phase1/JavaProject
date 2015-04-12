@@ -263,7 +263,6 @@ class ActualBanker {
 		//System.out.printf("%12s %-55s %12s %s %s %14s %s", "        ", "            Customer Information", "Balance", "# of Transactions", "Transaction Fee", "Total Fee","\n");  
 		int chkCounter = 1, regCounter = 1, gldCounter = 1;
 		for (Account a: accounts) {
-			
 			if (a instanceof Checking) {
 				if (chkCounter == 1) {
 					System.out.printf("%12s %-55s %12s %s %s %14s\n", "        ", "            Customer Information", "Balance", "# of Transactions", "Transaction Fee", "Total Fee");
