@@ -110,7 +110,7 @@ class ActualBanker {
 			{
 				case 1:
 					// 1.  Create a Customer
-					createCustomer();
+					createCustomer(0);
 					break;
 				case 2:
 					// 2.  Create a Checking Account
@@ -272,14 +272,14 @@ class ActualBanker {
 			if (a instanceof Regular) {
 				if (regCounter == 1) {
 					//System.out.printf("%12s %-55s %12.2f %s %10% %3s %12.2f %6s %12.2f %s", "Regular", this.getCustomer(), this.getAccountBalance(), "", this.getRegularInterestRate(), "", this.getRegularFixedCharge(), "", this.getRegularInterestAmount(),"\n");
-					System.out.printf("%12s %-55s %12s %s %s %14s\n", "        ", "            Customer Information", "Balance", "     Inerest Rate", "     Fixed Charge", "Total Interest");
+					System.out.printf("%12s %-55s %12s %s %s %17s\n", "        ", "            Customer Information", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest");
 					regCounter++;
 				}
 			}
 			if (a instanceof Gold) {
 				if (gldCounter == 1) {
 					//System.out.printf("%12s %-55s %12.2f %s %10% %3s %12.2f %s", "Regular", this.getCustomer(), this.getAccountBalance(), "", this.getGoldInterestRate(), "", this.getGoldInterestAmount(),"\n");
-					System.out.printf("%12s %-55s %12s %s %s\n", "        ", "            Customer Information", "Balance", "     Interest Rate", "Transaction Amount");
+					System.out.printf("%12s %-55s %12s %s %s\n", "        ", "            Customer Information", "Balance", "     Interest Rate", "Interest Amount");
 					gldCounter++;
 				}
 			}
@@ -303,15 +303,18 @@ class ActualBanker {
 	 * add it to the customer ArrayList<br>
 	 * 
 	 */
-	public void createCustomer() {
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		System.out.print("Enter customer ID ");
-		String customerID = input.nextLine();
-		System.out.print("Enter customer Name ");
-		String customerName = input.nextLine();
-		Customer customer = new Customer(customerID, customerName);
-		customers.add(customer);
+	public void createCustomer(int condtion) {
+		if (condtion == 0) {
+			@SuppressWarnings("resource")
+			Scanner input = new Scanner(System.in);
+			System.out.print("Enter customer ID ");
+			String customerID = input.nextLine();
+			System.out.print("Enter customer Name ");
+			String customerName = input.nextLine();
+			Customer customer = new Customer(customerID, customerName);
+			customers.add(customer);
+		
+		}
 	}
 	
 	public Customer getCustomer(String type) {
@@ -332,7 +335,7 @@ class ActualBanker {
 			// determine if the user wants to add customer now
 			if (getAnswer.equalsIgnoreCase("y")) {
 				// create user
-				createCustomer();
+				createCustomer(0);
 			} else {
 				// notify user of choice and re-display the menu
 				System.out.print("\nTerminationg create " + type + " account!\n");
@@ -362,7 +365,7 @@ class ActualBanker {
 		}
 		if (whichCustomer == 0) {
 			// create new customer
-			createCustomer();
+			createCustomer(0);
 			customer = customers.get(customers.size()-1);
 			whichCustomer = customers.size();
 		} else {
