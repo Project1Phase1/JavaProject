@@ -19,7 +19,7 @@ public class BankUtilities {
 	// generate unique info
 	
 	public int generateUniqueTransNumber() {
-		return (int) Calendar.getInstance().getTimeInMillis();
+		return Math.abs((int) Calendar.getInstance().getTimeInMillis());
 	}
 
 	public java.util.Date generateDate() {

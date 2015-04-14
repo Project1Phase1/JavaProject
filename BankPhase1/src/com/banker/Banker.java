@@ -293,9 +293,14 @@ class ActualBanker {
 			System.out.print("\nNo transactions to display!\n\n");
 			return;
 		}
+		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("                                               Transactions\n");
+		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.printf("%-20s %-35s %-15s %-55s %-20s\n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
 		for (Transaction t: transactions) {
 			t.toString();
 		}
+		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	}
 	/** create customer<br><br>
 	 * 

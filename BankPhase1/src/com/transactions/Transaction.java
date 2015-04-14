@@ -1,21 +1,18 @@
-/**
- * @mentor Professor Dr. Awny Alnusair<br><br>
- * @college Indiana University Kokomo<br><br><br>
- * @course INFO-211 Informatics II<br><br>
- * 
- * 
- * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
- * Apr 6, 2015<br>
- * Banker.java<br>
- *
- */
 package com.transactions;
 
 /** transaction class<br>
- * this class must only be used with the client side application<br>
+ * this class is only to be used with the client side application<br>
  * it tracks all transactions that change the account balance and is<br>
- * is used throughout the client code<br>
+ * used throughout the client code<br>
  * 
+ * @mentor Dr. Awny Alnusair<br><br>
+ * @college Professor at Indiana University Kokomo<br><br><br>
+ * @course INFO-211 Informatics II<br><br>
+ * 
+ * 
+ * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br><br>
+ * Apr 6, 2015<br>
+ * Banker.java<br>
  *
  */
 public class Transaction {
@@ -140,16 +137,16 @@ public class Transaction {
 	}
 	
 	public String toString() {
-		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-		System.out.print("                     Transactions\n");
-		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-		System.out.print("Transaction Date: " + this.createDate + "\n");
-		System.out.print("Customer ID: " + this.customerID + "\n");
-		System.out.print("Account Number: " + this.accountNumber + "\n");
-		System.out.print("Description: " + this.description + "\n");
-		System.out.printf("%s %12.2f %s", "Amount: $", this.amount, "\n");
-		System.out.print("Transaction Number: " + this.transactionNumber + "\n");
-		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.printf("%-20d %35c %-15s %-55s %17.2f\n", this.transactionNumber, this.createDate   , this.customerID, this.accountNumber, this.description         , this.amount);
+		
+/*		
+*		System.out.print("Transaction Date: " + this.createDate + "\n");
+*		System.out.print("Customer ID: " + this.customerID + "\n");
+*		System.out.print("Account Number: " + this.accountNumber + "\n");
+*		System.out.print("Description: " + this.description + "\n");
+*		System.out.printf("%s %12.2f %s", "Amount: $", this.amount, "\n");
+*		System.out.print("Transaction Number: " + this.transactionNumber + "\n");
+*/		
 		return "";
 	}
 }
