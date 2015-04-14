@@ -286,21 +286,20 @@ class ActualBanker {
 			a.toString();
 		}
 	}
-	
-	
+
 	public void displayTransaction() {
 		if (transactions.isEmpty()) {
 			System.out.print("\nNo transactions to display!\n\n");
 			return;
 		}
-		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-		System.out.print("                                               Transactions\n");
-		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-		System.out.printf("%-20s %-35s %-15s %-55s %-20s\n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
+		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("                                                                Transactions\n");
+		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.printf("%-20s %-35s %-15s %-15s %-45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
 		for (Transaction t: transactions) {
 			t.toString();
 		}
-		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	}
 	/** create customer<br><br>
 	 * 
@@ -554,7 +553,7 @@ class ActualBanker {
 		String description = "";
 		// check to see if there any accounts
 		if (accounts.isEmpty()) {
-			System.out.println("There are no accounts to add a deposit to!\nTerminating make deposit!\n");
+			System.out.println("\n\nThere are no accounts to add a deposit to!!!!!\n\nTerminating make deposit!!!!\n\n\n\n");
 			return;
 		}
 		// clear input not closed warning and declare scanner input
@@ -624,7 +623,7 @@ class ActualBanker {
 		String description = "";
 		// check to see if there any accounts
 		if (accounts.isEmpty()) {
-			System.out.println("There are no accounts to make a withdrawal from!\nTerminating make withdrawal!\n");
+			System.out.println("\n\nThere are no accounts to make a withdrawal from!!!!\n\nTerminating make withdrawal!!!!\n\n\n\n");
 			return;
 		}
 		// clear input not closed warning and declare scanner input
@@ -794,7 +793,7 @@ class ActualBanker {
 		// declare description string
 		// check to see if there are any accounts 
 		if (accounts.isEmpty()) {
-			System.out.println("There are no accounts to process!\nTerminating EOM calculations!\n");
+			System.out.println("\n\nThere are no accounts to process!!!\n\nTerminating EOM calculations!!!\n\n\n\n");
 			return;
 		}
 		
@@ -892,6 +891,10 @@ class ActualBanker {
 		// number of zero balance accounts
 		// average balance of the accounts
 		// largest balance accounts
+		if (accounts.isEmpty()) {
+			System.out.println("\n\nThere are no accounts available to run statistics for!!!\n\n\n");
+			return;
+		}
 		int numAccounts = 0, numRegularAccounts = 0, numCheckingAccounts = 0, numGoldAccounts = 0;
 		double sumAccounts = 0.0, sumRegularAccounts = 0.0, sumCheckingAccounts = 0.0, sumGoldAccounts = 0.0;
 		int numZeroAccounts = 0, numRegularZeroAccounts = 0, numCheckingZeroAccounts = 0, numGoldZeroAccounts = 0;
@@ -976,6 +979,9 @@ class ActualBanker {
 		System.out.print("                  ---------------------------\n");
 		System.out.print("                    Total Regular Accounts\n");
 		System.out.print("                  ---------------------------\n");
+		System.out.printf("%-18s %13s %-13s %15s %-15s %15s \n", "Number of Accounts", "Total Balance", "Zero Balance", "Average Balance", "Account Number", "Largest Balance");
+		System.out.printf("%-18d %$%12.2f %-13d %$%12.2f %-15s %$%12.2f \n", numRegularAccounts, sumRegularAccounts, numRegularZeroAccounts, avgRegularAccounts, accounts.get(indexLargestRegular).getAccountNumber(), accounts.get(indexLargestRegular).getAccountBalance());
+
 		System.out.print("\nNumber of accounts: " + numRegularAccounts);
 		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumRegularAccounts);
 		System.out.print("\n\nNumber of accounts with zero balance: "+ numRegularZeroAccounts);
