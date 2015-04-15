@@ -218,6 +218,7 @@ class ActualBanker {
 				System.out.print("Invalid Input: Please enter Integer Value");
 			}
 		}
+		//end try catch
 		return inputInt;
 	}
 
@@ -312,9 +313,29 @@ class ActualBanker {
 			@SuppressWarnings("resource")
 			Scanner input = new Scanner(System.in);
 			System.out.print("Enter customer ID ");
-			customerID = input.nextLine();
+			//begin try-catch
+			boolean validateInput=true;
+			while (validateInput) {
+				try  {
+					customerID = input.nextLine();
+					validateInput=false;
+				} catch (InputMismatchException e) {
+					System.out.print("Invalid Input: Please enter String Value");
+				}
+			}
+			//end try-catch
 			System.out.print("Enter customer Name ");
-			customerName = input.nextLine();
+			//begin try-catch
+			boolean inputValidate=true;
+			while (inputValidate) {
+				try  {
+					customerName = input.nextLine();
+					inputValidate=false;
+				} catch (InputMismatchException e) {
+					System.out.print("Invalid Input: Please enter Integer Value");
+				}
+			}
+			//end try-catch
 		} else if (condition == 1) {
 			customerID = JOptionPane.showInputDialog("Enter customer ID");
 			customerName = JOptionPane.showInputDialog("Enter customer Name");
@@ -337,7 +358,18 @@ class ActualBanker {
 			// notify user and get response
 			System.out.print("No customers available to complete task!\n");
 			System.out.print("Add customer? (y/n) ");
-			String getAnswer = input.nextLine();
+			String getAnswer = "";
+			//begin try-catch
+			boolean validateInput=true;
+			while (validateInput) {
+				try  {
+					getAnswer = input.nextLine();
+					validateInput=false;
+				} catch (InputMismatchException e) {
+					System.out.print("Invalid Input: Please enter String Value");
+				}
+			}
+			//end try-catch
 			// determine if the user wants to add customer now
 			if (getAnswer.equalsIgnoreCase("y")) {
 				// create user
@@ -363,7 +395,17 @@ class ActualBanker {
 		int whichCustomer = -1;
 		// validate user input
 		while (whichCustomer == -1) {
-			whichCustomer = input.nextInt();
+			//begin try-catch
+			boolean validateInput=true;
+			while (validateInput) {
+				try  {
+					whichCustomer = input.nextInt();
+					validateInput=false;
+				} catch (InputMismatchException e) {
+					System.out.print("Invalid Input: Please enter Integer Value");
+				}
+			}
+			//end try-catch
 			if (whichCustomer < 0 || whichCustomer > counter) {
 				System.out.print("Invalid entry. Please try again!!!");
 				whichCustomer = -1;
@@ -431,7 +473,17 @@ class ActualBanker {
 		String accountNumber = input.nextLine();
 		System.out.print("Ener account Balance: ");
 		double accountBalance = 0.0;
-		accountBalance = input.nextDouble();
+		boolean validateInput=true;
+		while (validateInput) {
+			try  {
+				accountBalance = input.nextDouble();
+				validateInput=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter Integer Value");
+			}
+		}
+		//end try catch
+		
 		// take care of extra tokens
 			// add the account
 		accounts.add(new Checking(accountNumber, accountBalance, customer));
@@ -472,16 +524,37 @@ class ActualBanker {
 		}		
 		// get account information (Account number, account balance)
 		System.out.print("Enter " + typeAccount + " account number: ");
-		String accountNumber = input.nextLine();
-		System.out.print("Ener account Balance: ");
+		String accountNumber = "";
+		//begin try-catch
+				boolean validateInput=true;
+				while (validateInput) {
+					try  {
+						accountNumber = input.nextLine();
+						validateInput=false;
+							} catch (InputMismatchException e) {
+								System.out.print("Invalid Input: Please enter String Value");
+							}
+						}
+				//end try-catch
 		double accountBalance = 0.0;
-		accountBalance = input.nextDouble();
+		//begin try-catch
+		boolean validate=true;
+				while (validate) {
+					try  {
+						accountBalance = input.nextDouble();
+						validate=false;
+					} catch (InputMismatchException e) {
+						System.out.print("Invalid Input: Please enter Double Value");
+					}
+				}
+		//end try-catch
 		// add account
 		accounts.add(new Gold(accountNumber, accountBalance, customer));
 		// create a record of the transaction
 		createTransaction(customer.getCustomerID(), accountNumber, "Opening " + typeAccount + " Account", accountBalance);
 		// notify user of success
 		System.out.println("\n" + typeAccount + " account successfully created!\n");
+		
 	
 	}
 
@@ -516,7 +589,18 @@ class ActualBanker {
 		}
 		// get account information (Account number, account balance)
 		System.out.print("Enter " + typeAccount + " account number: ");
-		String accountNumber = input.nextLine();
+		String accountNumber = "";
+		//begin try-catch
+				boolean validateInput=true;
+				while (validateInput) {
+					try  {
+						accountNumber = input.nextLine();
+						validateInput=false;
+					} catch (InputMismatchException e) {
+						System.out.print("Invalid Input: Please enter String Value");
+					}
+				}
+				//end try catch
 		System.out.print("Ener account Balance: ");
 		boolean isOk = false;
 		double accountBalance = 0.0;
@@ -574,6 +658,17 @@ class ActualBanker {
 		// get users choice
 		System.out.print("\nChoose which account will receive the deposit: (1 - " + counter + ") ");
 		int whichAccount = input.nextInt();
+		//begin try-catch
+				boolean validateInput=true;
+				while (validateInput) {
+					try  {
+						whichAccount = input.nextInt();
+						validateInput=false;
+					} catch (InputMismatchException e) {
+						System.out.print("Invalid Input: Please enter Integer Value");
+					}
+				}
+				//end try catch
 		// validate users choice
 		while (whichAccount < 1 || whichAccount > counter) {
 			whichAccount = input.nextInt();
@@ -599,6 +694,17 @@ class ActualBanker {
 		System.out.print("Enter the amount of the deposit ");
 		double amount = 0.0;
 		amount = input.nextDouble();
+		//begin try-catch
+		boolean validate=true;
+		while (validate) {
+			try  {
+				amount = input.nextDouble();
+				validate=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter Double Value");
+			}
+		}
+		//end try catch
 		// add deposit and notify user
 		System.out.print(((account.makeDeposit(amount))? "Deposit successful" : "Deposit unsuccessful"));
 		// create transaction in tracker
@@ -643,7 +749,18 @@ class ActualBanker {
 		}
 		// get users choice
 		System.out.print("\nChoose which account to withdraw from: (1 - " + counter + ") ");
-		int whichAccount = input.nextInt();
+		int whichAccount = 0;
+		//begin try-catch
+		boolean validateInput=true;
+		while (validateInput) {
+			try  {
+				whichAccount = input.nextInt();
+				validateInput=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter Integer Value");
+			}
+		}
+		//end try catch
 		// validate users choice
 		while (whichAccount < 1 || whichAccount > counter) {
 			whichAccount = input.nextInt();
@@ -668,7 +785,17 @@ class ActualBanker {
 		// get deposit amount
 		System.out.print("Enter the amount of the withdrawal ");
 		double amount = 0.0;
-		amount = input.nextDouble();
+		//begin try-catch
+		boolean validate=true;
+		while (validate) {
+			try  {
+				amount = input.nextDouble();
+				validate=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter Double Value");
+			}
+		}
+		//end try catch
 		// create transaction in tracker
 		createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, amount);
 		// add deposit and notify user
@@ -711,7 +838,18 @@ class ActualBanker {
 		}
 		// get users choice
 		System.out.print("\nChoose which account to remove: (1 - " + counter + ")");
-		int whichAccount = input.nextInt();
+		int whichAccount = 0;
+		//begin try-catch
+		boolean validateInput=true;
+		while (validateInput) {
+			try  {
+				whichAccount = input.nextInt();
+				validateInput=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter Integer Value");
+			}
+		}
+		//end try catch
 		// validate users choice
 		while (whichAccount < 1 || whichAccount > counter) {
 			whichAccount = input.nextInt();
@@ -764,7 +902,17 @@ class ActualBanker {
 		int whichAccount = 0;
 		// validate users choice
 		while (whichAccount < 1 || whichAccount > counter) {
-			whichAccount = input.nextInt();
+			//begin try-catch
+			boolean validateInput=true;
+			while (validateInput) {
+				try  {
+					whichAccount = input.nextInt();
+					validateInput=false;
+				} catch (InputMismatchException e) {
+					System.out.print("Invalid Input: Please enter Integer Value");
+				}
+			}
+			//end try catch
 		}
 		// lower choice to array type value (starts at 0)
 		whichAccount -= 1;
@@ -1012,6 +1160,8 @@ class ActualBanker {
  * I don't really think there will be very much deviation from the ones listed
  * but if you know of other ways to enter and still be effective in the testing
  * then please feel free to add them here.
+ * 
+ * 
  * 
  * 										CUSTOMER INFORMATION
  * CUSTOMERS:
