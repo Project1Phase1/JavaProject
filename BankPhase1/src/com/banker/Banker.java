@@ -26,9 +26,7 @@
 package com.banker;
 
 import java.util.*;
-
 import javax.swing.*;
-
 import com.accounts.*;
 import com.customers.*;
 import com.transactions.*;
@@ -265,20 +263,21 @@ class ActualBanker {
 		for (Account a: accounts) {
 			if (a instanceof Checking) {
 				if (chkCounter == 1) {
+					System.out.println();
 					System.out.printf("%12s %-55s %12s %s %s %14s\n", "        ", "            Customer Information", "Balance", "# of Transactions", "Transaction Fee", "Total Fee");
 					chkCounter++;
 				}
 			}
 			if (a instanceof Regular) {
 				if (regCounter == 1) {
-					//System.out.printf("%12s %-55s %12.2f %s %10% %3s %12.2f %6s %12.2f %s", "Regular", this.getCustomer(), this.getAccountBalance(), "", this.getRegularInterestRate(), "", this.getRegularFixedCharge(), "", this.getRegularInterestAmount(),"\n");
+					System.out.println();
 					System.out.printf("%12s %-55s %12s %s %s %17s\n", "        ", "            Customer Information", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest");
 					regCounter++;
 				}
 			}
 			if (a instanceof Gold) {
 				if (gldCounter == 1) {
-					//System.out.printf("%12s %-55s %12.2f %s %10% %3s %12.2f %s", "Regular", this.getCustomer(), this.getAccountBalance(), "", this.getGoldInterestRate(), "", this.getGoldInterestAmount(),"\n");
+					System.out.println();
 					System.out.printf("%12s %-55s %12s %s %s\n", "        ", "            Customer Information", "Balance", "     Interest Rate", "Interest Amount");
 					gldCounter++;
 				}
@@ -307,18 +306,21 @@ class ActualBanker {
 	 * add it to the customer ArrayList<br>
 	 * 
 	 */
-	public void createCustomer(int condtion) {
-		if (condtion == 0) {
+	public void createCustomer(int condition) {
+		String customerID = "", customerName = "";
+		if (condition == 0) {
 			@SuppressWarnings("resource")
 			Scanner input = new Scanner(System.in);
 			System.out.print("Enter customer ID ");
-			String customerID = input.nextLine();
+			customerID = input.nextLine();
 			System.out.print("Enter customer Name ");
-			String customerName = input.nextLine();
-			Customer customer = new Customer(customerID, customerName);
-			customers.add(customer);
-		
+			customerName = input.nextLine();
+		} else if (condition == 1) {
+			customerID = JOptionPane.showInputDialog("Enter customer ID");
+			customerName = JOptionPane.showInputDialog("Enter customer Name");
 		}
+		Customer customer = new Customer(customerID, customerName);
+		customers.add(customer);
 	}
 	
 	public Customer getCustomer(String type) {

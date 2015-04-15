@@ -13,6 +13,24 @@ package com.utilities;
 
 import java.util.*;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+
+import javax.swing.JOptionPane;
+
+import com.customers.Customer;
+
 public class BankUtilities {
 	private static Random randGen = new Random();
 
@@ -48,5 +66,80 @@ public class BankUtilities {
 		}
 		return isValueOk;
 	}
+
+	
+	public Customer createCustomer(int condition) {
+	      String customerID = "", customerName = "";
+		if (condition == 0) {
+			@SuppressWarnings("resource")
+			Scanner input = new Scanner(System.in);
+			System.out.print("Enter customer ID ");
+			customerID = input.nextLine();
+			System.out.print("Enter customer Name ");
+			customerName = input.nextLine();
+		} else if (condition == 1) {  // FXBanker
+			Scene myScene = new Scene(getCustPane(), 280,175, Color.BEIGE);
+			Stage test = new Stage();
+			test.setTitle(" LLC");
+			test.setScene(myScene);
+			test.show();
+
+//			customerID = JOptionPane.showInputDialog("Enter customer ID");
+//			customerName = JOptionPane.showInputDialog("Enter customer Name");
+		}
+		Customer customer = new Customer(customerID, customerName);
+		return customer;
+	}
+
+	  protected BorderPane getCustPane(){
+		  
+		  
+		  Label lblID = new Label("Customer ID");
+		  Label lblName = new Label("Customers Name");
+		  
+		  TextField txtID = new TextField();
+		  TextField txtName = new TextField();
+		  Font times = Font.font("Times New Roman", FontWeight.BOLD, 16);
+
+		  Button btnAdd = new Button("Add");
+		  Button btnExit = new Button("Exit");
+		  btnAdd.setFont(times);
+		  btnExit.setFont(times);
+		  
+		  HBox lblPane = new HBox(15);
+		  lblPane.setPadding(new Insets(15,15,15,15));  
+		  lblPane.getChildren().addAll(lblID, txtID, lblName, txtName);
+		  lblPane.setAlignment(Pos.TOP_CENTER);
+		  lblID.setFont(times);
+		  lblName.setFont(times);
+		  
+		  HBox txtPane = new HBox(5);
+		  txtPane.setPadding(new Insets(15,15,15,15));
+		  txtPane.getChildren().addAll(txtID, txtName);
+		  txtPane.setAlignment(Pos.BOTTOM_CENTER);
+		  
+		  HBox bottomPane = new HBox(2);
+		  bottomPane.setPadding(new Insets(15,15,15,15));;
+		  bottomPane.getChildren().addAll(btnAdd, btnExit);
+		  bottomPane.setAlignment(Pos.CENTER);
+		  
+		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  //bottomPane.getChildren().addAll(btnName, btnNumber, btnClear, btnExit);
+		  //bottomPane.setAlignment(Pos.CENTER);
+
+		  BorderPane custMainPane = new BorderPane();
+		  custMainPane.setTop(lblPane);
+		 // custMainPane.setTop(txtPane);
+		  custMainPane.setCenter(txtPane);
+		  custMainPane.setBottom(bottomPane);
+		  custMainPane.setStyle("-fx-border-color: red");
+		  
+//		  btnAdd.setOnAction(e -> {
+//			  ActualFXBanker banker = new ActualFXBanker();
+//			  banker.createCustomer(txtID.getText(), txtName.getText());
+//		  });
+
+	  return custMainPane;
+  }
 
 }
