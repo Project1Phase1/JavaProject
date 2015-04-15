@@ -543,11 +543,12 @@ class ActualBanker {
 					try  {
 						accountNumber = input.nextLine();
 						validateInput=false;
-							} catch (InputMismatchException e) {
-								System.out.print("Invalid Input: Please enter String Value");
-							}
-						}
+					} catch (InputMismatchException e) {
+						System.out.print("Invalid Input: Please enter String Value");
+					}
+				}
 				//end try-catch
+		System.out.print("Enter account Balance: ");
 		double accountBalance = 0.0;
 		//begin try-catch
 		boolean validate=true;
@@ -613,7 +614,7 @@ class ActualBanker {
 					}
 				}
 				//end try catch
-		System.out.print("Ener account Balance: ");
+		System.out.print("Enter account Balance: ");
 		boolean isOk = false;
 		double accountBalance = 0.0;
 		while (!isOk) {
