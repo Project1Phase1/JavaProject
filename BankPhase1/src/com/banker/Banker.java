@@ -470,16 +470,28 @@ class ActualBanker {
 		}
 		// get account information from user (Account number, balance)
 		System.out.print("Enter " + typeAccount + " account number: ");
-		String accountNumber = input.nextLine();
-		System.out.print("Ener account Balance: ");
+		String accountNumber = "";
+		//begin try-catch
+				boolean validateInput=true;
+				while (validateInput) {
+					try  {
+						accountNumber = input.nextLine();
+						validateInput=false;
+					} catch (InputMismatchException e) {
+						System.out.print("Invalid Input: Please enter String Value");
+					}
+				}
+				//end try catch
+		System.out.print("Enter account Balance: ");
 		double accountBalance = 0.0;
-		boolean validateInput=true;
-		while (validateInput) {
+		//begin try-catch
+		boolean validate=true;
+		while (validate) {
 			try  {
 				accountBalance = input.nextDouble();
-				validateInput=false;
+				validate=false;
 			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter Integer Value");
+				System.out.print("Invalid Input: Please enter Double Value");
 			}
 		}
 		//end try catch
@@ -609,7 +621,7 @@ class ActualBanker {
 				accountBalance = input.nextDouble();
 				isOk = true;
 			} catch (InputMismatchException e) {
-				JOptionPane.showMessageDialog(null, "Invalid entry detected! Please try again!");
+				JOptionPane.showMessageDialog(null, "Invalid entry detected! Please enter double amount!");
 			}
 		}
 		// create account
