@@ -160,7 +160,11 @@ class ActualBanker {
 					displayTransaction();
 					break;
 				case 14:
-					// 14.  exit
+					// 14.  Fix Bad Accounts
+					rejectTransactions();
+					break;
+				case 15:
+					// 15.  exit
 					finished = true;
 					break;
 				default:
@@ -179,7 +183,7 @@ class ActualBanker {
 		int inputInt = 0 ;
 
 		// Menu Display
-		String[] dispMenu = new String[14];
+		String[] dispMenu = new String[15];
 		dispMenu[0] = "Create a Customer ";
 		dispMenu[1] = "Create a Checking Account ";
 		dispMenu[2] = "Create a Gold Account ";
@@ -193,7 +197,8 @@ class ActualBanker {
 		dispMenu[10] ="Apply End of Month Updates ";
 		dispMenu[11] ="Display Bank Statistics ";
 		dispMenu[12] ="Generate Transaction Report ";
-		dispMenu[13] ="Exit ";
+		dispMenu[13] = "Fix Bad Accounts ";
+		dispMenu[14] ="Exit ";
 		menuItems = dispMenu.length;
 		System.out.println();
 		System.out.println("     Welcome To Your Banking Center ");
@@ -293,17 +298,17 @@ class ActualBanker {
 			return;
 		}
 		double totalAmnt = 0.0;
-		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 		System.out.print("                                                                     Transactions\n");
-		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
 		System.out.printf("%-20s %-35s %-15s %-15s %-45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
 		for (Transaction t: transactions) {
 			t.toString();
 			totalAmnt += t.getAmount();
 		}
-		System.out.printf("%1405s\n", "================");
-		System.out.printf("%130s 2%12.2f\n"," $", totalAmnt);
-		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.printf("%153s\n", "================");
+		System.out.printf("%139s $%12.2f \n","  ", totalAmnt);
+		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	}
 	/** create customer<br><br>
 	 * 
@@ -743,7 +748,7 @@ class ActualBanker {
 	 * 
 	 */	
 	public void callwithdrawal() {
-		boolean debug = true;
+		boolean debug = false;
 		// declare description string
 		String description = "";
 		// check to see if there any accounts
@@ -966,7 +971,12 @@ class ActualBanker {
 			System.out.println("\n\nThere are no accounts to process!!!\n\nTerminating EOM calculations!!!\n\n\n\n");
 			return;
 		}
-		
+		int counter = 0;
+		int goodCounter = 0;
+		int errorCounter = 0;
+		int checkCounter = 0;
+		int goldCounter = 0;
+		int regCounter = 0;
 		// calculate interest for 1 year compounded monthly7
 		// I = P x (1 + r/n)^(n x t)
 		// P = accountBalance : Principle
@@ -983,35 +993,53 @@ class ActualBanker {
 			
 			// is it a checking account
 			if (a instanceof Checking) {
+				counter++;
+				checkCounter++;
 				Checking chk = (Checking)a ;
 				description = "EOM Checking Account";
 				// validate the amount of the fees before posting
 				if (((chk.getNumberOfTransactions() - 2) * chk.getCheckingTransactionFee()) == chk.getCheckingTransactionFeeAmount()) {
-					chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
-					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, chk.getCheckingTransactionFeeAmount());
+					if (chk.getAccountBalance() < chk.getCheckingTransactionFeeAmount()) {
+						errorCounter++;
+						description = "EOM Checking - Insufficent Funds to Process";
+						System.out.print("\n" + description + "\n");
+						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
+						reject.add(chk);
+					} else {
+						goodCounter++;
+						chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
+						chk.setCheckingTransactionFeeAmount(0.0);
+						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
+						
+					}
 				} else {
 					// if this is reached there is a critical error
-					System.out.print("\nCRITICAL ERROR! Transaction Fees do not match!\n\n");
+					errorCounter++;
 					// put the troubled account into a reject holder until it can be properly processed
-					description = "EOM Checking Account - Transaction Fees No Match";
-					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, chk.getCheckingTransactionFeeAmount());
+					description = "EOM Checking - Transaction Fees No Match";
+					System.out.print("\n" + description + "\n");
+					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
 					reject.add(chk);
 					continue;
 				}
 			}
 			// is it a gold account
 			if (a instanceof Gold) {
+				counter++;
+				goldCounter++;
 				Gold gold = (Gold)a;
 				description = "EOM Gold Account";
 				if (gold.getAccountBalance() <= 0) {
-					System.out.println("Unable to calculate interest due to a lack of funds!\n");
+					errorCounter++;
 					// put the troubled account into the reject folder
-					description = "EOM Gold Insufficient Funds";
+					description = "EOM Gold - Insufficient Funds to process";
+					System.out.print("\n" + description + "\n");
 					createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, 0.0);					
 					reject.add(gold);
 					continue;
 				}
 				// calculate the interest
+				goodCounter++;
 				double rate = gold.getGoldInterestRate() / 100;
 				double years = 1;
 				double numTimes = 1/12.0;
@@ -1023,6 +1051,8 @@ class ActualBanker {
 			}
 			// is it a regular account 
 			if (a instanceof Regular){
+				counter++;
+				regCounter++;
 				// process regular accounts
 				Regular reg = (Regular)a;
 				description = "EOM Regular Account";
@@ -1031,11 +1061,13 @@ class ActualBanker {
 					System.out.println("Unable to calculate interest due to a lack of funds!\n");
 					// unable to process this account so add it to the  reject pile
 					// until the balance has enough to process
-					description = "EOM Regular Insufficent Funds";
+					errorCounter++;
+					description = "EOM Regular - Insufficent Funds to process";
 					createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, 0.0);
 					reject.add(reg);
 					continue;
 				}
+				goodCounter++;
 				double rate = reg.getRegularInterestRate() / 100;
 				double years = 1;
 				double numTimes = 1/12.0;
@@ -1046,6 +1078,13 @@ class ActualBanker {
 				createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, interest);
 			}
 		}
+		System.out.print("\nThere were " + counter + " accounts processed!\n");
+		System.out.print("\nThere were " + errorCounter + " errors accounted for!\n");
+		System.out.print("\nThere were " + goodCounter + " non-errors accounted for!\n");
+		System.out.print("\nOf the " + counter + " accounts processed, " + checkCounter + " were Checking accounts!\n");
+		System.out.print("\nOf the " + counter + " accounts processed, " + goldCounter + " were Gold accounts!\n");
+		System.out.print("\nOf the " + counter + " accounts processed, " + regCounter + " were Regular accounts!\n");
+		System.out.print("\n");
 	}
 	
 	/** generate statistics<br><br>
@@ -1076,7 +1115,7 @@ class ActualBanker {
 		int numZeroAccounts = 0, numRegularZeroAccounts = 0, numCheckingZeroAccounts = 0, numGoldZeroAccounts = 0;
 		double avgAccounts = 0.0, avgRegularAccounts = 0.0, avgCheckingAccounts = 0.0, avgGoldAccounts = 0.0;
 		double largestAccount = 0.0, largestRegularAccount = 0.0, largestCheckingAccount = 0.0, largestGoldAccount = 0.0;
-		int indexLargest = 0, indexLargestRegular = 0, indexLargestChecking = 0, indexLargestGold = 0;
+		String largestAccountNumber = "not available", largestRegularAccountNumber = "not available", largestCheckingAccountNumber = "not available", largestGoldAccountNumber = "not available";
 		numAccounts = accounts.size();
 		for (int x = 0; x < accounts.size(); x++) {
 //------------------------------------Total---------------------------			
@@ -1086,7 +1125,7 @@ class ActualBanker {
 			}
 			if (accounts.get(x).getAccountBalance() > largestAccount) {
 				largestAccount = accounts.get(x).getAccountBalance();
-				indexLargest = x;
+				largestAccountNumber = accounts.get(x).getAccountNumber();
 			}
 //-----------------------------------Gold-----------------------------
 			if(accounts.get(x) instanceof Gold) {
@@ -1097,7 +1136,7 @@ class ActualBanker {
 				}
 				if (accounts.get(x).getAccountBalance() > largestGoldAccount) {
 					largestGoldAccount = accounts.get(x).getAccountBalance();
-					indexLargestGold = x;
+					largestGoldAccountNumber = accounts.get(x).getAccountNumber();
 				}
 			}
 //----------------------------------Regular-----------------------------
@@ -1109,7 +1148,7 @@ class ActualBanker {
 				}
 				if (accounts.get(x).getAccountBalance() > largestRegularAccount) {
 					largestRegularAccount = accounts.get(x).getAccountBalance();
-					indexLargestRegular = x;
+					largestRegularAccountNumber = accounts.get(x).getAccountNumber();
 				}
 			}
 //--------------------------------Checking-----------------------------
@@ -1121,61 +1160,63 @@ class ActualBanker {
 				}
 				if (accounts.get(x).getAccountBalance() > largestCheckingAccount) {
 					largestCheckingAccount = accounts.get(x).getAccountBalance();
-					indexLargestChecking = x;
+					largestCheckingAccountNumber = accounts.get(x).getAccountNumber();
 				}
 			}
 			
 		}
 //-------------------------------calculate averages----------------------------		
-		avgAccounts = (Math.floor(((sumAccounts / numAccounts) * 100.0))) / 100.0;
-		avgGoldAccounts = (Math.floor(((sumGoldAccounts / numGoldAccounts) * 100.0))) / 100.0;
-		avgRegularAccounts = (Math.floor(((sumRegularAccounts / numRegularAccounts) * 100.0))) / 100.0;
-		avgCheckingAccounts = (Math.floor(((sumCheckingAccounts / numCheckingAccounts) * 100.0))) / 100.0;
+		if (numAccounts == 0) {
+			avgAccounts = 0.00;
+		} else {
+			avgAccounts = (sumAccounts / numAccounts);
+		}
+		if (numGoldAccounts == 0) {
+			avgGoldAccounts = 0.00;
+		} else {
+			avgGoldAccounts = (sumGoldAccounts / numGoldAccounts);
+		}
+		if (numRegularAccounts == 0) {
+			avgRegularAccounts = 0.00;
+		} else {
+			avgRegularAccounts = (sumRegularAccounts / numRegularAccounts);
+		}
+		if (numCheckingAccounts == 0) {
+			avgCheckingAccounts = 0.00;
+		} else {
+			avgCheckingAccounts = (sumCheckingAccounts / numCheckingAccounts);
+		}
 //------------------------------------display results-----------------------------------
-		System.out.print("\n                            Statistics\n");
-		System.out.print("===============================================================\n");
-		System.out.print("                    -----------------------\n");
-		System.out.print("                     Total All Accounts\n");
-		System.out.print("                    -----------------------\n");
-		System.out.print("\nNumber of accounts: " + numAccounts);
-		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumAccounts);
-		System.out.print("\n\nNumber of accounts with zero balance: "+ numZeroAccounts);
-		System.out.print("\n\nAverage balance of the accounts: $" + avgAccounts);
-		System.out.printf("%s %12.2f", "\n\nAccount with the largest balance: " + accounts.get(indexLargest).getAccountNumber() + " $", accounts.get(indexLargest).getAccountBalance());
-		System.out.print("\n\n");
-		System.out.print("                   -----------------------\n");
-		System.out.print("                    Total Gold Accounts\n");
-		System.out.print("                   -----------------------\n");
-		System.out.print("\nNumber of accounts: " + numGoldAccounts);
-		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumGoldAccounts);
-		System.out.print("\n\nNumber of accounts with zero balance: "+ numGoldZeroAccounts);
-		System.out.printf("%s %12.2f", "\n\nAverage balance of the accounts: $", avgGoldAccounts);
-		System.out.printf("%s %12.2f", "\n\nAccount with the largest balance: " + accounts.get(indexLargestGold).getAccountNumber() + " $", accounts.get(indexLargestGold).getAccountBalance());
-		System.out.print("\n\n");
-		System.out.print("                  ---------------------------\n");
-		System.out.print("                    Total Regular Accounts\n");
-		System.out.print("                  ---------------------------\n");
-		System.out.printf("%-18s %13s %-13s %15s %-15s %15s \n", "Number of Accounts", "Total Balance", "Zero Balance", "Average Balance", "Account Number", "Largest Balance");
-		System.out.printf("%-18d %$%12.2f %-13d %$%12.2f %-15s %$%12.2f \n", numRegularAccounts, sumRegularAccounts, numRegularZeroAccounts, avgRegularAccounts, accounts.get(indexLargestRegular).getAccountNumber(), accounts.get(indexLargestRegular).getAccountBalance());
-
-		System.out.print("\nNumber of accounts: " + numRegularAccounts);
-		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumRegularAccounts);
-		System.out.print("\n\nNumber of accounts with zero balance: "+ numRegularZeroAccounts);
-		System.out.print("\n\nAverage balance of the accounts: $" + avgRegularAccounts);
-		System.out.printf("%s %12.2f", "\n\nAccount with the largest balance: " + accounts.get(indexLargestRegular).getAccountNumber() + " $", accounts.get(indexLargestRegular).getAccountBalance());
-		System.out.print("\n\n");
-		System.out.print("                  -----------------------------\n");
-		System.out.print("                    Total Checking Accounts\n");
-		System.out.print("                  -----------------------------\n");
-		System.out.print("\nNumber of accounts: " + numCheckingAccounts);
-		System.out.printf("%s %12.2f", "\n\nTotal assets of all accounts: $", sumCheckingAccounts);
-		System.out.print("\n\nNumber of accounts with zero balance: "+ numCheckingZeroAccounts);
-		System.out.printf("%s %12.2f", "\n\nAverage balance of the accounts: $", avgCheckingAccounts);
-		System.out.printf("%s %12.2f", "\n\nAccount with the largest balance: " + accounts.get(indexLargestChecking).getAccountNumber() + " $", accounts.get(indexLargestChecking).getAccountBalance());
+		// (char) 68 < Statistics > 68 (char)
+		System.out.print("==================================================================================================================================================\n");
+		System.out.print("\n                                                                  Statistics\n");
+		// 16 < Statistics > 16
+		System.out.print("                                                  ------------------------------------------");
+		System.out.printf("\n %-15s %18s %20s %20s %20s %23s %20s \n", "Type Account","Number of Accounts", "Total Balance", "w/Zero Balance", "Average Balance", "Account Number of", "Largest Balance");
+		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
+		displayStatistics("All Accounts", numAccounts, sumAccounts, numZeroAccounts, avgAccounts, largestAccountNumber, largestAccount);
+		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
+		displayStatistics("Gold", numGoldAccounts, sumGoldAccounts, numGoldZeroAccounts, avgGoldAccounts, largestGoldAccountNumber, largestGoldAccount);
+		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
+		displayStatistics("Regular", numRegularAccounts, sumRegularAccounts, numRegularZeroAccounts, avgRegularAccounts, largestRegularAccountNumber, largestRegularAccount);
+		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
+		displayStatistics("Checking", numCheckingAccounts, sumCheckingAccounts, numCheckingZeroAccounts, avgCheckingAccounts, largestCheckingAccountNumber, largestCheckingAccount);
+		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
+		System.out.print("\n\n==================================================================================================================================================\n");
 		
-		
-		System.out.print("\n\n===============================================================\n");
-		
+	}
+	
+	public void displayStatistics(String acctType, int numAccts, double sumAccts, int numZero, double avgAccts, String acctNumber, double largeBal) {
+		System.out.printf("%-15s %7s %-4d %13s $%12.2f %11s %-4d %10s $%12.2f %3s %19s %6s $%12.2f \n", acctType, "", numAccts, "", sumAccts, "", numZero, "", avgAccts, "", acctNumber, "", largeBal);
+	}
+	
+	public void rejectTransactions() {
+		if (reject.isEmpty()) {
+			System.out.print("\nThere are no Error Transactions to process. Terminating Fix Bad Accounts!!!\n\n");
+			return;
+		}
+		// process the reject arraylist which holds the accounts that were not able to process
+		// because there was an error in the EOM: insufficient funds, fees don't match
 	}
 }
 

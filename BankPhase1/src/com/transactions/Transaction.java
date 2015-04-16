@@ -33,8 +33,7 @@ public class Transaction {
 	 * @param amount of the transaction
 	 * @param transactionNumber a unique transaction number
 	 */
-	public Transaction(java.util.Date createDate, String customerID, String accountNumber,
-			String description, double amount, int transactionNumber) {
+	public Transaction(java.util.Date createDate, String customerID, String accountNumber, String description, double amount, int transactionNumber) {
 		this.createDate = createDate;
 		this.customerID = customerID;
 		this.accountNumber = accountNumber;
@@ -137,7 +136,7 @@ public class Transaction {
 	}
 	
 	public String toString() {
-		System.out.printf("%-20d %-35s %-15s %-15s %-45s %17.2f \n", this.transactionNumber, this.createDate, this.customerID, this.accountNumber, this.description, this.amount);
+		System.out.printf("%-20d %-35s %-15s %-15s %-50s $%12.2f \n", this.transactionNumber, this.createDate, this.customerID, this.accountNumber, this.description, this.amount);
 		
 /*		
 *		System.out.print("Transaction Date: " + this.createDate + "\n");
