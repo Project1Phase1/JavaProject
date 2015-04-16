@@ -292,14 +292,18 @@ class ActualBanker {
 			System.out.print("\nNo transactions to display!\n\n");
 			return;
 		}
-		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-		System.out.print("                                                                Transactions\n");
-		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		double totalAmnt = 0.0;
+		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("                                                                     Transactions\n");
+		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 		System.out.printf("%-20s %-35s %-15s %-15s %-45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
 		for (Transaction t: transactions) {
 			t.toString();
+			totalAmnt += t.getAmount();
 		}
-		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.printf("%1405s\n", "================");
+		System.out.printf("%130s 2%12.2f\n"," $", totalAmnt);
+		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	}
 	/** create customer<br><br>
 	 * 
@@ -669,12 +673,15 @@ class ActualBanker {
 			System.out.print(counter + ".) " + a.getAccountNumber() + "\n");
 		}
 		// get users choice
-		System.out.print("\nChoose which account will receive the deposit: (1 - " + counter + ") ");
-		int whichAccount = input.nextInt();
+		boolean validateInput = true;
+		int whichAccount = 0;
 		//begin try-catch
-				boolean validateInput=true;
+			while (whichAccount < 1 || whichAccount > counter) {
+				validateInput=true;
 				while (validateInput) {
 					try  {
+						// validate users choice
+						System.out.print("\nChoose which account will receive the deposit: (1 - " + counter + ") ");
 						whichAccount = input.nextInt();
 						validateInput=false;
 					} catch (InputMismatchException e) {
@@ -682,9 +689,6 @@ class ActualBanker {
 					}
 				}
 				//end try catch
-		// validate users choice
-		while (whichAccount < 1 || whichAccount > counter) {
-			whichAccount = input.nextInt();
 		}
 		// lower choice to array type value (starts at 0)
 		whichAccount -= 1;
@@ -706,7 +710,6 @@ class ActualBanker {
 		// get deposit amount
 		System.out.print("Enter the amount of the deposit ");
 		double amount = 0.0;
-		amount = input.nextDouble();
 		//begin try-catch
 		boolean validate=true;
 		while (validate) {
@@ -740,6 +743,7 @@ class ActualBanker {
 	 * 
 	 */	
 	public void callwithdrawal() {
+		boolean debug = true;
 		// declare description string
 		String description = "";
 		// check to see if there any accounts
@@ -764,19 +768,18 @@ class ActualBanker {
 		System.out.print("\nChoose which account to withdraw from: (1 - " + counter + ") ");
 		int whichAccount = 0;
 		//begin try-catch
-		boolean validateInput=true;
-		while (validateInput) {
-			try  {
-				whichAccount = input.nextInt();
-				validateInput=false;
-			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter Integer Value");
-			}
-		}
-		//end try catch
 		// validate users choice
 		while (whichAccount < 1 || whichAccount > counter) {
-			whichAccount = input.nextInt();
+			boolean validateInput=true;
+			while (validateInput) {
+				try  {
+					whichAccount = input.nextInt();
+					validateInput=false;
+				} catch (InputMismatchException e) {
+					System.out.print("Invalid Input: Please enter Integer Value");
+				}
+			}
+			//end try catch
 		}
 		// lower choice to array type value (starts at 0)
 		whichAccount -= 1;
@@ -785,7 +788,11 @@ class ActualBanker {
 		// determine which type of account the account number
 		// belongs to and set it to account variable
 		// and set the portable string
+		
 		if (accounts.get(whichAccount) instanceof Checking) {
+			if (debug) {
+				System.out.println("Checking: " + "    " + accounts.get(whichAccount).getAccountNumber() + "   " + accounts.get(whichAccount).getAccountBalance());
+			}
 			account = (Checking) accounts.get(whichAccount);
 			description = "Checking Withdrawal";
 		} else if (accounts.get(whichAccount) instanceof Gold) {
@@ -810,9 +817,9 @@ class ActualBanker {
 		}
 		//end try catch
 		// create transaction in tracker
-		createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, amount);
+		createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, (amount*-1));
 		// add deposit and notify user
-		System.out.print(((account.makeDeposit(amount))? "Withdrawal successful" : "Withdrawal unsuccessful"));
+		System.out.print(((account.makeWithdrawal(amount))? "Withdrawal successful" : "Withdrawal unsuccessful"));
 	}
 
 	/** remove account<br><br>
@@ -986,6 +993,8 @@ class ActualBanker {
 					// if this is reached there is a critical error
 					System.out.print("\nCRITICAL ERROR! Transaction Fees do not match!\n\n");
 					// put the troubled account into a reject holder until it can be properly processed
+					description = "EOM Checking Account - Transaction Fees No Match";
+					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, chk.getCheckingTransactionFeeAmount());
 					reject.add(chk);
 					continue;
 				}
@@ -997,6 +1006,8 @@ class ActualBanker {
 				if (gold.getAccountBalance() <= 0) {
 					System.out.println("Unable to calculate interest due to a lack of funds!\n");
 					// put the troubled account into the reject folder
+					description = "EOM Gold Insufficient Funds";
+					createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, 0.0);					
 					reject.add(gold);
 					continue;
 				}
@@ -1020,6 +1031,8 @@ class ActualBanker {
 					System.out.println("Unable to calculate interest due to a lack of funds!\n");
 					// unable to process this account so add it to the  reject pile
 					// until the balance has enough to process
+					description = "EOM Regular Insufficent Funds";
+					createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, 0.0);
 					reject.add(reg);
 					continue;
 				}

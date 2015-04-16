@@ -101,8 +101,8 @@ public class Checking extends Account {
 		}
 		if (this.getAccountBalance() < amount) {
 			amount = this.getAccountBalance();
-			}
-		this.setAccountBalance(this.getAccountBalance() - amount);
+		}
+		this.setAccountBalance((this.getAccountBalance() - amount));
 		return true;
 	}
 	
