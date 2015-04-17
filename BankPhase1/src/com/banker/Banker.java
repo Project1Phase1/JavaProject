@@ -26,7 +26,9 @@
 package com.banker;
 
 import java.util.*;
+
 import javax.swing.*;
+
 import com.accounts.*;
 import com.customers.*;
 import com.transactions.*;
@@ -140,28 +142,28 @@ class ActualBanker {
 					displayAccount();
 					break;
 				case 9:
-					// 9.  Remove an Account
-					removeAccount();
-					break;
-				case 10:
-					// 10.  Remove a Customer
-					removeCustomer();
-					break;
-				case 11:
-					// 11.  Apply End of Month Updates
-					eomCalculations(accounts);
-					break;
-				case 12:
-					// 12.  Display Bank Statistics
-					generateStatistics();
-					break;
-				case 13:
-					// 13.  Generate Transaction Report
+					// 9.  Generate Transaction Report
 					displayTransaction();
 					break;
-				case 14:
-					// 14.  Fix Bad Accounts
+				case 10:
+					// 10.  Remove an Account
+					removeAccount();
+					break;
+				case 11:
+					// 11.  Remove a Customer
+					removeCustomer();
+					break;
+				case 12:
+					// 12.  Process EOM Errors
 					rejectTransactions();
+					break;
+				case 13:
+					// 13.  Apply End of Month Updates
+					eomCalculations(accounts);
+					break;
+				case 14:
+					// 14.  Display Bank Statistics
+					generateStatistics();
 					break;
 				case 15:
 					// 15.  exit
@@ -184,25 +186,25 @@ class ActualBanker {
 
 		// Menu Display
 		String[] dispMenu = new String[15];
-		dispMenu[0] = "Create a Customer ";
-		dispMenu[1] = "Create a Checking Account ";
-		dispMenu[2] = "Create a Gold Account ";
-		dispMenu[3] = "Create a Regular Account ";
-		dispMenu[4] = "Make a Deposit ";
-		dispMenu[5] = "Make a Withdraw ";
-		dispMenu[6] = "Display Customer Information";
-		dispMenu[7] = "Display Account Information ";
-		dispMenu[8] = "Remove an Account ";
-		dispMenu[9] = "Remove a Customer ";
-		dispMenu[10] ="Apply End of Month Updates ";
-		dispMenu[11] ="Display Bank Statistics ";
-		dispMenu[12] ="Generate Transaction Report ";
-		dispMenu[13] = "Fix Bad Accounts ";
-		dispMenu[14] ="Exit ";
+		dispMenu[0] =  "Create a Customer ";
+		dispMenu[1] =  "Create a Checking Account ";
+		dispMenu[2] =  "Create a Gold Account ";
+		dispMenu[3] =  "Create a Regular Account ";
+		dispMenu[4] =  "Make a Deposit ";
+		dispMenu[5] =  "Make a Withdraw ";
+		dispMenu[6] =  "Display Customer Information";
+		dispMenu[7] =  "Display Account Information ";
+		dispMenu[8] =  "Generate Transaction Report ";
+		dispMenu[9] =  "Remove an Account ";
+		dispMenu[10] = "Remove a Customer ";
+		dispMenu[11] = "Apply End of Month Updates ";
+		dispMenu[12] = "Process EOM Errors ";
+		dispMenu[13] = "Display Bank Statistics ";
+		dispMenu[14] = "Exit ";
 		menuItems = dispMenu.length;
 		System.out.println();
-		System.out.println("     Welcome To Your Banking Center ");
-		System.out.println("     ==============================");
+		System.out.println("     Welcome To Holtson, McKinney and Jessop LLC");
+		System.out.println("================================================");
 		for (int x = 0; x < dispMenu.length; x++) {
 			System.out.println(((x < 9)? " " + (x + 1) + ".   " + dispMenu[x] : (x + 1) + ".   " + dispMenu[x]));
 		}
@@ -213,7 +215,7 @@ class ActualBanker {
 
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner( System.in );
-//Try-catch for Scanner input sections (remember to set inputInt = 0)
+		//Try-catch for Scanner input sections (remember to set inputInt = 0)
 		boolean validateInput=true;
 		while (validateInput) {
 			try  {
@@ -481,16 +483,16 @@ class ActualBanker {
 		System.out.print("Enter " + typeAccount + " account number: ");
 		String accountNumber = "";
 		//begin try-catch
-				boolean validateInput=true;
-				while (validateInput) {
-					try  {
-						accountNumber = input.nextLine();
-						validateInput=false;
-					} catch (InputMismatchException e) {
-						System.out.print("Invalid Input: Please enter String Value");
-					}
-				}
-				//end try catch
+		boolean validateInput=true;
+		while (validateInput) {
+			try  {
+				accountNumber = input.nextLine();
+				validateInput=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter String Value");
+			}
+		}
+		//end try catch
 		System.out.print("Enter account Balance: ");
 		double accountBalance = 0.0;
 		//begin try-catch
@@ -547,28 +549,28 @@ class ActualBanker {
 		System.out.print("Enter " + typeAccount + " account number: ");
 		String accountNumber = "";
 		//begin try-catch
-				boolean validateInput=true;
-				while (validateInput) {
-					try  {
-						accountNumber = input.nextLine();
-						validateInput=false;
-					} catch (InputMismatchException e) {
-						System.out.print("Invalid Input: Please enter String Value");
-					}
-				}
-				//end try-catch
+		boolean validateInput=true;
+		while (validateInput) {
+			try  {
+				accountNumber = input.nextLine();
+				validateInput=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter String Value");
+			}
+		}
+		//end try-catch
 		System.out.print("Enter account Balance: ");
 		double accountBalance = 0.0;
 		//begin try-catch
 		boolean validate=true;
-				while (validate) {
-					try  {
-						accountBalance = input.nextDouble();
-						validate=false;
-					} catch (InputMismatchException e) {
-						System.out.print("Invalid Input: Please enter Double Value");
-					}
-				}
+		while (validate) {
+			try  {
+				accountBalance = input.nextDouble();
+				validate=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter Double Value");
+			}
+		}
 		//end try-catch
 		// add account
 		accounts.add(new Gold(accountNumber, accountBalance, customer));
@@ -613,16 +615,16 @@ class ActualBanker {
 		System.out.print("Enter " + typeAccount + " account number: ");
 		String accountNumber = "";
 		//begin try-catch
-				boolean validateInput=true;
-				while (validateInput) {
-					try  {
-						accountNumber = input.nextLine();
-						validateInput=false;
-					} catch (InputMismatchException e) {
-						System.out.print("Invalid Input: Please enter String Value");
-					}
-				}
-				//end try catch
+		boolean validateInput=true;
+		while (validateInput) {
+			try  {
+				accountNumber = input.nextLine();
+				validateInput=false;
+			} catch (InputMismatchException e) {
+				System.out.print("Invalid Input: Please enter String Value");
+			}
+		}
+		//end try catch
 		System.out.print("Enter account Balance: ");
 		boolean isOk = false;
 		double accountBalance = 0.0;
@@ -862,7 +864,7 @@ class ActualBanker {
 			System.out.print(counter + ".) " + a.getAccountNumber() + "\n");
 		}
 		// get users choice
-		System.out.print("\nChoose which account to remove: (1 - " + counter + ")");
+		System.out.print("\nChoose which account to remove: (1 - " + counter + ") ");
 		int whichAccount = 0;
 		//begin try-catch
 		boolean validateInput=true;
@@ -923,7 +925,7 @@ class ActualBanker {
 			System.out.print(counter + ".) " + c.toString() + "\n");
 		}
 		// get users choice
-		System.out.print("\nChoose which customer to remove: (1 - " + counter + ")");
+		System.out.print("\nChoose which customer to remove: (1 - " + counter + ") ");
 		int whichAccount = 0;
 		// validate users choice
 		while (whichAccount < 1 || whichAccount > counter) {
@@ -954,6 +956,11 @@ class ActualBanker {
 
 	}
 
+	public void removeReject(Account rejectRemove) {
+		reject.remove(rejectRemove);
+	}
+	
+	
 	/** end of month (eom) calculations<br><br>
 	 * 
 	 * this will allow for processing not only the accounts<br>
@@ -1206,19 +1213,108 @@ class ActualBanker {
 		
 	}
 	
+	/** display statistics
+	 * this makes changing the printed listing a lot easier than
+	 * having to change 4 different version of the same thing
+	 * 
+	 * @param acctType the account type (Checking, Gold, Regular, All)
+	 * @param numAccts the total number of accounts per account type
+	 * @param sumAccts the sum of the balance of the accounts per account type
+	 * @param numZero the number of accounts with a balance of zero balance per account type
+	 * @param avgAccts the average balance of all the accounts per account type
+	 * @param acctNumber the account number of the account with the largest balance per account type
+	 * @param largeBal the largest balance of the accounts per account type
+	 * 
+	 */
 	public void displayStatistics(String acctType, int numAccts, double sumAccts, int numZero, double avgAccts, String acctNumber, double largeBal) {
 		System.out.printf("%-15s %7s %-4d %13s $%12.2f %11s %-4d %10s $%12.2f %3s %19s %6s $%12.2f \n", acctType, "", numAccts, "", sumAccts, "", numZero, "", avgAccts, "", acctNumber, "", largeBal);
 	}
 	
+	/** reject Transactions
+	 *  process transactions that were added to the reject array list
+	 *  because they were not able to be processed.
+	 *  Example: insufficient funds to post a EOM transaction (Transaction fees)
+	 *  
+	 */
 	public void rejectTransactions() {
 		if (reject.isEmpty()) {
-			System.out.print("\nThere are no Error Transactions to process. Terminating Fix Bad Accounts!!!\n\n");
+			System.out.print("\nThe correction table has nothing to process. Terminating Fix Bad Accounts!!!\n\n");
 			return;
 		}
 		// process the reject arraylist which holds the accounts that were not able to process
 		// because there was an error in the EOM: insufficient funds, fees don't match
+		Account account;
+		for (int x = 0; x < reject.size(); x++) {
+			for (int y = 0; y < accounts.size(); y++) {
+				if (reject.get(x).equals(accounts.get(y))){
+					account = reject.get(x);
+					processReject(account);
+					return;
+				}
+			}
+		}
 	}
-}
+	
+	/** process reject
+	 * this is the engine that will actually do the processing
+	 * 
+	 * @param account the reject account that will be processed
+	 */
+	public void processReject(Account account) {
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		String procInput = "", description = "";
+		double procAmount = 0.0;
+		boolean debug = true, isOk = true;
+		for (int t = 0; t < transactions.size(); t++) {
+			if (account.getAccountNumber() == transactions.get(t).getAccountNumber()) {
+				if (account.getCustomer().getCustomerID() == transactions.get(t).getCustomerID()) {
+					if (transactions.get(t).getDescription().contains("Insufficent") && transactions.get(t).getDescription().contains("EOM")) {
+						if (debug) {
+							System.out.print(transactions.get(1).getCustomerID()+ " " + transactions.get(1).getAccountNumber() + " " + transactions.get(1).getDescription() + " $" + transactions.get(1).getAmount() + "\n");
+						}
+						Transaction transaction = transactions.get(t);
+						System.out.printf("\n %20s %20s %20s \n", "Account Number", "Customer ID", "Balance");
+						System.out.printf("%20s %20s %7s $%12.2f \n", account.getAccountNumber(), account.getCustomer().getCustomerID(), "", account.getAccountBalance());
+						System.out.printf("\n $%12.2f %s \n", Math.abs(transaction.getAmount()), " is the amount that needs to be taken from the account balance");
+						System.out.print("process transaction? (y/n");
+						procInput = input.nextLine();
+						if (procInput.equalsIgnoreCase("y")) {
+							System.out.print("Transaction amt " + (Math.abs(transaction.getAmount())) + " : Account amt " + account.getAccountBalance() + " :: Increase amount by ");
+							while (isOk) {
+								try {
+									procAmount = input.nextDouble();
+									isOk = false;
+								} catch (InputMismatchException e) {
+									System.out.println("Invalid entry! Please re-enter your amount!");
+								}
+							}
+							account.makeDeposit(procAmount);
+							description = transaction.getDescription() + "Correction deposit";
+							createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, (procAmount));
+							description = transaction.getDescription() + "Correction withdraw";
+							account.makeWithdrawal((Math.abs(transaction.getAmount())));
+							createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, (Math.abs(transaction.getAmount())));
+							System.out.print("Successfully Updated!!!");
+							break;
+						}
+						
+						
+					} else {
+						continue;
+					}
+				} else {
+					continue;
+				}
+			} else {
+				continue;
+			}
+		}
+		reject.remove(account);
+		System.out.print("Updated correction table");
+	}
+} // end of ActualBanker class
+
 
 /*
  * This information is to try and stay as consistent as possible
@@ -1232,28 +1328,77 @@ class ActualBanker {
  * 
  * 										CUSTOMER INFORMATION
  * CUSTOMERS:
- * LK4344 Luke Kyle
- * MV5613 Mary Valinski
- * OX1121 Oienta Xau
- * VC1314 Victoria Chow
+ * 	LK4344 Luke Kyle
+ * 	MV5613 Mary Valinski
+ * 	OX1121 Oienta Xau
+ * 	VC1314 Victoria Chow
+ * 	PT8621 Paul Thomas
  * 
  * 
  * ACCOUNTS:
  * Gold---
  * 	GA43245643		4600.00		Oienta Xau
  * 	GA15436453		1200.00		Mary Valinski
- * 	GA44369945		0.0			Victoria Chow
+ * 	GA44369945		   0.00		Victoria Chow
+ *  GA65898813		  -5.00		Luke Kyle
  * 
  * Regular---
- *  RA11436453		300.00		Luke Kyle
+ * 	RA11436453		300.00		Luke Kyle
  *  RA43146345		275.43		Mary Valinski
  *  RA34331436		527.68		Oienta Xau
- *  RA94964394		0.0			Victoria Chow
+ *  RA94964394		  0.00		Victoria Chow
+ *  RA22487883		-23.36		Paul Thomas
  *  
  * Checking---
- *  CA55451345		25.00		Oienta Xau
+ *  CA55451345		 25.00		Oienta Xau
  *  CA93464345		145.16		Luke Kyle
  *  CA99474135		987.89		Mary Valinski
- *  CA16439459		0.0			Victoria Chow
+ *  CA16439459		  0.00		Victoria Chow
+ *  CA54983214	   -895.32		Paul Thomas
 
+
+this will produce a checking fee of 48.00
+and when the withdrawals are applied
+the balance will be below the available limit
+making it possible to test the EOM and
+the process the correction table
+Deposits
+	CA55451345		200.00		Oienta Xau
+	CA55451345		125.00		Oienta Xau
+	CA55451345		100.00		Oienta Xau
+	CA55451345		200.00		Oienta Xau
+	CA55451345		175.00		Oienta Xau
+	CA55451345		350.18		Oienta Xau
+	CA55451345		 23.00		Oienta Xau
+	CA55451345		600.00		Oienta Xau
+	CA55451345		125.00		Oienta Xau
+	CA55451345		 16.49		Oienta Xau
+	CA55451345		 42.37		Oienta Xau
+	
+Withdrawals
+	CA55451345		200.00		Oienta Xau
+	CA55451345		325.00		Oienta Xau
+	CA55451345		 12.32		Oienta Xau
+	CA55451345		900.17		Oienta Xau
+	CA55451345		395.00		Oienta Xau
+	CA55451345		100.00		Oienta Xau
+	CA55451345		 25.00		Oienta Xau
+	CA55451345		200.00		Oienta Xau
+
+Below will allow for calculating interest that
+will also allow for testing of the EOM and
+interest calculations
+Deposits
+	GA44369945		350.12		Victoria Chow
+	GA44369945		251.96		Victoria Chow
+	GA44369945		 26.49		Victoria Chow
+	GA44369945		999.21		Victoria Chow
+	RA11436453	   1248.92		Luke Kyle
+	RA11436453		245.63		Luke Kyle
+	RA11436453		983.47		Luke Kyle
+
+Withdrawals
+	GA44369945		125.31		Victoria Chow
+	RA11436453		361.67		Luke Kyle
+	
  */
