@@ -70,7 +70,7 @@ class ActualBanker {
 	// eom accounts that had problems while processing
 	// does not remove them from the accounts list but adds
 	// them so thay can be processed later
-	ArrayList<Account> reject = new ArrayList<Account>(); 
+	ArrayList<Account> eomErrors = new ArrayList<Account>(); 
 	ArrayList<Customer> customers = new ArrayList<Customer>();
 	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	BankUtilities bu = new BankUtilities();
@@ -957,7 +957,7 @@ class ActualBanker {
 	}
 
 	public void removeReject(Account rejectRemove) {
-		reject.remove(rejectRemove);
+		eomErrors.remove(rejectRemove);
 	}
 	
 	
@@ -1011,7 +1011,7 @@ class ActualBanker {
 						description = "EOM Checking - Insufficent Funds to Process";
 						System.out.print("\n" + description + "\n");
 						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
-						reject.add(chk);
+						eomErrors.add(chk);
 					} else {
 						goodCounter++;
 						chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
@@ -1026,7 +1026,7 @@ class ActualBanker {
 					description = "EOM Checking - Transaction Fees No Match";
 					System.out.print("\n" + description + "\n");
 					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
-					reject.add(chk);
+					eomErrors.add(chk);
 					continue;
 				}
 			}
@@ -1042,7 +1042,7 @@ class ActualBanker {
 					description = "EOM Gold - Insufficient Funds to process";
 					System.out.print("\n" + description + "\n");
 					createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, 0.0);					
-					reject.add(gold);
+					eomErrors.add(gold);
 					continue;
 				}
 				// calculate the interest
@@ -1071,7 +1071,7 @@ class ActualBanker {
 					errorCounter++;
 					description = "EOM Regular - Insufficent Funds to process";
 					createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, 0.0);
-					reject.add(reg);
+					eomErrors.add(reg);
 					continue;
 				}
 				goodCounter++;
@@ -1237,17 +1237,17 @@ class ActualBanker {
 	 *  
 	 */
 	public void rejectTransactions() {
-		if (reject.isEmpty()) {
+		if (eomErrors.isEmpty()) {
 			System.out.print("\nThe correction table has nothing to process. Terminating Fix Bad Accounts!!!\n\n");
 			return;
 		}
 		// process the reject arraylist which holds the accounts that were not able to process
 		// because there was an error in the EOM: insufficient funds, fees don't match
 		Account account;
-		for (int x = 0; x < reject.size(); x++) {
+		for (int x = 0; x < eomErrors.size(); x++) {
 			for (int y = 0; y < accounts.size(); y++) {
-				if (reject.get(x).equals(accounts.get(y))){
-					account = reject.get(x);
+				if (eomErrors.get(x).equals(accounts.get(y))){
+					account = eomErrors.get(x);
 					processReject(account);
 					return;
 				}
@@ -1310,7 +1310,7 @@ class ActualBanker {
 				continue;
 			}
 		}
-		reject.remove(account);
+		eomErrors.remove(account);
 		System.out.print("Updated correction table");
 	}
 } // end of ActualBanker class
