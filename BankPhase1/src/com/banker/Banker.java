@@ -75,7 +75,8 @@ class ActualBanker {
 	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	BankUtilities bu = new BankUtilities();
 	static int menuItems;
-	
+	// change bankName to whatever the bank
+	static String bankName = "   Welcome To Holtson, McKinney and Jessop LLC";
 	/** doBanker method<br><br>
 	 * 
 	 * this method is the heart of the client menu<br>
@@ -203,7 +204,7 @@ class ActualBanker {
 		dispMenu[14] = "Exit ";
 		menuItems = dispMenu.length;
 		System.out.println();
-		System.out.println("   Welcome To Holtson, McKinney and Jessop LLC");
+		System.out.println(bankName);
 		System.out.println("=================================================");
 		for (int x = 0; x < dispMenu.length; x++) {
 			System.out.println(((x < 9)? " " + (x + 1) + ".   " + dispMenu[x] : (x + 1) + ".   " + dispMenu[x]));
