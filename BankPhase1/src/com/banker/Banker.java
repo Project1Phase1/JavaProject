@@ -110,27 +110,27 @@ class ActualBanker {
 			{
 				case 1:
 					// 1.  Create a Customer
-					createCustomer(0);
+					System.out.print(((createCustomer(0))? "\nCustomer Successfully Created!!\n" : "\nCustomer was not created!!\n"));
 					break;
 				case 2:
-					// 2.  Create a Checking Account
-					createCheckingAccount();
+					// 2.  Create a Checking Account (0)
+					createAccounts(0);
 					break;
 				case 3:
-					// 3.  Create a Gold Account
-					createGoldAccount();
+					// 3.  Create a Gold Account (2)
+					createAccounts(2);
 					break;
 				case 4:
-					// 4.  Create a Regular Account
-					createRegularAccount();
+					// 4.  Create a Regular Account (1)
+					createAccounts(1);
 					break;
 				case 5:
-					// 5.  Make a Deposit
-					callDeposit();
+					// 5.  Make a Deposit (0)
+					callDepositWithdrawal(0);
 					break;
 				case 6:
-					// 6.  Make a Withdraw
-					callwithdrawal();
+					// 6.  Make a Withdraw (1)
+					callDepositWithdrawal(1);
 					break;
 				case 7:
 					// 7.  Display Customer Information
@@ -154,12 +154,12 @@ class ActualBanker {
 					removeCustomer();
 					break;
 				case 12:
-					// 12.  Process EOM Errors
-					rejectTransactions();
+					// 12.  Apply End of Month Updates
+					eomCalculations();
 					break;
 				case 13:
-					// 13.  Apply End of Month Updates
-					eomCalculations(accounts);
+					// 13.  Process EOM Errors
+					eomErrorTransactions();
 					break;
 				case 14:
 					// 14.  Display Bank Statistics
@@ -167,6 +167,9 @@ class ActualBanker {
 					break;
 				case 15:
 					// 15.  exit
+					System.out.print("\n*********************************************\n"
+							         + "      Thank you for using H M and J LLC\n"
+							         + "*********************************************\n");
 					finished = true;
 					break;
 				default:
@@ -175,9 +178,6 @@ class ActualBanker {
 					break;
 			} // end switch
 		} // end while
-		
-		//eomCalculations(reject);
-		
 	}
 	
 	public static int displayMenuAndGetInput()
@@ -203,8 +203,8 @@ class ActualBanker {
 		dispMenu[14] = "Exit ";
 		menuItems = dispMenu.length;
 		System.out.println();
-		System.out.println("     Welcome To Holtson, McKinney and Jessop LLC");
-		System.out.println("================================================");
+		System.out.println("   Welcome To Holtson, McKinney and Jessop LLC");
+		System.out.println("=================================================");
 		for (int x = 0; x < dispMenu.length; x++) {
 			System.out.println(((x < 9)? " " + (x + 1) + ".   " + dispMenu[x] : (x + 1) + ".   " + dispMenu[x]));
 		}
@@ -216,13 +216,14 @@ class ActualBanker {
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner( System.in );
 		//Try-catch for Scanner input sections (remember to set inputInt = 0)
-		boolean validateInput=true;
+		boolean validateInput = true;
 		while (validateInput) {
 			try  {
 				inputInt = input.nextInt();
-				validateInput=false;
+				validateInput = false;
 			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter Integer Value");
+				System.out.print("\nInvalid Input: Please enter Integer Value\n");
+				input.nextLine();
 			}
 		}
 		//end try catch
@@ -318,12 +319,22 @@ class ActualBanker {
 	 * add it to the customer ArrayList<br>
 	 * 
 	 */
-	public void createCustomer(int condition) {
+	public boolean createCustomer(int condition) {
 		String customerID = "", customerName = "";
+		boolean debug = false;
+		int chkSum = -1;
+		if (customers.isEmpty()) {
+			chkSum = 0;
+		} else {
+			chkSum = customers.size();
+		}
+		if (debug) {
+			System.out.println(chkSum);
+		}
 		if (condition == 0) {
 			@SuppressWarnings("resource")
 			Scanner input = new Scanner(System.in);
-			System.out.print("Enter customer ID ");
+			System.out.print("\nEnter customer ID ");
 			//begin try-catch
 			boolean validateInput=true;
 			while (validateInput) {
@@ -331,11 +342,11 @@ class ActualBanker {
 					customerID = input.nextLine();
 					validateInput=false;
 				} catch (InputMismatchException e) {
-					System.out.print("Invalid Input: Please enter String Value");
+					System.out.print("\nInvalid Input: Please enter String Value");
 				}
 			}
 			//end try-catch
-			System.out.print("Enter customer Name ");
+			System.out.print("\nEnter customer Name ");
 			//begin try-catch
 			boolean inputValidate=true;
 			while (inputValidate) {
@@ -343,7 +354,7 @@ class ActualBanker {
 					customerName = input.nextLine();
 					inputValidate=false;
 				} catch (InputMismatchException e) {
-					System.out.print("Invalid Input: Please enter Integer Value");
+					System.out.print("\nInvalid Input: Please enter Integer Value");
 				}
 			}
 			//end try-catch
@@ -353,6 +364,12 @@ class ActualBanker {
 		}
 		Customer customer = new Customer(customerID, customerName);
 		customers.add(customer);
+		if (chkSum < customers.size()) {
+			return true;
+		} else {
+			return false;
+		}
+		
 	}
 	
 	public Customer getCustomer(String type) {
@@ -367,8 +384,8 @@ class ActualBanker {
 		// are the customers empty
 		while (customers.isEmpty()) {
 			// notify user and get response
-			System.out.print("No customers available to complete task!\n");
-			System.out.print("Add customer? (y/n) ");
+			System.out.print("\nNo customers available to complete task!\n");
+			System.out.print("\nAdd customer? (y/n) ");
 			String getAnswer = "";
 			//begin try-catch
 			boolean validateInput=true;
@@ -377,14 +394,14 @@ class ActualBanker {
 					getAnswer = input.nextLine();
 					validateInput=false;
 				} catch (InputMismatchException e) {
-					System.out.print("Invalid Input: Please enter String Value");
+					System.out.print("\nInvalid Input: Please enter String Value\n");
 				}
 			}
 			//end try-catch
 			// determine if the user wants to add customer now
 			if (getAnswer.equalsIgnoreCase("y")) {
 				// create user
-				createCustomer(0);
+				System.out.print(((createCustomer(0))? "\nCustomer Successfully Created!!\n" : "\nCustomer was not created!!\n"));
 			} else {
 				// notify user of choice and re-display the menu
 				System.out.print("\nTerminationg create " + type + " account!\n");
@@ -402,7 +419,7 @@ class ActualBanker {
 			System.out.print(counter + ".) " + c.toString() + "\n");
 		}
 		// get response from user
-		System.out.print("Choose which customer to create "+ type + " account for (0 - " + counter + ") ");
+		System.out.print("\nChoose which customer to create "+ type + " account for (0 - " + counter + ") ");
 		int whichCustomer = -1;
 		// validate user input
 		while (whichCustomer == -1) {
@@ -413,18 +430,18 @@ class ActualBanker {
 					whichCustomer = input.nextInt();
 					validateInput=false;
 				} catch (InputMismatchException e) {
-					System.out.print("Invalid Input: Please enter Integer Value");
+					System.out.print("\nInvalid Input: Please enter Integer Value\n");
 				}
 			}
 			//end try-catch
 			if (whichCustomer < 0 || whichCustomer > counter) {
-				System.out.print("Invalid entry. Please try again!!!");
+				System.out.print("\nInvalid entry. Please try again!!!\n");
 				whichCustomer = -1;
 			}
 		}
 		if (whichCustomer == 0) {
 			// create new customer
-			createCustomer(0);
+			System.out.print(((createCustomer(0))? "\nCustomer Successfully Created!!\n\n" : "\nCustomer was not created!!\n\n"));
 			customer = customers.get(customers.size()-1);
 			whichCustomer = customers.size();
 		} else {
@@ -432,6 +449,18 @@ class ActualBanker {
 			customer = customers.get((whichCustomer - 1));
 		}
 		return customer;
+
+	}
+	
+	public void displayAccount(String message) {
+		// present account information to user and get response
+		System.out.print(message);
+		System.out.print("\n=============================================================\n");
+		System.out.print("Available accounts\n-----------------------------------------\n");
+		// list available accounts in a menu style
+		for (Account a: accounts) {
+			System.out.print("     " + a.getAccountNumber() + "\n");
+		}
 
 	}
 	
@@ -446,11 +475,22 @@ class ActualBanker {
 		transactions.add(new Transaction(new java.util.Date(), customerID, accountNumber, description, amount, bu.generateUniqueTransNumber()));
 	}
 	
+	/** create customer transaction<br>
+	 * this add to the transaction table the removal of a customer<br>
+	 * the description will include the cutomer id and name<br>
+	 * 
+	 * 
+	 * @param description
+	 */
 	public void createCustomerTransaction(String description) {
 		transactions.add(new Transaction(new java.util.Date(), description, bu.generateUniqueTransNumber()));
 	}
 	
-	/** create checking account<br><br>
+	/** create accounst<br><br>
+	 * 
+	 * 0 is Checking<br>
+	 * 1 is Regular<br>
+	 * 2 is Gold<br><br>
 	 * 
 	 * check to see if there are any customers to add before trying to add an account<br>
 	 * if there are no customers then it will ask to create them<br><br>
@@ -466,369 +506,223 @@ class ActualBanker {
 	 * and add a transaction to the transaction tracker with "Opening Checking Account" as the <br>
 	 * description<br>
 	 * 
+	 * @param threeAcct is the account type: 0 is Checking, 1 is Regular, 2 is Gold
 	 */
-	public void createCheckingAccount() {
+	public void createAccounts(int threeAcct) {
 		// declare the type of account string
-		String typeAccount = "Checking";
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		@SuppressWarnings("unused")
-		String skip = "";
+		String typeAccount = "";
+		switch (threeAcct) {
+		case 0:
+			typeAccount = "Checking";
+			break;
+		case 1:
+			typeAccount = "Regular";
+			break;
+		case 2:
+			typeAccount = "Gold";
+			break;
+	}
 		Customer customer;
 		customer = getCustomer(typeAccount);
 		if (customer==null) {
 			return;
 		}
 		// get account information from user (Account number, balance)
-		System.out.print("Enter " + typeAccount + " account number: ");
-		String accountNumber = "";
-		//begin try-catch
-		boolean validateInput=true;
-		while (validateInput) {
-			try  {
-				accountNumber = input.nextLine();
-				validateInput=false;
-			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter String Value");
-			}
-		}
-		//end try catch
-		System.out.print("Enter account Balance: ");
+		String accountNumber = "", message = "", errMessage = "";
+		message = "\nEnter " + typeAccount + " account number: ";
+		errMessage = "\nInvalid Input: Please enter Account Number\n";
+		accountNumber = getAccountNumber(message, errMessage);
 		double accountBalance = 0.0;
-		//begin try-catch
-		boolean validate=true;
-		while (validate) {
-			try  {
-				accountBalance = input.nextDouble();
-				validate=false;
-			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter Double Value");
-			}
-		}
-		//end try catch
+		message = "\nEnter Account Balance: ";
+		errMessage = "\n**************************************************\n"
+			+          " Invalid Amount! Can ONLY enter positive values!!\n"
+			+          "**************************************************\n"
+			+          "\nPlease re-enter Account balance: ";
+		accountBalance = getDoubleAmount(message, errMessage);
+		// add the account
 		
-		// take care of extra tokens
-			// add the account
-		accounts.add(new Checking(accountNumber, accountBalance, customer));
+		switch (threeAcct) {
+			case 0:
+				accounts.add(new Checking(accountNumber, accountBalance, customer));
+				break;
+			case 1:
+				accounts.add(new Regular(accountNumber, accountBalance, customer));
+				break;
+			case 2:
+				accounts.add(new Gold(accountNumber, accountBalance, customer));
+				break;
+		}
 		// add transaction to transaction tracker
 		createTransaction(customer.getCustomerID(), accountNumber, "Opening "+ typeAccount + " Account", accountBalance);
 		// notify user of account creation
 		System.out.println("\n" + typeAccount + " account successfully created!\n");
 	}
-
-	/** create gold account<br><br>
-	 * 
-	 * check to see if there are any customers to add before trying to add an account<br>
-	 * if there are no customers then it will ask to create them<br><br>
-	 * 
-	 * if user does not want to create them right now it will terminate the process<br>
-	 * and return to the menu<br><br>
-	 * 
-	 * allow the user to select a customer form a list<br>
-	 * once selected it will then ask for the account information<br>
-	 * (account number, balance)<br><br>
-	 * 
-	 * create account from user input and add the account to the available accounts<br>
-	 * and add a transaction to the transaction tracker with "Opening Gold Account" as the <br>
-	 * description<br>
-	 * 
-	 */
-	public void createGoldAccount() {
-		// declare a portable string
-		String typeAccount = "Gold";
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		@SuppressWarnings("unused")
-		String skip = "";
-		Customer customer;
-		customer = getCustomer(typeAccount);
-		if (customer==null) {
-			return;
-		}		
-		// get account information (Account number, account balance)
-		System.out.print("Enter " + typeAccount + " account number: ");
-		String accountNumber = "";
-		//begin try-catch
-		boolean validateInput=true;
-		while (validateInput) {
-			try  {
-				accountNumber = input.nextLine();
-				validateInput=false;
-			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter String Value");
-			}
-		}
-		//end try-catch
-		System.out.print("Enter account Balance: ");
-		double accountBalance = 0.0;
-		//begin try-catch
-		boolean validate=true;
-		while (validate) {
-			try  {
-				accountBalance = input.nextDouble();
-				validate=false;
-			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter Double Value");
-			}
-		}
-		//end try-catch
-		// add account
-		accounts.add(new Gold(accountNumber, accountBalance, customer));
-		// create a record of the transaction
-		createTransaction(customer.getCustomerID(), accountNumber, "Opening " + typeAccount + " Account", accountBalance);
-		// notify user of success
-		System.out.println("\n" + typeAccount + " account successfully created!\n");
-		
 	
-	}
-
-	/** create regular account<br><br>
+	/** create make deposit or withdrawal<br><br>
 	 * 
-	 * check to see if there are any customers to add before trying to add an account<br>
-	 * if there are no customers then it will ask to create them<br><br>
+	 * 0 is Deposit<br>
+	 * 1 is Withdrawal<br><br>
 	 * 
-	 * if user does not want to create them right now it will terminate the process<br>
-	 * and return to the menu<br><br>
-	 * 
-	 * allow the user to select a customer form a list<br>
-	 * once selected it will then ask for the account information<br>
-	 * (account number, balance)<br><br>
-	 * 
-	 * create account from user input and add the account to the available accounts<br>
-	 * and add a transaction to the transaction tracker with "Opening Regular Account" as the <br>
-	 * description<br>
-	 * 
-	 */
-	public void createRegularAccount() {
-		// declare a portable string
-		String typeAccount = "Regular";
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		@SuppressWarnings("unused")
-		String skip = "";
-		Customer customer;
-		customer = getCustomer(typeAccount);
-		if (customer==null) {
-			return;
-		}
-		// get account information (Account number, account balance)
-		System.out.print("Enter " + typeAccount + " account number: ");
-		String accountNumber = "";
-		//begin try-catch
-		boolean validateInput=true;
-		while (validateInput) {
-			try  {
-				accountNumber = input.nextLine();
-				validateInput=false;
-			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter String Value");
-			}
-		}
-		//end try catch
-		System.out.print("Enter account Balance: ");
-		boolean isOk = false;
-		double accountBalance = 0.0;
-		while (!isOk) {
-			try {
-				accountBalance = input.nextDouble();
-				isOk = true;
-			} catch (InputMismatchException e) {
-				JOptionPane.showMessageDialog(null, "Invalid entry detected! Please enter double amount!");
-			}
-		}
-		// create account
-		accounts.add(new Regular(accountNumber, accountBalance, customer));
-		// add transaction to transaction tracker
-		createTransaction(customer.getCustomerID(), accountNumber, "Opening Regular Account", accountBalance);
-		// notify user of success
-		System.out.println("\n" + typeAccount + " account successfully created!\n");
-	}
-	
-	/** create make deposit<br><br>
-	 * 
-	 * check to see if there are any customers to make deposits to<br>
+	 * check to see if there are any customers<br>
 	 * if there are no customers it will terminate<br><br>
 	 * 
-	 * displays a list of account numbers to choose from<br>
-	 * ask the user for the amount of the deposit<br>
+	 * ask for the account number and allow the user to <br>
+	 * select 0 to get a list<br><br>
+	 * 
+	 * ask the user for the amount<br>
 	 * user will be notified of success or failure<br><br>
 	 * 
 	 * determine whether it is the checking, gold or regular account<br>
 	 * and add it the description: example: "Checking Deposit"
 	 * add a transaction to the transaction tracker<br><br>
 	 * 
+	 * @param dw 0 is Deposit, 1 is Withdrawal
 	 */	
-	public void callDeposit() {
+	public void callDepositWithdrawal(int dw) {
 		// declare description string
-		String description = "";
+		String description = "", message = "", errMessage = "", tranType = "";
+		switch (dw) {
+			case 0:
+				tranType = "Deposit";
+				break;
+			case 1:
+				tranType = "Withdrawal";
+				break;
+		}
 		// check to see if there any accounts
 		if (accounts.isEmpty()) {
-			System.out.println("\n\nThere are no accounts to add a deposit to!!!!!\n\nTerminating make deposit!!!!\n\n\n\n");
+			System.out.println("\n\nThere are no accounts to add a " + tranType + " to!!!!!\n\nTerminating make " + tranType + "!!\n\n\n\n");
 			return;
 		}
-		// clear input not closed warning and declare scanner input
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		// present account information to user and get response
-		System.out.print("                           Make Deposit");
-		System.out.print("\n=============================================================\n");
-		int counter = 0;
-		System.out.print("Available accounts\n-----------------------------------------\n");
-		// list available accounts in a menu style
-		for (Account a: accounts) {
-			counter++;
-			System.out.print(counter + ".) " + a.getAccountNumber() + "\n");
-		}
+		
 		// get users choice
-		boolean validateInput = true;
-		int whichAccount = 0;
-		//begin try-catch
-			while (whichAccount < 1 || whichAccount > counter) {
-				validateInput=true;
-				while (validateInput) {
-					try  {
-						// validate users choice
-						System.out.print("\nChoose which account will receive the deposit: (1 - " + counter + ") ");
-						whichAccount = input.nextInt();
-						validateInput=false;
-					} catch (InputMismatchException e) {
-						System.out.print("Invalid Input: Please enter Integer Value");
-					}
-				}
-				//end try catch
+		String getAccount = "";
+		message = "\nEnter the Account Number or 0 to display accounts: ";
+		errMessage = "\n************************************\n"
+			+ "          Invalid entry!"
+			+ "\n************************************\n"
+			+ "Please re-enter the Account Number: ";
+		boolean wantDisplay = true;
+		while (wantDisplay) {
+			getAccount = getAccountNumber(message, errMessage);
+			if (getAccount.equals("0")) {
+				displayAccount("                           Make " + tranType);
+			} else {
+				wantDisplay = false;
+			}
 		}
-		// lower choice to array type value (starts at 0)
-		whichAccount -= 1;
 		// declare account variable
-		Account account;
+		Account account = accounts.get(0);
 		// determine which type of account the account number
 		// belongs to and set it to account variable
 		// and set the portable string
-		if (accounts.get(whichAccount) instanceof Checking) {
-			account = (Checking) accounts.get(whichAccount);
-			description = "Checking Deposit";
-		} else if (accounts.get(whichAccount) instanceof Gold) {
-			account = (Gold) accounts.get(whichAccount);
-			description = "Gold Deposit";
-		} else {
-			account = (Regular) accounts.get(whichAccount);
-			description = "Regular Deposit";
-		}
-		// get deposit amount
-		System.out.print("Enter the amount of the deposit ");
-		double amount = 0.0;
-		//begin try-catch
-		boolean validate=true;
-		while (validate) {
-			try  {
-				amount = input.nextDouble();
-				validate=false;
-			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter Double Value");
+		boolean isFound = false, validateInput=true;
+		while (validateInput) {
+			for (Account a: accounts) {
+				if (a.getAccountNumber().equals(getAccount)) {
+					account = a;
+					isFound = true;
+				}
+			}
+			if (!isFound) {
+				//System.out.print(errMessage);
+				getAccount = getAccountNumber(errMessage, "");
+			} else {
+				validateInput=false;
 			}
 		}
-		//end try catch
-		// add deposit and notify user
-		System.out.print(((account.makeDeposit(amount))? "Deposit successful" : "Deposit unsuccessful"));
+		// determine which type of account the account number
+		// belongs to and set it to account variable
+		// and set the portable string
+		if (account instanceof Checking) {
+			description = "Checking " + tranType;
+		} else if (account instanceof Gold) {
+			description = "Gold " + tranType;
+		} else {
+			description = "Regular " + tranType;
+		}
+		// get deposit amount
+		message = "\n\nEnter the amount of the " + tranType + " ";
+		errMessage = "\n**************************************************\n"
+			+          " Invalid Amount! Can ONLY enter positive values!!\n"
+			+          "**************************************************\n"
+			+          "\nPlease re-enter amount of the " + tranType + ": ";
+		double amount = 0.0;
+		amount = getDoubleAmount(message, errMessage);
+		switch (dw) {
+			case 0:
+				// deposit
+				// add deposit and notify user
+				System.out.print(((account.makeDeposit(amount))? "\n       ******\nDeposit Successful!\n       ******\n" : "\n       ******\nDeposit Unsuccessful!\n       ******\n"));
+				break;
+			case 1:
+				amount = account.makeWithdrawal(amount);
+				// if the returning value is -1 then the amount sent to withdaraw
+				// was a negative number
+				// if the amount in the account is below the amount requested
+				// then it will return the amount that is in the account
+				// it will not allow the account to go below 0.00
+				if (amount == -1.0) {
+					System.out.print("\n\n******************************\nWithdrawal was UNSUCCESSFUL!!\n******************************\n\n");
+					return;
+				} else {
+					System.out.print("\n           ******\nWithdrawal Successful!\n           ******\n");
+				}
+				
+		}
 		// create transaction in tracker
 		createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, amount);
 	}
 
-	
-	/** create make withdrawal<br><br>
-	 * 
-	 * check to see if there are any customers to make withdrawal from<br>
-	 * if there are no customers it will terminate<br><br>
-	 * 
-	 * displays a list of account numbers to choose from<br>
-	 * ask the user for the amount of the withdrawal<br>
-	 * user will be notified of success or failure<br><br>
-	 * 
-	 * determine whether it is the checking, gold or regular account<br>
-	 * and add it the description: example: "Checking Withdrawal"
-	 * add a transaction to the transaction tracker<br><br>
-	 * 
-	 */	
-	public void callwithdrawal() {
-		boolean debug = false;
-		// declare description string
-		String description = "";
-		// check to see if there any accounts
-		if (accounts.isEmpty()) {
-			System.out.println("\n\nThere are no accounts to make a withdrawal from!!!!\n\nTerminating make withdrawal!!!!\n\n\n\n");
-			return;
-		}
-		// clear input not closed warning and declare scanner input
+	public double getDoubleAmount(String message, String errMessage) {
+		//begin try-catch
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-		// present account information to user and get response
-		System.out.print("                           Make Withdrawal");
-		System.out.print("\n=============================================================\n");
-		int counter = 0;
-		System.out.print("Available accounts\n-----------------------------------------\n");
-		// list available accounts in a menu style
-		for (Account a: accounts) {
-			counter++;
-			System.out.print(counter + ".) " + a.getAccountNumber() + "\n");
-		}
-		// get users choice
-		System.out.print("\nChoose which account to withdraw from: (1 - " + counter + ") ");
-		int whichAccount = 0;
-		//begin try-catch
-		// validate users choice
-		while (whichAccount < 1 || whichAccount > counter) {
-			boolean validateInput=true;
-			while (validateInput) {
-				try  {
-					whichAccount = input.nextInt();
-					validateInput=false;
-				} catch (InputMismatchException e) {
-					System.out.print("Invalid Input: Please enter Integer Value");
-				}
-			}
-			//end try catch
-		}
-		// lower choice to array type value (starts at 0)
-		whichAccount -= 1;
-		// declare account variable
-		Account account;
-		// determine which type of account the account number
-		// belongs to and set it to account variable
-		// and set the portable string
-		
-		if (accounts.get(whichAccount) instanceof Checking) {
-			if (debug) {
-				System.out.println("Checking: " + "    " + accounts.get(whichAccount).getAccountNumber() + "   " + accounts.get(whichAccount).getAccountBalance());
-			}
-			account = (Checking) accounts.get(whichAccount);
-			description = "Checking Withdrawal";
-		} else if (accounts.get(whichAccount) instanceof Gold) {
-			account = (Gold) accounts.get(whichAccount);
-			description = "Gold Withdrawal";
-		} else {
-			account = (Regular) accounts.get(whichAccount);
-			description = "Regular Withdrawal";
-		}
-		// get deposit amount
-		System.out.print("Enter the amount of the withdrawal ");
 		double amount = 0.0;
-		//begin try-catch
 		boolean validate=true;
+		System.out.print(message);
 		while (validate) {
 			try  {
-				amount = input.nextDouble();
-				validate=false;
+				amount = input.nextDouble(); 
+				if (amount >= 0.00) {
+					validate=false;
+				}
 			} catch (InputMismatchException e) {
-				System.out.print("Invalid Input: Please enter Double Value");
+				System.out.print("\n*******************\n"
+						+ "Fatal Error: Invalid input!\n"
+						+ "*******************\n");
+			}
+			if (validate) {
+				System.out.print(errMessage);
 			}
 		}
 		//end try catch
-		// create transaction in tracker
-		createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, (amount*-1));
-		// add deposit and notify user
-		System.out.print(((account.makeWithdrawal(amount))? "Withdrawal successful" : "Withdrawal unsuccessful"));
+		return amount;
 	}
-
+	
+	public String getAccountNumber(String message, String errMessage) {
+		// try catch
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		String getAccount = "";
+		System.out.print(message);
+		boolean validateInput = true;
+		while (validateInput) {
+			try  {
+				getAccount = input.nextLine();
+				validateInput=false;
+			} catch (NoSuchElementException | IllegalStateException e) {
+				System.out.print("\n           *************\n"
+						+ "Fatal Error: Element or State!"
+						+ "\n           *************\n");
+			}
+			if (validateInput) {
+				System.out.print(errMessage);
+			}
+		}
+		//end try catch
+		return getAccount;
+	}
 	/** remove account<br><br>
 	 * 
 	 * check to see if there are any accounts to remove<br>
@@ -905,6 +799,17 @@ class ActualBanker {
 		System.out.print("\nSuccessfully removed account!\n");
 	}
 	
+	/** remove customer<br><br>
+	 * 
+	 * check to see if there are any customers to remove<br>
+	 * if there are it will display the customers in a menu<br>
+	 * style and allow the user to select the one to remove<br><br>
+	 * 
+	 * Add a transaction into the tracker listing the customer id and name<br><br>
+	 * 
+	 * then notify the user of the success<br>
+	 * 
+	 */
 	public void removeCustomer() {
 		// check to see if there any customers
 		if (customers.isEmpty()) {
@@ -956,11 +861,6 @@ class ActualBanker {
 
 	}
 
-	public void removeReject(Account rejectRemove) {
-		eomErrors.remove(rejectRemove);
-	}
-	
-	
 	/** end of month (eom) calculations<br><br>
 	 * 
 	 * this will allow for processing not only the accounts<br>
@@ -969,7 +869,8 @@ class ActualBanker {
 	 * 
 	 * @param process the ArrayList
 	 */
-	public void eomCalculations(ArrayList<Account> process) {
+	public void eomCalculations() {
+		boolean debug = true;
 		// declare variables
 		String description;
 		// declare description string
@@ -978,109 +879,119 @@ class ActualBanker {
 			System.out.println("\n\nThere are no accounts to process!!!\n\nTerminating EOM calculations!!!\n\n\n\n");
 			return;
 		}
+		// declare counter variable for statistics
+		// to display at the end of the calculations
 		int counter = 0;
 		int goodCounter = 0;
 		int errorCounter = 0;
 		int checkCounter = 0;
 		int goldCounter = 0;
 		int regCounter = 0;
-		// calculate interest for 1 year compounded monthly7
-		// I = P x (1 + r/n)^(n x t)
-		// P = accountBalance : Principle
-		// r = rate : interest rate (in decimal)
-		// t = year : number of years, months, days, etc in this case it is years
-		// n = numTimes : how often : months, quarters, days etc. in this case it is one month
-
+		
+		Checking chk;
+		Gold gold;
+		Regular reg;
 		// loop through the accounts
-		for (Account a: process) {
+		for (Account a: accounts) {
 			// determine which type of account the account number
 			// belongs to and set it to account variable
 			// and set the description
-			
 			
 			// is it a checking account
 			if (a instanceof Checking) {
 				counter++;
 				checkCounter++;
-				Checking chk = (Checking)a ;
+				chk = (Checking) a ;
 				description = "EOM Checking Account";
 				// validate the amount of the fees before posting
+				if (chk.getNumberOfTransactions() == 0) {
+					goodCounter++;
+					continue;
+				}
 				if (((chk.getNumberOfTransactions() - 2) * chk.getCheckingTransactionFee()) == chk.getCheckingTransactionFeeAmount()) {
 					if (chk.getAccountBalance() < chk.getCheckingTransactionFeeAmount()) {
+						System.out.print("\nChecking: Unable to process due to a lack of funds!\n");
+						
+						if (debug) {
+							System.out.print((chk.getAccountBalance() < chk.getCheckingTransactionFeeAmount())? "\nBalance < Fee: True\n\n" : "\nBalance < Fee: False\n\n");
+							System.out.print("Balance: " + chk.getAccountBalance() + "\n");
+							System.out.print("\nTran Fee Amt: "+chk.getCheckingTransactionFeeAmount() + "\n");
+						}
 						errorCounter++;
-						description = "EOM Checking - Insufficent Funds to Process";
-						System.out.print("\n" + description + "\n");
+						description = "EOM Checking - Insufficent Funds to process Fees";
+						displayDescription(description);
 						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
 						eomErrors.add(chk);
 					} else {
 						goodCounter++;
 						chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
 						chk.setCheckingTransactionFeeAmount(0.0);
+						chk.setNumberOfTransactions(0);
 						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
-						
 					}
 				} else {
-					// if this is reached there is a critical error
+					// if this is reached there is an error
+					if (debug) {
+						System.out.print("Balance: " + chk.getAccountBalance());
+						System.out.print("Tran Fee Amt: "+chk.getCheckingTransactionFeeAmount());
+					}
 					errorCounter++;
 					// put the troubled account into a reject holder until it can be properly processed
-					description = "EOM Checking - Transaction Fees No Match";
-					System.out.print("\n" + description + "\n");
+					description = "EOM Checking - Transaction Fees don't Match";
 					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
 					eomErrors.add(chk);
 					continue;
 				}
-			}
-			// is it a gold account
-			if (a instanceof Gold) {
+			} else if (a instanceof Gold) {
+				// is it a gold account
 				counter++;
 				goldCounter++;
-				Gold gold = (Gold)a;
+				gold = (Gold) a;
 				description = "EOM Gold Account";
 				if (gold.getAccountBalance() <= 0) {
-					errorCounter++;
+					//errorCounter++;
 					// put the troubled account into the reject folder
-					description = "EOM Gold - Insufficient Funds to process";
-					System.out.print("\n" + description + "\n");
+					System.out.print("\nGold: Unable to calculate interest due to a lack of funds!\n");
+					description = "EOM Gold - Insufficient Funds to calculate interest";
+					displayDescription(description);
 					createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, 0.0);					
 					eomErrors.add(gold);
 					continue;
 				}
 				// calculate the interest
 				goodCounter++;
-				double rate = gold.getGoldInterestRate() / 100;
-				double years = 1;
-				double numTimes = 1/12.0;
-				double interest = ((Math.floor(((gold.getAccountBalance() * Math.pow(1 + (rate / numTimes), (numTimes * years))) - gold.getAccountBalance())*100.0))/100.0);
+				double rate = gold.getGoldInterestRate() / 100.0;
+				double interest = calculateInterest(gold, rate);
 				// add interest to balance
 				gold.setAccountBalance(gold.getAccountBalance() + interest);
+				gold.setGoldInterestAmount(interest);
 				// add transaction to transaction tracker
 				createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, interest);
-			}
+			} else if (a instanceof Regular){
 			// is it a regular account 
-			if (a instanceof Regular){
 				counter++;
 				regCounter++;
 				// process regular accounts
-				Regular reg = (Regular)a;
+				reg = (Regular) a;
 				description = "EOM Regular Account";
 				
 				if (reg.getAccountBalance() <= 0) {
-					System.out.println("Unable to calculate interest due to a lack of funds!\n");
+					System.out.println("\nRegular: Unable to calculate interest due to a lack of funds!\n");
 					// unable to process this account so add it to the  reject pile
 					// until the balance has enough to process
-					errorCounter++;
-					description = "EOM Regular - Insufficent Funds to process";
+					//errorCounter++;
+					description = "EOM Regular - Insufficent Funds to calulate interest";
+					displayDescription(description);
 					createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, 0.0);
 					eomErrors.add(reg);
 					continue;
 				}
 				goodCounter++;
-				double rate = reg.getRegularInterestRate() / 100;
-				double years = 1;
-				double numTimes = 1/12.0;
-				double interest = ((Math.floor(((reg.getAccountBalance() * Math.pow(1 + (rate / numTimes), (numTimes * years))) - reg.getAccountBalance())*100.0))/100.0);
+				double rate = reg.getRegularInterestRate() / 100.0;
+				double interest = calculateInterest(reg, rate);
 				// apply interest to balance
 				reg.setAccountBalance(reg.getAccountBalance() + interest);
+				reg.setRegularInterestAmount(interest);
 				// add to tracker
 				createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, interest);
 			}
@@ -1094,6 +1005,25 @@ class ActualBanker {
 		System.out.print("\n");
 	}
 	
+	
+	public void displayDescription(String description) {
+		System.out.print("\n\n"
+		+ "*******************************************\n"
+		+ description + "\n"
+		+ "*******************************************\n\n");
+	}
+	public double calculateInterest(Account account, double rate) {
+		// calculate interest for 1 year compounded monthly7
+		// I = P x (1 + r/n)^(n x t)
+		// P = accountBalance : Principle
+		// r = rate : interest rate (in decimal)
+		// t = year : number of years, months, days, etc in this case it is years
+		// n = numTimes : how often : months, quarters, days etc. in this case it is one month
+		double years = 1.0;
+		double numTimes = 1.0/12.0;
+		double interest = ((account.getAccountBalance() * (Math.pow((1.0 + (rate / numTimes)), (numTimes * years)))) - account.getAccountBalance());
+		return interest;
+	}
 	/** generate statistics<br><br>
 	 * 
 	 * loop through the accounts and get:<br>
@@ -1201,13 +1131,13 @@ class ActualBanker {
 		System.out.print("                                                  ------------------------------------------");
 		System.out.printf("\n %-15s %18s %20s %20s %20s %23s %20s \n", "Type Account","Number of Accounts", "Total Balance", "w/Zero Balance", "Average Balance", "Account Number of", "Largest Balance");
 		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
-		displayStatistics("All Accounts", numAccounts, sumAccounts, numZeroAccounts, avgAccounts, largestAccountNumber, largestAccount);
-		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
 		displayStatistics("Gold", numGoldAccounts, sumGoldAccounts, numGoldZeroAccounts, avgGoldAccounts, largestGoldAccountNumber, largestGoldAccount);
 		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
 		displayStatistics("Regular", numRegularAccounts, sumRegularAccounts, numRegularZeroAccounts, avgRegularAccounts, largestRegularAccountNumber, largestRegularAccount);
 		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
 		displayStatistics("Checking", numCheckingAccounts, sumCheckingAccounts, numCheckingZeroAccounts, avgCheckingAccounts, largestCheckingAccountNumber, largestCheckingAccount);
+		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
+		displayStatistics("All Accounts", numAccounts, sumAccounts, numZeroAccounts, avgAccounts, largestAccountNumber, largestAccount);
 		System.out.print("-----------------------------------------------------------------------------------------------------------------------------------------------\n");
 		System.out.print("\n\n==================================================================================================================================================\n");
 		
@@ -1230,13 +1160,13 @@ class ActualBanker {
 		System.out.printf("%-15s %7s %-4d %13s $%12.2f %11s %-4d %10s $%12.2f %3s %19s %6s $%12.2f \n", acctType, "", numAccts, "", sumAccts, "", numZero, "", avgAccts, "", acctNumber, "", largeBal);
 	}
 	
-	/** reject Transactions
+	/** EOM Error Transactions
 	 *  process transactions that were added to the reject array list
 	 *  because they were not able to be processed.
 	 *  Example: insufficient funds to post a EOM transaction (Transaction fees)
 	 *  
 	 */
-	public void rejectTransactions() {
+	public void eomErrorTransactions() {
 		if (eomErrors.isEmpty()) {
 			System.out.print("\nThe correction table has nothing to process. Terminating Fix Bad Accounts!!!\n\n");
 			return;
@@ -1248,7 +1178,7 @@ class ActualBanker {
 			for (int y = 0; y < accounts.size(); y++) {
 				if (eomErrors.get(x).equals(accounts.get(y))){
 					account = eomErrors.get(x);
-					processReject(account);
+					processEOMError(account);
 					return;
 				}
 			}
@@ -1260,42 +1190,44 @@ class ActualBanker {
 	 * 
 	 * @param account the reject account that will be processed
 	 */
-	public void processReject(Account account) {
+	public void processEOMError(Account account) {
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-		String procInput = "", description = "";
+		String procInput = "", description = "", message = "", errMessage = "";
 		double procAmount = 0.0;
-		boolean debug = true, isOk = true;
+		boolean debug = false;
 		for (int t = 0; t < transactions.size(); t++) {
 			if (account.getAccountNumber() == transactions.get(t).getAccountNumber()) {
 				if (account.getCustomer().getCustomerID() == transactions.get(t).getCustomerID()) {
 					if (transactions.get(t).getDescription().contains("Insufficent") && transactions.get(t).getDescription().contains("EOM")) {
 						if (debug) {
-							System.out.print(transactions.get(1).getCustomerID()+ " " + transactions.get(1).getAccountNumber() + " " + transactions.get(1).getDescription() + " $" + transactions.get(1).getAmount() + "\n");
+							System.out.print(transactions.get(t).getCustomerID()+ " " + transactions.get(t).getAccountNumber() + " " + transactions.get(t).getDescription() + " $" + transactions.get(t).getAmount() + "\n");
 						}
 						Transaction transaction = transactions.get(t);
 						System.out.printf("\n %20s %20s %20s \n", "Account Number", "Customer ID", "Balance");
 						System.out.printf("%20s %20s %7s $%12.2f \n", account.getAccountNumber(), account.getCustomer().getCustomerID(), "", account.getAccountBalance());
 						System.out.printf("\n $%12.2f %s \n", Math.abs(transaction.getAmount()), " is the amount that needs to be taken from the account balance");
-						System.out.print("process transaction? (y/n");
+						System.out.print("process transaction? (y/n) ");
 						procInput = input.nextLine();
 						if (procInput.equalsIgnoreCase("y")) {
 							System.out.print("Transaction amt " + (Math.abs(transaction.getAmount())) + " : Account amt " + account.getAccountBalance() + " :: Increase amount by ");
-							while (isOk) {
-								try {
-									procAmount = input.nextDouble();
-									isOk = false;
-								} catch (InputMismatchException e) {
-									System.out.println("Invalid entry! Please re-enter your amount!");
-								}
-							}
+							message = "";
+							errMessage = "\n**************************************************\n"
+								+          " Invalid Amount! Can ONLY enter positive values!!\n"
+								+          "**************************************************\n"
+								+          "\nPlease re-enter amount: ";
+							procAmount = getDoubleAmount(errMessage, message);
 							account.makeDeposit(procAmount);
 							description = transaction.getDescription() + "Correction deposit";
 							createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, (procAmount));
 							description = transaction.getDescription() + "Correction withdraw";
 							account.makeWithdrawal((Math.abs(transaction.getAmount())));
+							if (account instanceof Checking) {
+								((Checking) account).setNumberOfTransactions(0);
+								((Checking) account).setCheckingTransactionFeeAmount(0.0);
+							}
 							createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, (Math.abs(transaction.getAmount())));
-							System.out.print("Successfully Updated!!!");
+							System.out.print("Successfully Updated!!!\n\n");
 							break;
 						}
 						
@@ -1311,7 +1243,10 @@ class ActualBanker {
 			}
 		}
 		eomErrors.remove(account);
-		System.out.print("Updated correction table");
+		if (debug) {
+			System.out.print(((eomErrors.isEmpty())? "EOM Error Table Empty" : "EOM Error Table Not Empty"));
+		}
+		System.out.print("Updated correction table\n\n");
 	}
 } // end of ActualBanker class
 

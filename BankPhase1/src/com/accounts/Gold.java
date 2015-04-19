@@ -82,12 +82,12 @@ public class Gold extends Account {
 		return true;
 	}
 
-	public boolean makeWithdrawal(double amount) {
+	public double makeWithdrawal(double amount) {
 		if (amount < 0) {
-			return false;
+			return -1.0;
 		}
 		this.setAccountBalance(this.getAccountBalance() - amount);
-		return true;
+		return amount;
 	}
 
 	public String toString() {

@@ -26,9 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
 import javax.swing.JOptionPane;
-
 import com.customers.Customer;
 
 public class BankUtilities {

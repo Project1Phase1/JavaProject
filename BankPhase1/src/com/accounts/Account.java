@@ -74,6 +74,6 @@ public abstract class Account {
 	
 	abstract public boolean makeDeposit(double amount);
 	
-	abstract public boolean makeWithdrawal(double amount);
+	abstract public double makeWithdrawal(double amount);
 	
 }

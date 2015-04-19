@@ -102,7 +102,7 @@ public class NewFXBanker extends Application
      menuBar.getMenus().add(quit);
      quit.setOnAction(new EventHandler<ActionEvent>() {
     	 public void handle(ActionEvent e) {
-    		 System.exit(1);
+    		 System.exit(0);
     	 }
      });
      

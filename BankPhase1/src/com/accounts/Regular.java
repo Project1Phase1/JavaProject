@@ -87,6 +87,9 @@ public class Regular extends Account {
 		System.out.print("Regular interest charge successfully updated!\n");
 	}
 
+	public void setRegularInterestAmount(double interest) {
+		this.regularInterestAmount += interest;
+	}
 
 	/** make deposit<br><br>
 	 * 
@@ -108,14 +111,14 @@ public class Regular extends Account {
 	 * @return true or false<br>was the withdrawal successful or not
 	 * 
 	 */
-	public boolean makeWithdrawal(double amount) {
+	public double makeWithdrawal(double amount) {
 		if (amount < 0) {
-			return false;
+			return -1.0;
 		} else if (this.getAccountBalance() < amount) {
 			amount = this.getAccountBalance();
 		}
 		this.setAccountBalance(this.getAccountBalance() - amount);
-		return true;
+		return amount;
 	}
 
 	public String toString() {

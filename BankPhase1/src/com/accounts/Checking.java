@@ -91,9 +91,9 @@ public class Checking extends Account {
 		return true;
 	}
 
-	public boolean makeWithdrawal(double amount) {
+	public double makeWithdrawal(double amount) {
 		if (amount < 0) {
-			return false;
+			return -1.0;
 		}
 		this.setNumberOfTransactions(this.getNumberOfTransactions() + 1);
 		if (this.numberOfTransactions > 2) {
@@ -103,7 +103,7 @@ public class Checking extends Account {
 			amount = this.getAccountBalance();
 		}
 		this.setAccountBalance((this.getAccountBalance() - amount));
-		return true;
+		return amount;
 	}
 	
 	public String toString() {

@@ -93,19 +93,19 @@ public class FXBanker extends Application {
 		 // Label lblNumber = new Label("Enter a number");
 
 		  
-		  Button btnOne =    new Button(" 1. Create Regular account");
-		  Button btnTwo =    new Button(" 2. Create Gold account");
-		  Button btnThree =  new Button(" 3. Create Checking account");
-		  Button btnFour =   new Button(" 4. Deposit money into a choosen account");
-		  Button btnFive =   new Button(" 5. Withdraw money from a choosen account");
-		  Button btnSix =    new Button(" 6. Display account information");
-		  Button btnSeven =  new Button(" 7. Remove a a choosen account");
-		  Button btnEight =  new Button(" 8. EOM Calculations");
-		  Button btnNine =   new Button(" 9. Generate Statistics");
-		  Button btnTen =    new Button("10. Generate Transaction report");
-		  Button btnEleven = new Button("11. Exit");
-		  
-		  
+		  Button[] button =  {
+				  new Button(" 1. Create Regular account"), 
+				  new Button(" 2. Create Gold account"), 
+				  new Button(" 3. Create Checking account"), 
+				  new Button(" 4. Deposit money into a choosen account"), 
+				  new Button(" 5. Withdraw money from a choosen account"), 
+				  new Button(" 6. Display account information"), 
+				  new Button(" 7. Remove a a choosen account"), 
+				  new Button(" 8. EOM Calculations"), 
+				  new Button(" 9. Generate Statistics"), 
+				  new Button("10. Generate Transaction report"), 
+				  new Button("11. Exit")
+				  };
 		  /*
 		  Button btnName = new Button("Display Name");
 		  Button btnNumber = new Button("Display Number");
@@ -147,7 +147,9 @@ public class FXBanker extends Application {
 		  VBox centerPane = new VBox(5);
 		  //                           top, right, bottom, left
 		  centerPane.setPadding(new Insets(10, 10, 10, 10));
-		  centerPane.getChildren().addAll(btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnTen, btnEleven);
+		  //for (int x = 0; x < button.length; x++) {
+			  centerPane.getChildren().addAll(button);
+		 // }
 		  centerPane.setAlignment(Pos.TOP_LEFT);
 		  //bottomPane.setPadding(new Insets(15,15,15,15));
 		  //bottomPane.getChildren().addAll(btnName, btnNumber, btnClear, btnExit);
@@ -195,12 +197,12 @@ public class FXBanker extends Application {
 		  //You can also use the new Java 8 Lambda expression feature as follows:
 		  //A lambda expression can be viewed as an anonymous class with precise syntax
 		  */
-		  btnOne.setOnAction(e -> {
+		  button[0].setOnAction(e -> {
 			  ActualFXBanker banker = new ActualFXBanker();
 			  banker.createRegularAccount();
 		  });
 		  
-		  btnEleven.setOnAction(e -> {//code for processing event e
+		  button[10].setOnAction(e -> {//code for processing event e
 				  	JOptionPane.showMessageDialog(null, "Exiting!", "Goodbye", JOptionPane.INFORMATION_MESSAGE);
 					System.exit( 0 ); 
 					//class System is part of the Java.lang package thats imported automatically for every java program.
