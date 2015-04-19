@@ -1,8 +1,6 @@
-<<<<<<< HEAD
+
 package com.reports;
 
-=======
-package reports;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -13,8 +11,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
@@ -86,14 +82,6 @@ public class Reports extends Application {
 			  return;
 		});
 	  
-  return mainPane;
-}
-		  
-		  
-		  
+		  return mainPane;
 	  }
-	  
-	
-	
->>>>>>> origin/master
-
+}
