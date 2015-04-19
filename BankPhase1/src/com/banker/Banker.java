@@ -110,7 +110,7 @@ class ActualBanker {
 			{
 				case 1:
 					// 1.  Create a Customer
-					System.out.print(((createCustomer(0))? "\nCustomer Successfully Created!!\n" : "\nCustomer was not created!!\n"));
+					System.out.print(((createCustomer(0))? "\nCustomer Successfully Created!!\n" : "\nCustomer was NOT created!!\n"));
 					break;
 				case 2:
 					// 2.  Create a Checking Account (0)
@@ -255,7 +255,7 @@ class ActualBanker {
 			totalAccounts = 0.0;
 			counter = 0;
 		}
-		System.out.print("\n======================================================================================================================\n\n");
+		System.out.print("\n=======================================================================================================================\n\n");
 	}
 	
 	
@@ -264,35 +264,36 @@ class ActualBanker {
 			System.out.print("\nNo accounts to display!\n\n");
 			return;
 		}
-		System.out.print("\n==================================================================================================================================\n");
-		System.out.print("                                                                  Accounts\n");
-		System.out.print("                                                    ------------------------------\n");
+		System.out.print("\n====================================================================================================================================================\n");
+		System.out.print("                                                                        Accounts "+ accounts.size() + "\n");
+		System.out.print("                                                             ------------------------------\n");
 		//System.out.printf("%12s %-55s %12s %s %s %14s %s", "        ", "            Customer Information", "Balance", "# of Transactions", "Transaction Fee", "Total Fee","\n");  
 		int chkCounter = 1, regCounter = 1, gldCounter = 1;
 		for (Account a: accounts) {
 			if (a instanceof Checking) {
 				if (chkCounter == 1) {
 					System.out.println();
-					System.out.printf("%12s %-55s %12s %s %s %14s\n", "        ", "            Customer Information", "Balance", "# of Transactions", "Transaction Fee", "Total Fee");
+					System.out.printf("%12s %-55s %-15s %12s %s %s %15s\n", " ", "Customer Information","Account Number", "Balance", "# of Transactions", "Transaction Fee", "Total Fee");
 					chkCounter++;
 				}
 			}
 			if (a instanceof Regular) {
 				if (regCounter == 1) {
 					System.out.println();
-					System.out.printf("%12s %-55s %12s %s %s %17s\n", "        ", "            Customer Information", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest");
+					System.out.printf("%12s %-55s %-15s %12s %s %s %17s\n", " ", "Customer Information", "Account Number", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest");
 					regCounter++;
 				}
 			}
 			if (a instanceof Gold) {
 				if (gldCounter == 1) {
 					System.out.println();
-					System.out.printf("%12s %-55s %12s %s %s\n", "        ", "            Customer Information", "Balance", "     Interest Rate", "Interest Amount");
+					System.out.printf("%12s %-55s %-15s %12s %s %s\n", " ", "Customer Information", "Account Number", "Balance", "     Interest Rate", "Interest Amount");
 					gldCounter++;
 				}
 			}
 			a.toString();
 		}
+		System.out.print("\n====================================================================================================================================================\n");
 	}
 
 	public void displayTransaction() {
@@ -301,17 +302,17 @@ class ActualBanker {
 			return;
 		}
 		double totalAmnt = 0.0;
-		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-		System.out.print("                                                                     Transactions\n");
-		System.out.print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
-		System.out.printf("%-20s %-35s %-15s %-15s %-45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
+		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("                                                                     Transactions" + transactions.size() + "\n");
+		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
+		System.out.printf("%20s %35s %15s %20s %45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
 		for (Transaction t: transactions) {
 			t.toString();
 			totalAmnt += t.getAmount();
 		}
-		System.out.printf("%153s\n", "================");
-		System.out.printf("%139s $%12.2f \n","  ", totalAmnt);
-		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.printf("%158s\n", "================");
+		System.out.printf("%144s $%12.2f \n","  ", totalAmnt);
+		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	}
 	/** create customer<br><br>
 	 * 
@@ -431,6 +432,9 @@ class ActualBanker {
 					validateInput=false;
 				} catch (InputMismatchException e) {
 					System.out.print("\nInvalid Input: Please enter Integer Value\n");
+					if (input.hasNext()){
+						input.nextLine();
+					}
 				}
 			}
 			//end try-catch
@@ -686,11 +690,17 @@ class ActualBanker {
 				amount = input.nextDouble(); 
 				if (amount >= 0.00) {
 					validate=false;
+				} else {
+					//throw new InputMismatchException("Non-Positive Value") ;
 				}
 			} catch (InputMismatchException e) {
-				System.out.print("\n*******************\n"
-						+ "Fatal Error: Invalid input!\n"
-						+ "*******************\n");
+				System.out.print("\n                   *******************\n"
+						+ "Fatal Error: Invalid input! Was expecting a decimal value!\n"
+						+ "                   *******************\n");
+				if (input.hasNext()) {
+					input.next();
+				}
+				
 			}
 			if (validate) {
 				System.out.print(errMessage);

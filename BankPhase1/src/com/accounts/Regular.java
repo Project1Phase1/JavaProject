@@ -122,7 +122,7 @@ public class Regular extends Account {
 	}
 
 	public String toString() {
-		System.out.printf("%12s %-55s %12.2f %s %10.2f%% %3s %12.2f %6s %12.2f\n", "Regular", this.getCustomer(), this.getAccountBalance(), "", this.getRegularInterestRate(), "", this.getRegularFixedCharge(), "", this.getRegularInterestAmount());
+		System.out.printf("%12s %-55s %-15s %12.2f %s %10.2f%% %3s %12.2f %6s %12.2f\n", "Regular", this.getCustomer(), this.getAccountNumber(), this.getAccountBalance(), "", this.getRegularInterestRate(), "", this.getRegularFixedCharge(), "", this.getRegularInterestAmount());
 		return "";
 	}
 
