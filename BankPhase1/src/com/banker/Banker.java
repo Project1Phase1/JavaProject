@@ -10,19 +10,6 @@
  *
  */
 
-/* -------------------Tasks that need done ---------------------------
- * Tasks that need to be finished before submission
- * -------------------------------------------------------------------
- * 
- * 1. Correct the formating on the Statistics method <FINISHED - Theral>
- * 2. Add try / catch to all input areas. Wherever a scanner gets input from user <Ian is working on this>
- * 
- * 
- * ------------Ongoing tasks---------------
- * Finish testing the entire application from start to finish
- * 
- */
-
 package com.banker;
 
 import java.util.*;
@@ -33,19 +20,18 @@ import com.accounts.*;
 import com.customers.*;
 import com.transactions.*;
 import com.utilities.*;
-/**
- * @mentor Professor Dr. Awny Alnusair<br><br>
- * @college Indiana University Kokomo<br><br><br>
- * @course INFO-211 Informatics II<br><br>
+
+/** public class
  * 
  * 
- * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
- * Apr 6, 2015<br>
+ * @author Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
+ * Apr 20, 2015<br>
  * Banker.java<br>
  *
  */
 public class Banker {
-	/**
+	
+	/** main method
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -66,17 +52,23 @@ public class Banker {
  * 
  */
 class ActualBanker {
+	// holds the account information
 	ArrayList<Account> accounts = new ArrayList<Account>();
-	// eom accounts that had problems while processing
+	// eom accounts that have problems while processing
 	// does not remove them from the accounts list but adds
-	// them so thay can be processed later
+	// them so they can be processed later
 	ArrayList<Account> eomErrors = new ArrayList<Account>(); 
+	// holds the customer information
 	ArrayList<Customer> customers = new ArrayList<Customer>();
+	// holds the transactions that only affect the change in balance
 	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+	// utility class for holding miscellaneous methods
 	BankUtilities bu = new BankUtilities();
+	// this holds the number of menu items and allows for customization to occur
 	static int menuItems;
-	// change bankName to whatever the bank
+	// change bankName to whatever the user prefers
 	static String bankName = "";//"   Welcome To Holtson, McKinney and Jessop LLC";
+	
 	/** doBanker method<br><br>
 	 * 
 	 * this method is the heart of the client menu<br>
@@ -169,7 +161,7 @@ class ActualBanker {
 				case 15:
 					// 15.  exit
 					System.out.print("\n*********************************************\n"
-							         + "      Thank you for using H M and J LLC\n"
+							         + "      Thank you for using " + bankName + "\n"
 							         + "*********************************************\n");
 					finished = true;
 					break;
@@ -181,6 +173,10 @@ class ActualBanker {
 		} // end while
 	}
 	
+	/** display menu and get input<br>
+	 * 
+	 * @return the menu number the user enters
+	 */
 	public static int displayMenuAndGetInput()
 	{
 		int inputInt = 0 ;
@@ -192,7 +188,7 @@ class ActualBanker {
 			getBankName = input.nextLine();
 			bankName = "   Welcome To ".concat(getBankName);
 		}
-		// Menu Display
+		// define the menu options
 		String[] dispMenu = new String[15];
 		dispMenu[0] =  "Create a Customer ";
 		dispMenu[1] =  "Create a Checking Account ";
@@ -209,10 +205,12 @@ class ActualBanker {
 		dispMenu[12] = "Process EOM Errors ";
 		dispMenu[13] = "Display Bank Statistics ";
 		dispMenu[14] = "Exit ";
+		// set the number of menu options
 		menuItems = dispMenu.length;
 		System.out.println();
 		System.out.println(bankName);
 		System.out.println("=================================================");
+		// generate the menu
 		for (int x = 0; x < dispMenu.length; x++) {
 			System.out.println(((x < 9)? " " + (x + 1) + ".   " + dispMenu[x] : (x + 1) + ".   " + dispMenu[x]));
 		}
@@ -229,6 +227,7 @@ class ActualBanker {
 				validateInput = false;
 			} catch (InputMismatchException e) {
 				System.out.print("\nInvalid Input: Please enter Integer Value\n");
+				// catch any stray tokens
 				input.nextLine();
 			}
 		}
@@ -236,7 +235,13 @@ class ActualBanker {
 		return inputInt;
 	}
 
-	
+	/** display customer<br>br>
+	 * 
+	 * loop through the customer with the accounts in a nested loop<br>
+	 * to find all the accounts that a customer has and their overall balance<br>
+	 * and present it to the user in a formated manner<br>
+	 * 
+	 */
 	public void displayCustomer(){
 		if (customers.isEmpty()) {
 			System.out.print("\nNo customers to display!\n\n");
@@ -245,10 +250,12 @@ class ActualBanker {
 
 		int counter = 0;
 		double totalAccounts = 0.0;
+		// set up the header
 		System.out.print("\n\n=======================================================================================================================\n");
 		System.out.print("                                                       Customers " + customers.size() + "\n");
 		System.out.print("                                                 -------------------\n\n");
 		System.out.printf("%12s %-55s %s %s %s %s", "", "                      Customer Information", "|", "# of Accounts", "|", " Total  Balance\n");
+		// get customer information
 		for (Customer c: customers) {
 			for (Account a: accounts) {
 				if (a.getCustomer() == c) {
@@ -256,16 +263,26 @@ class ActualBanker {
 					totalAccounts += a.getAccountBalance();
 				}
 			}
-			totalAccounts = (((totalAccounts % 1) > 0.5)? (((Math.ceil((((totalAccounts)*100))))/100)) :  (((Math.floor((((totalAccounts)*100))))/100)));
-			System.out.printf("%12s %-55s %s %7d %10s %12.2f %s", "",  c.toString(), "|", counter, "|  $", totalAccounts, "\n");
+			// display customer information and reset totals for next customer
+			System.out.printf("%12s %-55s %s %7d %10s $%12.2f \n", "",  c.toString(), "|", counter, "|  ", totalAccounts);
 			totalAccounts = 0.0;
 			counter = 0;
 		}
 		System.out.print("\n=======================================================================================================================\n\n");
 	}
 	
-	
+	/** display account information<br><br>
+	 * 
+	 * loop through accounts and generate a list<br>
+	 * grouped by type (Checking, Regular, Gold)<br>
+	 * in a easily readable format<br><br>
+	 * 
+	 * also display the number of accounts next to the main heading<br>
+	 * 
+	 * 
+	 */
 	public void displayAccount() {
+		// check to see if there is anything to display
 		if (accounts.isEmpty()) {
 			System.out.print("\nNo accounts to display!\n\n");
 			return;
@@ -273,67 +290,93 @@ class ActualBanker {
 		System.out.print("\n====================================================================================================================================================\n");
 		System.out.print("                                                                        Accounts "+ accounts.size() + "\n");
 		System.out.print("                                                             ------------------------------\n");
-		//System.out.printf("%12s %-55s %12s %s %s %14s %s", "        ", "            Customer Information", "Balance", "# of Transactions", "Transaction Fee", "Total Fee","\n");  
 		int chkCounter = 1, regCounter = 1, gldCounter = 1;
 		for (Account a: accounts) {
 			if (a instanceof Checking) {
+				// display the header only once
 				if (chkCounter == 1) {
 					System.out.println();
 					System.out.printf("%12s %-55s %-15s %12s %s %s %15s\n", " ", "Customer Information","Account Number", "Balance", "# of Transactions", "Transaction Fee", "Total Fee");
 					chkCounter++;
 				}
+				// display the account information for Checking
 				System.out.print(a.toString());
 			}
 		}
 		for (Account a: accounts) {
 			if (a instanceof Regular) {
+				// display the header only once
 				if (regCounter == 1) {
 					System.out.println();
 					System.out.printf("%12s %-55s %-15s %12s %s %s %17s\n", " ", "Customer Information", "Account Number", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest");
 					regCounter++;
 				}
+				// display the account information for Regular
 				System.out.print(a.toString());
 			}
 		}
 		for (Account a: accounts) {
 			if (a instanceof Gold) {
+				// display the header only once
 				if (gldCounter == 1) {
 					System.out.println();
 					System.out.printf("%12s %-55s %-15s %12s %s %s\n", " ", "Customer Information", "Account Number", "Balance", "     Interest Rate", "Interest Amount");
 					gldCounter++;
 				}
+				// display the account information for Gold
 				System.out.print(a.toString());
 			}
 		}
 		System.out.print("\n====================================================================================================================================================\n");
 	}
 
+	/** display transactions<br><br>
+	 * 
+	 * list the transactions in a easily readable format<br>
+	 * all deposits will be positive<br>
+	 * all withdrawals will be negative<br><br>
+	 * 
+	 * all transactions that increase to the balance will be positive<br>
+	 * and all transaction that decrease the balance will be negative<br>
+	 * 
+	 */
 	public void displayTransaction() {
+		// check to see if there is anything to display
 		if (transactions.isEmpty()) {
 			System.out.print("\nNo transactions to display!\n\n");
 			return;
 		}
 		double totalAmnt = 0.0;
+		// generate the header
 		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 		System.out.print("                                                                     Transactions " + transactions.size() + "\n");
 		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
 		System.out.printf("%-20s %-35s %-15s %-20s %-45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
+		// display the transactions
 		for (Transaction t: transactions) {
 			System.out.print(t.toString());
 			totalAmnt += t.getAmount();
 		}
+		// report the total
 		System.out.printf("%158s\n", "================");
 		System.out.printf("%144s $%12.2f \n","  ", totalAmnt);
 		System.out.print("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	}
+	
 	/** create customer<br><br>
 	 * 
 	 * get customer id and name from user then create customer<br>
-	 * add it to the customer ArrayList<br>
+	 * add it to the customer ArrayList (I call it a table)<br><br>
+	 * 
+	 * @param condition allows for using JOptionPane as the input for<br>
+	 * customer id and name
+	 * 
 	 * 
 	 */
 	public boolean createCustomer(int condition) {
+		// declare usable variables
 		String customerID = "", customerName = "";
+		// set the debug vale
 		boolean debug = false;
 		int chkSum = -1;
 		if (customers.isEmpty()) {
@@ -344,7 +387,9 @@ class ActualBanker {
 		if (debug) {
 			System.out.println(chkSum);
 		}
+		// if using the text based menu
 		if (condition == 0) {
+			// hide the warning input not closed
 			@SuppressWarnings("resource")
 			Scanner input = new Scanner(System.in);
 			System.out.print("\nEnter customer ID ");
@@ -377,6 +422,7 @@ class ActualBanker {
 		}
 		Customer customer = new Customer(customerID, customerName);
 		customers.add(customer);
+		// determine whether customer was added or not
 		if (chkSum < customers.size()) {
 			return true;
 		} else {
@@ -385,13 +431,26 @@ class ActualBanker {
 		
 	}
 	
-	public Customer getCustomer(String type) {
+	/** get customer<br><br>
+	 * 
+	 * determine if there are any customers and if there are not<br>
+	 * ask the user if they want to create one now or not<br>
+	 * if not, it will return to the menu<br><br>
+	 * 
+	 * the typeAcct is for displaying to the user what type<br>
+	 * account being created contextually<br><br>
+	 * 
+	 * display the customers in a menu style and allow the<br>
+	 * user to add a customer if the customer is not listed<br>
+	 * 
+	 * @param typeAcct the type of account being created (Checking, Regular, Gold)
+	 * @return the appropriate customer selected
+	 */
+	public Customer getCustomer(String typeAcct) {
 		// clear warning of input not closed and declare scanner input
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
 		// clear skip unused warning and set up token capture variable
-		@SuppressWarnings("unused")
-		String skip;
 		// declare customer variable
 		Customer customer;
 		// are the customers empty
@@ -417,22 +476,25 @@ class ActualBanker {
 				System.out.print(((createCustomer(0))? "\nCustomer Successfully Created!!\n" : "\nCustomer was not created!!\n"));
 			} else {
 				// notify user of choice and re-display the menu
-				System.out.print("\nTerminationg create " + type + " account!\n");
+				System.out.print("\nTerminationg create " + typeAcct + " account!\n");
 				return null;
 			}
 		}
 		// show available customers to choose from
-		System.out.println("\nChoose the customer for this " + type + " account");
+		System.out.println("\nChoose the customer for this " + typeAcct + " account");
 		System.out.println("===========================================================================");
 		int counter = 0;
+		// start the menu
 		System.out.print("0.) Create New Customer\n");
 		System.out.print("    -------------------\n");
+		// list the available customers starting with 1 as the first one
 		for (Customer c: customers) {
 			counter++;
 			System.out.print(counter + ".) " + c.toString() + "\n");
 		}
 		// get response from user
-		System.out.print("\nChoose which customer to create "+ type + " account for (0 - " + counter + ") ");
+		System.out.print("\nChoose which customer to create "+ typeAcct + " account for (0 - " + counter + ") ");
+		// set the element to a negative value
 		int whichCustomer = -1;
 		// validate user input
 		while (whichCustomer == -1) {
@@ -444,20 +506,21 @@ class ActualBanker {
 					validateInput=false;
 				} catch (InputMismatchException e) {
 					System.out.print("\nInvalid Input: Please enter Integer Value\n");
-					if (input.hasNext()){
-						input.nextLine();
-					}
+					input.nextLine();
 				}
 			}
 			//end try-catch
+			// is the user entry within the appropriate range
 			if (whichCustomer < 0 || whichCustomer > counter) {
 				System.out.print("\nInvalid entry. Please try again!!!\n");
+				// reset element value
 				whichCustomer = -1;
 			}
 		}
 		if (whichCustomer == 0) {
-			// create new customer
+			// call the create new customer method
 			System.out.print(((createCustomer(0))? "\nCustomer Successfully Created!!\n\n" : "\nCustomer was not created!!\n\n"));
+			// set customer variable to last entered customer
 			customer = customers.get(customers.size()-1);
 			whichCustomer = customers.size();
 		} else {
@@ -465,9 +528,16 @@ class ActualBanker {
 			customer = customers.get((whichCustomer - 1));
 		}
 		return customer;
-
 	}
 	
+	/** display account<br><br>
+	 * 
+	 * used to display a list of available account numbers<br>
+	 * so the user can enter the proper one<br>
+	 * 
+	 * @param message an appropriate message to display to the user<br>
+	 * as the header
+	 */
 	public void displayAccount(String message) {
 		// present account information to user and get response
 		System.out.print(message);
@@ -495,13 +565,13 @@ class ActualBanker {
 	 * the description will include the cutomer id and name<br>
 	 * 
 	 * 
-	 * @param description
+	 * @param description the description of the transaction
 	 */
 	public void createCustomerTransaction(String description) {
 		transactions.add(new Transaction(new java.util.Date(), description, bu.generateUniqueTransNumber()));
 	}
 	
-	/** create accounst<br><br>
+	/** create account<br><br>
 	 * 
 	 * 0 is Checking<br>
 	 * 1 is Regular<br>
@@ -526,19 +596,22 @@ class ActualBanker {
 	public void createAccounts(int threeAcct) {
 		// declare the type of account string
 		String typeAccount = "";
+		// which type of account is being created
 		switch (threeAcct) {
-		case 0:
-			typeAccount = "Checking";
-			break;
-		case 1:
-			typeAccount = "Regular";
-			break;
-		case 2:
-			typeAccount = "Gold";
-			break;
-	}
+			case 0:
+				typeAccount = "Checking";
+				break;
+			case 1:
+				typeAccount = "Regular";
+				break;
+			case 2:
+				typeAccount = "Gold";
+				break;
+		}
+		// declare variables
 		Customer customer;
 		customer = getCustomer(typeAccount);
+		// if the customer was not found return
 		if (customer==null) {
 			return;
 		}
@@ -554,7 +627,7 @@ class ActualBanker {
 			+          "**************************************************\n"
 			+          "\nPlease re-enter Account balance: ";
 		accountBalance = getDoubleAmount(message, errMessage);
-		// add the account
+		// add the appropriate account
 		
 		switch (threeAcct) {
 			case 0:
@@ -676,7 +749,7 @@ class ActualBanker {
 				if ((oldAmount != amount) && amount != -1.0) {
 					description = description + " - Available Balance";
 				}
-				// if the returning value is -1 then the amount sent to withdaraw
+				// if the returning value is -1 then the amount sent to withdraw
 				// was a negative number
 				// if the amount in the account is below the amount requested
 				// then it will return the amount that is in the account
@@ -687,12 +760,19 @@ class ActualBanker {
 				} else {
 					System.out.print("\n           ******\nWithdrawal Successful!\n           ******\n");
 				}
-				
 		}
-		// create transaction in tracker
+		// add transaction in tracker
 		createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, amount);
 	}
 
+	/** get double amount<br><br>
+	 * 
+	 * get the amount from the user<br>
+	 * 
+	 * @param message the message to display to the user
+	 * @param errMessage the error message to display to the user
+	 * @return the amount
+	 */
 	public double getDoubleAmount(String message, String errMessage) {
 		//begin try-catch
 		@SuppressWarnings("resource")
@@ -705,8 +785,6 @@ class ActualBanker {
 				amount = input.nextDouble(); 
 				if (amount >= 0.00) {
 					validate=false;
-				} else {
-					//throw new InputMismatchException("Non-Positive Value") ;
 				}
 			} catch (InputMismatchException e) {
 				System.out.print("\n                   *******************\n"
@@ -715,8 +793,8 @@ class ActualBanker {
 				if (input.hasNext()) {
 					input.next();
 				}
-				
 			}
+			// if user entered a negative number display error message
 			if (validate) {
 				System.out.print(errMessage);
 			}
@@ -725,11 +803,20 @@ class ActualBanker {
 		return amount;
 	}
 	
+	/** get account number<br><br>
+	 * 
+	 * 
+	 * 
+	 * @param message to display to user
+	 * @param errMessage to display to user
+	 * @return account number
+	 */
 	public String getAccountNumber(String message, String errMessage) {
 		// try catch
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
 		String getAccount = "";
+		// display message to user
 		System.out.print(message);
 		boolean validateInput = true;
 		while (validateInput) {
@@ -741,6 +828,7 @@ class ActualBanker {
 						+ "Fatal Error: Element or State!"
 						+ "\n           *************\n");
 			}
+			// display error message
 			if (validateInput) {
 				System.out.print(errMessage);
 			}
@@ -748,6 +836,7 @@ class ActualBanker {
 		//end try catch
 		return getAccount;
 	}
+	
 	/** remove account<br><br>
 	 * 
 	 * check to see if there are any accounts to remove<br>
@@ -756,7 +845,7 @@ class ActualBanker {
 	 * 
 	 * create a transaction in the tracker with a description and the current balance<br><br>
 	 * 
-	 * notify user of the success
+	 * notify user of the success or failure
 	 * 
 	 * 
 	 * 
@@ -886,6 +975,25 @@ class ActualBanker {
 
 	}
 	
+	/** end of month calculations<br><br>
+	 * 
+	 * process accounts and calculate interest for accounts that<br>
+	 * have the ability to generate interest only if the balance is positive<br><br>
+	 * 
+	 * apply transaction fees to the balance of Checking accounts only<br>
+	 * if there is enough funds to do so<br>
+	 * Will not allow the balance to go into a negative state<br>
+	 * if there are not enough funds, the account will be added to a<br>
+	 * error table and processed later allow the user to<br>
+	 * add funds<br><br>
+	 * 
+	 * also keep track of the number of account and how many errors<br>
+	 * and display a formated report at the end of the run<br>
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 	public void eomCalculations() {
 		
 		String description = "";
@@ -893,6 +1001,7 @@ class ActualBanker {
 			System.out.print("\n\nThere are no accounts to process!\n\nTerminating EOM Calculations!\n\n");
 			return;
 		}
+		// declare counting variables
 		int counter = 0;
 		int goodCounter = 0;
 		int badCounter = 0;
@@ -903,25 +1012,33 @@ class ActualBanker {
 		int checkErrorCounter = 0;
 		int goldErrorCounter = 0;
 		int regErrorCounter = 0;
-		
+		// set up account types variables
 		Checking chk;
 		Gold gold;
 		Regular reg;
+		// loop through accounts and prcess each one
 		for (Account a: accounts) {
 			counter++;
+			// checking accounts
 			if (a instanceof Checking) {
 				checkCounter++;
 				chk = (Checking) a;
+				// determine if transactions are zero and increment bad counter and loop back
 				if (chk.getNumberOfTransactions() == 0) {
 					badCounter++;
 					continue;
 				}
+				// check to see if the amount of the fees don't match the number of transaction times the fees (remember the first two are fee)
 				if (((chk.getNumberOfTransactions() - 2) * chk.getCheckingTransactionFee()) != chk.getCheckingTransactionFeeAmount()) {
+					// there is an error
 					errorCounter++;
 					checkErrorCounter++;
 					description = "EOM Checking Fees Don't Match";
+					// display message to user
 					displayDescription(description);
+					// add transaction to tracker
 					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, 0.0);
+					// add account to error table
 					eomErrors.add(chk);
 				} else {
 				 // calculated fees and fee amount are equal
@@ -931,16 +1048,23 @@ class ActualBanker {
 						errorCounter++;
 						checkErrorCounter++;
 						description = "EOM Checking - Insufficient Funds";
+						// add account to error table
 						eomErrors.add(chk);
+						// display message to user
 						displayDescription(description);
+						// add transaction to tracker
 						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, 0.0);
 					} else {
 						// there are enough funds to process
 						goodCounter++;
 						description = "EOM Checking - Transaction Fees";
+						// update account balance
 						chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
+						// display message to user
 						displayDescription(description);
+						// add transaction to tracker
 						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
+						// reset transaction number and fee amount
 						chk.setNumberOfTransactions(0);
 						chk.setCheckingTransactionFeeAmount(0.0);
 					}
@@ -956,10 +1080,15 @@ class ActualBanker {
 					// account is able to add interest calculations
 					goodCounter++;
 					description = "EOM Gold - Interest Calculation";
+					// display message to user
 					displayDescription(description);
+					// calculate interest
 					double interest = calculateInterest(gold, (gold.getGoldInterestRate() / 100.0));
+					// apply interest to account
 					gold.setAccountBalance(gold.getAccountBalance() + interest);
+					// add transaction to tracker
 					createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, interest);
+					// add interest to interest field
 					gold.setGoldInterestAmount(gold.getGoldInterestAmount() + interest);
 				}
 			} else {
@@ -974,20 +1103,28 @@ class ActualBanker {
 					if (reg.getAccountBalance() >= reg.getRegularFixedCharge()) {
 						goodCounter++;
 						description = "EOM Regular - Interest Calculation";
+						// calculate interest
 						double interest = calculateInterest(reg, (reg.getRegularInterestRate() / 100.0));
+						// display message to user
 						displayDescription(description);
+						// apply interest to account
 						reg.setAccountBalance(reg.getAccountBalance() + (interest - reg.getRegularFixedCharge()));
+						// add transaction to tracker
 						createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, interest);
+						// add interest to interest field
+						reg.setRegularInterestAmount(reg.getRegularInterestAmount() + interest);
 					} else {
 						// there is not enough funds available to calculate interest and apply the fixed Charge
 						regErrorCounter++;
 						errorCounter++;
 						description = "EOM Regular - Insufficient funds to apply fixed cost";
+						// display message to user
 						displayDescription(description);
 					}
 				}
 			}
 		}
+		// display report
 		// all accounts
 		System.out.print("\nThere were " + counter + " accounts processed!\n");
 		System.out.print("\nThere were " + errorCounter + " errors accounted for!\n");
@@ -1061,11 +1198,17 @@ class ActualBanker {
 			System.out.println("\n\nThere are no accounts available to run statistics for!!!\n\n\n");
 			return;
 		}
+		// number of accounts
 		int numAccounts = 0, numRegularAccounts = 0, numCheckingAccounts = 0, numGoldAccounts = 0;
+		// sum accounts
 		double sumAccounts = 0.0, sumRegularAccounts = 0.0, sumCheckingAccounts = 0.0, sumGoldAccounts = 0.0;
+		// number of zero balances
 		int numZeroAccounts = 0, numRegularZeroAccounts = 0, numCheckingZeroAccounts = 0, numGoldZeroAccounts = 0;
+		// average balance
 		double avgAccounts = 0.0, avgRegularAccounts = 0.0, avgCheckingAccounts = 0.0, avgGoldAccounts = 0.0;
+		// largest account balance
 		double largestAccount = 0.0, largestRegularAccount = 0.0, largestCheckingAccount = 0.0, largestGoldAccount = 0.0;
+		// largest account balance account number
 		String largestAccountNumber = "not available", largestRegularAccountNumber = "not available", largestCheckingAccountNumber = "not available", largestGoldAccountNumber = "not available";
 		numAccounts = accounts.size();
 		for (int x = 0; x < accounts.size(); x++) {
