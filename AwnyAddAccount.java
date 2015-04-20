@@ -1,6 +1,9 @@
+package com.reports;
+import com.sun.corba.se.impl.orbutil.graph.Node;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class AddAccount extends Application {
+public class AwnyAddAccount extends Application {
 
 	 public static void main(String[] args) {
 		    launch(args);
@@ -99,11 +102,13 @@ public class AddAccount extends Application {
 		     mainPane.setCenter(centerPane);
 		     mainPane.setBottom(bottomPane);
 		     mainPane.setStyle("-fx-border-color: blue");
-			  
+			 
+		     btnExit.setOnAction(e ->{
+		    	 ((Window)(e.getSource())).getScene().getWindow().hide();	 
+		     });
 			  return mainPane;
 		  	
-//implement SetOnAction for btnAdd & btnExit
-	
+
 	
 }
 }

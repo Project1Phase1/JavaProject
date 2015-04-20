@@ -20,7 +20,7 @@ public class AddAccount extends Application {
 	
 	public void start(Stage primaryStage) {
 	    // Create a scene by calling the method above and place it in the stage
-	    Scene scene = new Scene(getPane(), 800, 300);
+	    Scene scene = new Scene(getPane(), 1300, 500);
 	    primaryStage.setTitle("Add Account"); // Set the stage title
 	    primaryStage.setScene(scene); // Place the scene in the stage
 	    primaryStage.show(); // Display the stage
@@ -34,7 +34,6 @@ public class AddAccount extends Application {
 		  TextField txtDisplayBoxAccounts = new TextField(" ");
 		  txtDisplayBoxAccounts.setPrefSize(0,1);
 		  txtDisplayBoxAccounts.setDisable(true);
-		  
 		  TextField txtDisplayBoxMessage = new TextField(" ");
 		  txtDisplayBoxMessage.setPrefSize(0,1);
 		  txtDisplayBoxMessage.setDisable(true);
@@ -51,6 +50,12 @@ public class AddAccount extends Application {
 		  //bottomPane.setPadding(new Insets(15,15,15,15));
 		  accountPane.getChildren().addAll(lblAccountNumber, txtAccountNumber);
 		  accountPane.setAlignment(Pos.CENTER);
+		 
+		  
+		  HBox accountDisplayPane = new HBox(1);
+		  accountDisplayPane.setPadding(new Insets(20,15,150,15));
+		  accountDisplayPane.getChildren().addAll(txtDisplayBoxAccounts);
+		  accountDisplayPane.setAlignment(Pos.CENTER);
 		  
 		  VBox customerPane = new VBox(2);
 		  //bottomPane.setPadding(new Insets(15,15,15,15));
@@ -62,25 +67,14 @@ public class AddAccount extends Application {
 		  //bottomPane.setPadding(new Insets(15,15,15,15));
 		  balancePane.getChildren().addAll(lblOpeningBalance,txtOpeningBalance);
 		  balancePane.setAlignment(Pos.CENTER);
-		 
-		  
-		  HBox accountDisplayPane = new HBox(1);
-		  accountDisplayPane.setPadding(new Insets(15,15,15,15));
-		  accountDisplayPane.getChildren().addAll(txtDisplayBoxAccounts);
-		  accountDisplayPane.setAlignment(Pos.CENTER);
 		  
 		  HBox topPane = new HBox(3);
 		  topPane.setPadding(new Insets(15,15,15,15));
 		  topPane.getChildren().addAll(accountPane,customerPane,balancePane);
 		  topPane.setAlignment(Pos.CENTER);
 		  
-		  VBox finaTopPane = new VBox(2);
-		  //bottomPane.setPadding(new Insets(15,15,15,15));
-		  finaTopPane.getChildren().addAll(accountDisplayPane, topPane);
-		  finaTopPane.setAlignment(Pos.CENTER);
-		  
 		  HBox centerPane = new HBox(1);
-		  centerPane.setPadding(new Insets(0,15,15,15));
+		  centerPane.setPadding(new Insets(15,15,150,15));
 		  centerPane.getChildren().addAll(txtDisplayBoxMessage);
 		  centerPane.setAlignment(Pos.CENTER);
 		  
@@ -89,14 +83,14 @@ public class AddAccount extends Application {
 		  //bottomPane.setPadding(new Insets(15,15,15,15));
 		  bottomPane.getChildren().addAll(btnAdd, btnExit);
 		  bottomPane.setAlignment(Pos.CENTER);
-	/*	 
+		  
 		  HBox finalPane = new HBox(3);
 		  //bottomPane.setPadding(new Insets(15,15,15,15));
-		  finalPane.getChildren().addAll(accountDisplayPane,topPane);
+		  finalPane.getChildren().addAll(accountDisplayPane,topPane,centerPane);
 		 finalPane.setAlignment(Pos.CENTER);
-	*/
+	
 		  BorderPane mainPane = new BorderPane();
-			 mainPane.setTop(finaTopPane);
+			 mainPane.setTop(finalPane);
 		     mainPane.setCenter(centerPane);
 		     mainPane.setBottom(bottomPane);
 		     mainPane.setStyle("-fx-border-color: blue");

@@ -1,5 +1,5 @@
 /**
- * @mentor Professor Dr. Awny Alnusair<br><br>
+* @mentor Professor Dr. Awny Alnusair<br><br>
  * @college Indiana University Kokomo<br><br><br>
  * @course INFO-211 Informatics II<br><br>
  * 
