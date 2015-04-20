@@ -306,14 +306,14 @@ class ActualBanker {
 		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 		System.out.print("                                                                     Transactions" + transactions.size() + "\n");
 		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
-		System.out.printf("%20s %35s %15s %20s %45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
+		System.out.printf("%-20s %-35s %-15s %-20s %-45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
 		for (Transaction t: transactions) {
 			t.toString();
 			totalAmnt += t.getAmount();
 		}
 		System.out.printf("%158s\n", "================");
 		System.out.printf("%144s $%12.2f \n","  ", totalAmnt);
-		System.out.print("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+		System.out.print("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	}
 	/** create customer<br><br>
 	 * 
@@ -466,7 +466,6 @@ class ActualBanker {
 		for (Account a: accounts) {
 			System.out.print("     " + a.getAccountNumber() + "\n");
 		}
-
 	}
 	
 	/** create transactions
@@ -594,11 +593,11 @@ class ActualBanker {
 				tranType = "Withdrawal";
 				break;
 		}
-		// check to see if there any accounts
 		if (accounts.isEmpty()) {
 			System.out.println("\n\nThere are no accounts to add a " + tranType + " to!!!!!\n\nTerminating make " + tranType + "!!\n\n\n\n");
 			return;
 		}
+		// check to see if there any accounts
 		
 		// get users choice
 		String getAccount = "";
@@ -661,7 +660,11 @@ class ActualBanker {
 				System.out.print(((account.makeDeposit(amount))? "\n       ******\nDeposit Successful!\n       ******\n" : "\n       ******\nDeposit Unsuccessful!\n       ******\n"));
 				break;
 			case 1:
+				double oldAmount = amount;
 				amount = account.makeWithdrawal(amount);
+				if ((oldAmount != amount) && amount != -1.0) {
+					description = description + " - Available Balance";
+				}
 				// if the returning value is -1 then the amount sent to withdaraw
 				// was a negative number
 				// if the amount in the account is below the amount requested
@@ -872,15 +875,16 @@ class ActualBanker {
 
 	}
 	
-	public void newEOMCalculations() {
+	public void eomCalculations() {
 		
 		String description = "";
 		if (accounts.isEmpty()) {
-			System.out.print("\n\nThere are no accounts to process!\n\nTerminating New EOM Calculations!\n\n");
+			System.out.print("\n\nThere are no accounts to process!\n\nTerminating EOM Calculations!\n\n");
 			return;
 		}
 		int counter = 0;
 		int goodCounter = 0;
+		int badCounter = 0;
 		int errorCounter = 0;
 		int checkCounter = 0;
 		int goldCounter = 0;
@@ -897,10 +901,14 @@ class ActualBanker {
 			if (a instanceof Checking) {
 				checkCounter++;
 				chk = (Checking) a;
+				if (chk.getNumberOfTransactions() == 0) {
+					badCounter++;
+					continue;
+				}
 				if (((chk.getNumberOfTransactions() - 2) * chk.getCheckingTransactionFee()) != chk.getCheckingTransactionFeeAmount()) {
 					errorCounter++;
 					checkErrorCounter++;
-					description = "New EOM Checking Fees Don't Match";
+					description = "EOM Checking Fees Don't Match";
 					displayDescription(description);
 					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, 0.0);
 					eomErrors.add(chk);
@@ -911,14 +919,14 @@ class ActualBanker {
 						// there are not enough funds to process
 						errorCounter++;
 						checkErrorCounter++;
-						description = "New EOM Checking - Insufficient Funds";
+						description = "EOM Checking - Insufficient Funds";
 						eomErrors.add(chk);
 						displayDescription(description);
 						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, 0.0);
 					} else {
 						// there are enough funds to process
 						goodCounter++;
-						description = "New EOM Checking - Transaction Fees";
+						description = "EOM Checking - Transaction Fees";
 						chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
 						displayDescription(description);
 						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
@@ -931,54 +939,55 @@ class ActualBanker {
 				gold = (Gold) a;
 				if(gold.getAccountBalance() <= 0.0) {
 					// the account has no funds to calculate interest
-					goldErrorCounter++;
-					errorCounter++;
-					description = "New EOM Gold - Insufficient funds to calculate interest";
-					displayDescription(description);
+					badCounter++;
+					continue;
 				} else {
 					// account is able to add interest calculations
 					goodCounter++;
-					description = "New EOM Gold - Interest Calculation";
+					description = "EOM Gold - Interest Calculation";
 					displayDescription(description);
 					double interest = calculateInterest(gold, (gold.getGoldInterestRate() / 100.0));
 					gold.setAccountBalance(gold.getAccountBalance() + interest);
 					createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, interest);
 					gold.setGoldInterestAmount(gold.getGoldInterestAmount() + interest);
 				}
-			} else if (a instanceof Regular) {
+			} else {
 				regCounter++;
 				reg = (Regular) a;
 				if (reg.getAccountBalance() <= 0.0) {
 					// the account has no funds to calculate interest
-					regErrorCounter++;
-					errorCounter++;
-					description = "New EOM Regular - Insufficient funds to calculate interest";
-					displayDescription(description);
+					badCounter++;
+					continue;
 				} else {
 					// account is able to add interest calculations
-					double interest = calculateInterest(reg, (reg.getRegularInterestRate() / 100.0));
-					if (interest >= reg.getRegularFixedCharge()) {
+					if (reg.getAccountBalance() >= reg.getRegularFixedCharge()) {
 						goodCounter++;
-						description = "New EOM Regular - Interest Calculation";
+						description = "EOM Regular - Interest Calculation";
+						double interest = calculateInterest(reg, (reg.getRegularInterestRate() / 100.0));
 						displayDescription(description);
 						reg.setAccountBalance(reg.getAccountBalance() + (interest - reg.getRegularFixedCharge()));
+						createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, interest);
 					} else {
-						
+						// there is not enough funds available to calculate interest and apply the fixed Charge
+						regErrorCounter++;
+						errorCounter++;
+						description = "EOM Regular - Insufficient funds to apply fixed cost";
+						displayDescription(description);
 					}
-					
 				}
 			}
-			
 		}
-		
+		// all accounts
 		System.out.print("\nThere were " + counter + " accounts processed!\n");
 		System.out.print("\nThere were " + errorCounter + " errors accounted for!\n");
-		System.out.print("\nThere were " + goodCounter + " non-errors accounted for!\n\n");
-		
+		System.out.print("\nThere were " + goodCounter + " accounts processed successfully!\n");
+		// show those with zero balance
+		System.out.print("\nThere were " + badCounter + " accounts processed unsuccessfully! (zero balance or no transactions)\n\n");
+		// out of all the accounts
 		System.out.print("\nOf the " + counter + " accounts processed, " + checkCounter + " were Checking accounts!\n");
 		System.out.print("\nOf the " + counter + " accounts processed, " + goldCounter + " were Gold accounts!\n");
 		System.out.print("\nOf the " + counter + " accounts processed, " + regCounter + " were Regular accounts!\n\n");
-		
+		// of the accounts how many of those were errors
 		System.out.print("\nOf the " + checkCounter + " Checking accounts processed, there were " + checkErrorCounter + " errors\n");
 		System.out.print("\nOf the " + goldCounter + " Gold accounts processed, there were " + goldErrorCounter + " errors\n");
 		System.out.print("\nOf the " + regCounter + " Regular accounts processed, there were " + regErrorCounter + " errors\n\n");
@@ -987,149 +996,6 @@ class ActualBanker {
 		
 	}
 
-	/** end of month (eom) calculations<br><br>
-	 * 
-	 * this will allow for processing not only the accounts<br>
-	 * but <strong>also</strong> the rejects from running the eom<br>
-	 * 
-	 * 
-	 * @param process the ArrayList
-	 */
-	public void eomCalculations() {
-		boolean debug = true;
-		// declare variables
-		String description;
-		// declare description string
-		// check to see if there are any accounts 
-		if (accounts.isEmpty()) {
-			System.out.println("\n\nThere are no accounts to process!!!\n\nTerminating EOM calculations!!!\n\n\n\n");
-			return;
-		}
-		// declare counter variable for statistics
-		// to display at the end of the calculations
-		int counter = 0;
-		int goodCounter = 0;
-		int errorCounter = 0;
-		int checkCounter = 0;
-		int goldCounter = 0;
-		int regCounter = 0;
-		
-		Checking chk;
-		Gold gold;
-		Regular reg;
-		// loop through the accounts
-		for (Account a: accounts) {
-			// determine which type of account the account number
-			// belongs to and set it to account variable
-			// and set the description
-			
-			// is it a checking account
-			if (a instanceof Checking) {
-				counter++;
-				checkCounter++;
-				chk = (Checking) a ;
-				description = "EOM Checking Account";
-				// validate the amount of the fees before posting
-				if (chk.getNumberOfTransactions() == 0) {
-					goodCounter++;
-					continue;
-				}
-				if (((chk.getNumberOfTransactions() - 2) * chk.getCheckingTransactionFee()) == chk.getCheckingTransactionFeeAmount()) {
-					if (chk.getAccountBalance() < chk.getCheckingTransactionFeeAmount()) {
-						System.out.print("\nChecking: Unable to process due to a lack of funds!\n");
-						
-						if (debug) {
-							System.out.print((chk.getAccountBalance() < chk.getCheckingTransactionFeeAmount())? "\nBalance < Fee: True\n\n" : "\nBalance < Fee: False\n\n");
-							System.out.print("Balance: " + chk.getAccountBalance() + "\n");
-							System.out.print("\nTran Fee Amt: "+chk.getCheckingTransactionFeeAmount() + "\n");
-						}
-						errorCounter++;
-						description = "EOM Checking - Insufficent Funds to process Fees";
-						displayDescription(description);
-						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
-						eomErrors.add(chk);
-					} else {
-						goodCounter++;
-						chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
-						chk.setCheckingTransactionFeeAmount(0.0);
-						chk.setNumberOfTransactions(0);
-						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
-					}
-				} else {
-					// if this is reached there is an error
-					if (debug) {
-						System.out.print("Balance: " + chk.getAccountBalance());
-						System.out.print("Tran Fee Amt: "+chk.getCheckingTransactionFeeAmount());
-					}
-					errorCounter++;
-					// put the troubled account into a reject holder until it can be properly processed
-					description = "EOM Checking - Transaction Fees don't Match";
-					createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
-					eomErrors.add(chk);
-					continue;
-				}
-			} else if (a instanceof Gold) {
-				// is it a gold account
-				counter++;
-				goldCounter++;
-				gold = (Gold) a;
-				description = "EOM Gold Account";
-				if (gold.getAccountBalance() <= 0) {
-					//errorCounter++;
-					// put the troubled account into the reject folder
-					System.out.print("\nGold: Unable to calculate interest due to a lack of funds!\n");
-					description = "EOM Gold - Insufficient Funds to calculate interest";
-					displayDescription(description);
-					createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, 0.0);					
-					eomErrors.add(gold);
-					continue;
-				}
-				// calculate the interest
-				goodCounter++;
-				double rate = gold.getGoldInterestRate() / 100.0;
-				double interest = calculateInterest(gold, rate);
-				// add interest to balance
-				gold.setAccountBalance(gold.getAccountBalance() + interest);
-				gold.setGoldInterestAmount(interest);
-				// add transaction to transaction tracker
-				createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, interest);
-			} else if (a instanceof Regular){
-			// is it a regular account 
-				counter++;
-				regCounter++;
-				// process regular accounts
-				reg = (Regular) a;
-				description = "EOM Regular Account";
-				
-				if (reg.getAccountBalance() <= 0) {
-					System.out.println("\nRegular: Unable to calculate interest due to a lack of funds!\n");
-					// unable to process this account so add it to the  reject pile
-					// until the balance has enough to process
-					//errorCounter++;
-					description = "EOM Regular - Insufficent Funds to calulate interest";
-					displayDescription(description);
-					createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, 0.0);
-					eomErrors.add(reg);
-					continue;
-				}
-				goodCounter++;
-				double rate = reg.getRegularInterestRate() / 100.0;
-				double interest = calculateInterest(reg, rate);
-				// apply interest to balance
-				reg.setAccountBalance(reg.getAccountBalance() + interest);
-				reg.setRegularInterestAmount(interest);
-				// add to tracker
-				createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, interest);
-			}
-		}
-		System.out.print("\nThere were " + counter + " accounts processed!\n");
-		System.out.print("\nThere were " + errorCounter + " errors accounted for!\n");
-		System.out.print("\nThere were " + goodCounter + " non-errors accounted for!\n");
-		System.out.print("\nOf the " + counter + " accounts processed, " + checkCounter + " were Checking accounts!\n");
-		System.out.print("\nOf the " + counter + " accounts processed, " + goldCounter + " were Gold accounts!\n");
-		System.out.print("\nOf the " + counter + " accounts processed, " + regCounter + " were Regular accounts!\n");
-		System.out.print("\n");
-	}
 	
 	/** display description<br><br>
 	 * 	
@@ -1297,10 +1163,10 @@ class ActualBanker {
 		System.out.printf("%-15s %7s %-4d %13s $%12.2f %11s %-4d %10s $%12.2f %3s %19s %6s $%12.2f \n", acctType, "", numAccts, "", sumAccts, "", numZero, "", avgAccts, "", acctNumber, "", largeBal);
 	}
 	
-	/** EOM Error Transactions
-	 *  process transactions that were added to the reject array list
-	 *  because they were not able to be processed.
-	 *  Example: insufficient funds to post a EOM transaction (Transaction fees)
+	/** EOM Error Transactions<br><br>
+	 *  process transactions that were added to the eomError array list<br>
+	 *  because they were not able to be processed.<br>
+	 *  Example: insufficient funds to post a EOM transaction (Transaction fees)<br>
 	 *  
 	 */
 	public void eomErrorTransactions() {
@@ -1311,79 +1177,95 @@ class ActualBanker {
 		// process the reject arraylist which holds the accounts that were not able to process
 		// because there was an error in the EOM: insufficient funds, fees don't match
 		Account account;
+		// keep track of the elements of the eomErrors that are processed
+		ArrayList<Integer> element = new ArrayList<Integer>();
+		boolean isOk = false;
+		// loop through the eomErrors and accounts and process the eomErrors one by one
 		for (int x = 0; x < eomErrors.size(); x++) {
 			for (int y = 0; y < accounts.size(); y++) {
-				if (eomErrors.get(x).equals(accounts.get(y))){
-					account = eomErrors.get(x);
-					processEOMError(account);
-					return;
+				if (eomErrors.get(x).equals(accounts.get(y))) {
+					account = accounts.get(y);
+					isOk = processEOMError(account);
+					if (isOk) {
+						element.add(x);
+					}
+					break;
 				}
+			}
+		}
+		// now remove all the eomErrors that were processed
+		if (!element.isEmpty()) {
+			for (Integer i: element) {
+				eomErrors.remove(i);
 			}
 		}
 	}
 	
-	/** process reject
-	 * this is the engine that will actually do the processing
+	/** process EOM errors<br><br>
 	 * 
-	 * @param account the reject account that will be processed
+	 * @param account the account that had the error
+	 * @return true if it was processed<br><br>and false if it was not
+	 * 
 	 */
-	public void processEOMError(Account account) {
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		String procInput = "", description = "", message = "", errMessage = "";
+	public boolean processEOMError(Account account) {
+		String procInput = "", message = "", errMessage = "";
 		double procAmount = 0.0;
-		boolean debug = false;
-		for (int t = 0; t < transactions.size(); t++) {
-			if (account.getAccountNumber() == transactions.get(t).getAccountNumber()) {
-				if (account.getCustomer().getCustomerID() == transactions.get(t).getCustomerID()) {
-					if (transactions.get(t).getDescription().contains("Insufficent") && transactions.get(t).getDescription().contains("EOM")) {
-						if (debug) {
-							System.out.print(transactions.get(t).getCustomerID()+ " " + transactions.get(t).getAccountNumber() + " " + transactions.get(t).getDescription() + " $" + transactions.get(t).getAmount() + "\n");
-						}
-						Transaction transaction = transactions.get(t);
-						System.out.printf("\n %20s %20s %20s \n", "Account Number", "Customer ID", "Balance");
-						System.out.printf("%20s %20s %7s $%12.2f \n", account.getAccountNumber(), account.getCustomer().getCustomerID(), "", account.getAccountBalance());
-						System.out.printf("\n $%12.2f %s \n", Math.abs(transaction.getAmount()), " is the amount that needs to be taken from the account balance");
-						System.out.print("process transaction? (y/n) ");
-						procInput = input.nextLine();
-						if (procInput.equalsIgnoreCase("y")) {
-							System.out.print("Transaction amt " + (Math.abs(transaction.getAmount())) + " : Account amt " + account.getAccountBalance() + " :: Increase amount by ");
-							message = "";
-							errMessage = "\n**************************************************\n"
-								+          " Invalid Amount! Can ONLY enter positive values!!\n"
-								+          "**************************************************\n"
-								+          "\nPlease re-enter amount: ";
-							procAmount = getDoubleAmount(errMessage, message);
-							account.makeDeposit(procAmount);
-							description = transaction.getDescription() + "Correction deposit";
-							createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, (procAmount));
-							description = transaction.getDescription() + "Correction withdraw";
-							account.makeWithdrawal((Math.abs(transaction.getAmount())));
-							if (account instanceof Checking) {
-								((Checking) account).setNumberOfTransactions(0);
-								((Checking) account).setCheckingTransactionFeeAmount(0.0);
-							}
-							createTransaction(account.getCustomer().getCustomerID(), account.getAccountNumber(), description, (Math.abs(transaction.getAmount())));
-							System.out.print("Successfully Updated!!!\n\n");
-							break;
-						}
-						
-						
-					} else {
-						continue;
-					}
+		boolean procYN = true;
+		// make sure the account is a checking account
+		if (account instanceof Checking) {
+			Checking chk = (Checking) account;
+			System.out.printf("\n%s $%12.2f %s $%12.2f \n", "Avalable Balance: ", chk.getAccountBalance(), " Amount of Fees ", chk.getCheckingTransactionFeeAmount());
+			System.out.printf("\n %s $%12.2f %s \n", "Account needs: ", (chk.getCheckingTransactionFeeAmount() - chk.getAccountBalance()), " to process.");
+			message = "\nProcess now? (y/n) ";
+			errMessage = "\n************************************\n"
+					+ "          Invalid entry!"
+					+ "\n************************************\n"
+					+ "Please re-enter (y/n): ";
+			// loop as long as the user did not enter y or n
+			while (procYN) {
+				procInput = getAccountNumber(message, errMessage);
+				if (procInput.equalsIgnoreCase("y")) {
+					procYN = false;
+				} else if (procInput.equalsIgnoreCase("n")) {
+					procYN = false;
 				} else {
-					continue;
+					System.out.print(errMessage);
+				}
+			}
+			// start the processing as long as the user entered y
+			if (procInput.equalsIgnoreCase("y")) {
+				errMessage = "\n************************************\n"
+					+ "          Invalid entry!"
+					+ "\n************************************\n"
+					+ "Please re-enter amount: ";
+				boolean addUntil = true;
+				// loop as long as there needs to be more funds added to account
+				while (addUntil) {
+					
+					message = "Enter the amount to add to the account:\nMinimum is " + (chk.getCheckingTransactionFeeAmount() - chk.getAccountBalance()) + " ";
+					procAmount = getDoubleAmount(message, errMessage);
+					// with amount entered will there be enough to process the fees
+					if (procAmount >= (chk.getCheckingTransactionFeeAmount() - chk.getAccountBalance())) {
+						chk.setAccountBalance(chk.getAccountBalance()+procAmount);
+						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), "New EOM Checking - Correction", procAmount);
+						// after adding the amount to the account will there be enough to process the fees
+						if ((chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount()) >= 0.0){
+							chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
+							createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), "New EOM Checking - Process Fees", (chk.getCheckingTransactionFeeAmount() * -1));
+							chk.setNumberOfTransactions(0);
+							chk.setCheckingTransactionFeeAmount(0.0);
+							addUntil = false;
+							return true;
+						}
+					}
 				}
 			} else {
-				continue;
+				// user entered n
+				return false;
 			}
 		}
-		eomErrors.remove(account);
-		if (debug) {
-			System.out.print(((eomErrors.isEmpty())? "EOM Error Table Empty" : "EOM Error Table Not Empty"));
-		}
-		System.out.print("Updated correction table\n\n");
+		// account was not a checking account
+		return false;
 	}
 } // end of ActualBanker class
 

@@ -1,4 +1,3 @@
-package com.reports;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -20,7 +19,7 @@ public class AddAccount extends Application {
 	
 	public void start(Stage primaryStage) {
 	    // Create a scene by calling the method above and place it in the stage
-	    Scene scene = new Scene(getPane(), 800, 300);
+	    Scene scene = new Scene(getPane(), 800, 600);
 	    primaryStage.setTitle("Add Account"); // Set the stage title
 	    primaryStage.setScene(scene); // Place the scene in the stage
 	    primaryStage.show(); // Display the stage
@@ -65,7 +64,7 @@ public class AddAccount extends Application {
 		 
 		  
 		  HBox accountDisplayPane = new HBox(1);
-		  accountDisplayPane.setPadding(new Insets(15,15,15,15));
+		  accountDisplayPane.setPadding(new Insets(20,15,150,15));
 		  accountDisplayPane.getChildren().addAll(txtDisplayBoxAccounts);
 		  accountDisplayPane.setAlignment(Pos.CENTER);
 		  
@@ -80,7 +79,7 @@ public class AddAccount extends Application {
 		  finaTopPane.setAlignment(Pos.CENTER);
 		  
 		  HBox centerPane = new HBox(1);
-		  centerPane.setPadding(new Insets(0,15,15,15));
+		  centerPane.setPadding(new Insets(15,15,150,15));
 		  centerPane.getChildren().addAll(txtDisplayBoxMessage);
 		  centerPane.setAlignment(Pos.CENTER);
 		  
