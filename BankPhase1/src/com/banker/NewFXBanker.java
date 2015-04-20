@@ -7,6 +7,7 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 import com.accounts.Account;
+import com.accounts.AddAccount;
 import com.customers.Customer;
 import com.transactions.Transaction;
 import com.utilities.BankUtilities;
@@ -50,6 +51,7 @@ public class NewFXBanker extends Application
 	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	BankUtilities bu = new BankUtilities();
 	static String bankName = "";
+	static boolean noGo = false;
 
    /**
     * Build menu bar with included menus for this demonstration.
@@ -116,11 +118,34 @@ public class NewFXBanker extends Application
     		 System.exit(0);
     	 }
      });
-     
      fileCustomer.setOnAction(new EventHandler<ActionEvent>() {
     	 public void handle(ActionEvent e) {
-    		 createCustomer();
-    		 //JOptionPane.showMessageDialog(null, "Customer Created");
+    			noGo = true;
+ 				Scene myScene = new Scene(getCustPane(), 280,175, Color.BEIGE);
+    			Stage test = new Stage();
+    			test.setTitle("Customer Information");
+    			test.setScene(myScene);
+    			test.show();
+	   			if (!noGo) {
+	   				test.hide();
+	   			}
+
+    	 }
+     });
+     
+     fileChecking.setOnAction(new EventHandler<ActionEvent>() {
+    	 public void handle(ActionEvent e) {
+    		 noGo = true;
+		    Stage chkAddStage = new Stage();
+		    // Create a scene by calling the method above and place it in the stage
+		    Scene scene = new Scene(addAccountPane(), 800, 600);
+		    chkAddStage.setTitle("Add Account"); // Set the stage title
+		    chkAddStage.setScene(scene); // Place the scene in the stage
+   		    chkAddStage.show(); // Display the stage
+		    while (noGo) {
+      		 }
+   		   // chkAddStage.hide();
+
     	 }
      });
       // bind width of menu bar to width of associated stage
@@ -162,19 +187,6 @@ public class NewFXBanker extends Application
       Application.launch(arguments);
    }
    
-	public void createCustomer() {
-		
-		//while ()
-			Scene myScene = new Scene(getCustPane(), 280,175, Color.BEIGE);
-			Stage test = new Stage();
-			test.setTitle("Customer Information");
-			test.setScene(myScene);
-			test.show();
-//			test.get
-//			test.hide();
-			//test.setOnC
-	}
-
 	  protected BorderPane getCustPane(){
 		  
 		  
@@ -228,13 +240,107 @@ public class NewFXBanker extends Application
 		  });
 		  
 		  btnExit.setOnAction(e -> {
+			  noGo = false;
 //			  btnExit.set
 			// test.hide();	
 			  });
 
 	  return custMainPane;
+	  }
+
+
+	  protected BorderPane addAccountPane() {
+			  
+		  Button btnAdd = new Button("Add");
+		  Button btnExit = new Button("Exit"); 
+		  
+		  TextField txtDisplayBoxAccounts = new TextField(" ");
+		  txtDisplayBoxAccounts.setPrefSize(0,1);
+		  txtDisplayBoxAccounts.setDisable(true);
+		  
+		  TextField txtDisplayBoxMessage = new TextField(" ");
+		  txtDisplayBoxMessage.setPrefSize(0,1);
+		  txtDisplayBoxMessage.setDisable(true);
+		  
+		  Label lblAccountNumber = new Label("Account Number");
+		  Label lblCustomerID = new Label("Customer ID");
+		  Label lblOpeningBalance = new Label("Opening Balance");
+		  
+		  TextField txtAccountNumber = new TextField();
+		  TextField txtCustomerID = new TextField();
+		  TextField txtOpeningBalance = new TextField();
+		  
+		  VBox accountPane = new VBox(2);
+		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  accountPane.getChildren().addAll(lblAccountNumber, txtAccountNumber);
+		  accountPane.setAlignment(Pos.CENTER);
+		  
+		  VBox customerPane = new VBox(2);
+		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  customerPane.getChildren().addAll(lblCustomerID,txtCustomerID);
+		  customerPane.setAlignment(Pos.CENTER);
+		 
+		  
+		  VBox balancePane = new VBox(2);
+		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  balancePane.getChildren().addAll(lblOpeningBalance,txtOpeningBalance);
+		  balancePane.setAlignment(Pos.CENTER);
+		 
+		  
+		  HBox accountDisplayPane = new HBox(1);
+		  accountDisplayPane.setPadding(new Insets(20,15,150,15));
+		  accountDisplayPane.getChildren().addAll(txtDisplayBoxAccounts);
+		  accountDisplayPane.setAlignment(Pos.CENTER);
+		  
+		  HBox topPane = new HBox(3);
+		  topPane.setPadding(new Insets(15,15,15,15));
+		  topPane.getChildren().addAll(accountPane,customerPane,balancePane);
+		  topPane.setAlignment(Pos.CENTER);
+		  
+		  VBox finaTopPane = new VBox(2);
+		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  finaTopPane.getChildren().addAll(accountDisplayPane, topPane);
+		  finaTopPane.setAlignment(Pos.CENTER);
+		  
+		  HBox centerPane = new HBox(1);
+		  centerPane.setPadding(new Insets(15,15,150,15));
+		  centerPane.getChildren().addAll(txtDisplayBoxMessage);
+		  centerPane.setAlignment(Pos.CENTER);
+		  
+		  
+		  HBox bottomPane = new HBox(2);
+		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  bottomPane.getChildren().addAll(btnAdd, btnExit);
+		  bottomPane.setAlignment(Pos.CENTER);
+	/*	 
+		  HBox finalPane = new HBox(3);
+		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  finalPane.getChildren().addAll(accountDisplayPane,topPane);
+		 finalPane.setAlignment(Pos.CENTER);
+	*/
+		  BorderPane mainPane = new BorderPane();
+			 mainPane.setTop(finaTopPane);
+		     mainPane.setCenter(centerPane);
+		     mainPane.setBottom(bottomPane);
+		     mainPane.setStyle("-fx-border-color: blue");
+			  
+		     
+		    btnExit.setOnAction(e -> {
+		    	noGo = false;
+		    }); 
+		     
+		     
+		     
+		     
+		     
+		     
+			  return mainPane;
+		  	
+//implement SetOnAction for btnAdd & btnExit
+	
+	
 }
-  
+
    
    
 }

@@ -1,4 +1,3 @@
-package com.utilities;
 import javax.swing.JOptionPane;
 import javafx.application.Application;
 import javafx.stage.Stage;
