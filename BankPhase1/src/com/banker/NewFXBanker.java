@@ -27,9 +27,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * Example of creating menus in JavaFX.
+ * @mentor Professor Dr. Awny Alnusair<br><br>
+ * @college Indiana University Kokomo<br><br><br>
+ * @course INFO-211 Informatics II<br><br>
  * 
- * @author Dustin
+ * 
+ * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
+ * Apr 6, 2015<br>
+ * FXBanker.java<br>
+ *
  */
 public class NewFXBanker extends Application
 {

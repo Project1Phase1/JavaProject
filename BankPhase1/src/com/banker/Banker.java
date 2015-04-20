@@ -76,7 +76,7 @@ class ActualBanker {
 	BankUtilities bu = new BankUtilities();
 	static int menuItems;
 	// change bankName to whatever the bank
-	static String bankName = "   Welcome To Holtson, McKinney and Jessop LLC";
+	static String bankName = "";//"   Welcome To Holtson, McKinney and Jessop LLC";
 	/** doBanker method<br><br>
 	 * 
 	 * this method is the heart of the client menu<br>
@@ -184,7 +184,14 @@ class ActualBanker {
 	public static int displayMenuAndGetInput()
 	{
 		int inputInt = 0 ;
-
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner( System.in );
+		if (bankName.isEmpty()) {
+			String getBankName = "";
+			System.out.print("\n\nWhat is the name of your bank? ");
+			getBankName = input.nextLine();
+			bankName = "   Welcome To ".concat(getBankName);
+		}
 		// Menu Display
 		String[] dispMenu = new String[15];
 		dispMenu[0] =  "Create a Customer ";
@@ -195,7 +202,7 @@ class ActualBanker {
 		dispMenu[5] =  "Make a Withdraw ";
 		dispMenu[6] =  "Display Customer Information";
 		dispMenu[7] =  "Display Account Information ";
-		dispMenu[8] =  "Generate Transaction Report ";
+		dispMenu[8] =  "Display Transaction Report ";
 		dispMenu[9] =  "Remove an Account ";
 		dispMenu[10] = "Remove a Customer ";
 		dispMenu[11] = "Apply End of Month Updates ";
@@ -214,8 +221,6 @@ class ActualBanker {
 		// Get the input from the user
 		System.out.print("Please input your choice (1 - " + (dispMenu.length) + "): ");
 
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner( System.in );
 		//Try-catch for Scanner input sections (remember to set inputInt = 0)
 		boolean validateInput = true;
 		while (validateInput) {
@@ -277,22 +282,28 @@ class ActualBanker {
 					System.out.printf("%12s %-55s %-15s %12s %s %s %15s\n", " ", "Customer Information","Account Number", "Balance", "# of Transactions", "Transaction Fee", "Total Fee");
 					chkCounter++;
 				}
+				a.toString();
 			}
+		}
+		for (Account a: accounts) {
 			if (a instanceof Regular) {
 				if (regCounter == 1) {
 					System.out.println();
 					System.out.printf("%12s %-55s %-15s %12s %s %s %17s\n", " ", "Customer Information", "Account Number", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest");
 					regCounter++;
 				}
+				a.toString();
 			}
+		}
+		for (Account a: accounts) {
 			if (a instanceof Gold) {
 				if (gldCounter == 1) {
 					System.out.println();
 					System.out.printf("%12s %-55s %-15s %12s %s %s\n", " ", "Customer Information", "Account Number", "Balance", "     Interest Rate", "Interest Amount");
 					gldCounter++;
 				}
+				a.toString();
 			}
-			a.toString();
 		}
 		System.out.print("\n====================================================================================================================================================\n");
 	}
@@ -304,7 +315,7 @@ class ActualBanker {
 		}
 		double totalAmnt = 0.0;
 		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-		System.out.print("                                                                     Transactions" + transactions.size() + "\n");
+		System.out.print("                                                                     Transactions " + transactions.size() + "\n");
 		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
 		System.out.printf("%-20s %-35s %-15s %-20s %-45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
 		for (Transaction t: transactions) {
