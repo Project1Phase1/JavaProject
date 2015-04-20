@@ -1,7 +1,10 @@
 package com.reports;
 
+import com.sun.corba.se.impl.orbutil.graph.Node;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -95,10 +98,10 @@ public class AddAccount extends Application {
 		     mainPane.setBottom(bottomPane);
 		     mainPane.setStyle("-fx-border-color: blue");
 			  
+		     btnExit.setOnAction(e->{
+		    	// ((Window)(e.getSource())).getScene().getWindow().hide();
+		     });
 			  return mainPane;
-		  	
-//implement SetOnAction for btnAdd & btnExit
-	
-	
+
 }
 }
