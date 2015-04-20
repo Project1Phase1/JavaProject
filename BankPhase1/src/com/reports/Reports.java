@@ -2,8 +2,11 @@
 package com.reports;
 
 
+import com.sun.corba.se.impl.orbutil.graph.Node;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,7 +26,7 @@ public class Reports extends Application {
 	 public static void main(String[] args) {
 		    launch(args);
 		  }
-	
+	 
 	public void start(Stage primaryStage) {
 	    // Create a scene by calling the method above and place it in the stage
 	    Scene scene = new Scene(getPane(), 1300, 300);
@@ -79,7 +82,7 @@ public class Reports extends Application {
 		  mainPane.setStyle("-fx-border-color: blue");
 		  
 		  btnExit.setOnAction(e -> {
-			  return;
+			  ((Window)(e.getSource())).getScene().getWindow().hide();
 		});
 	  
 		  return mainPane;
