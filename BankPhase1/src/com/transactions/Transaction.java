@@ -136,16 +136,6 @@ public class Transaction {
 	}
 	
 	public String toString() {
-		System.out.printf("%-20d %-35s %-15s %-20s %-50s $%12.2f \n", this.transactionNumber, this.createDate, this.customerID, this.accountNumber, this.description, this.amount);
-		
-/*		
-*		System.out.print("Transaction Date: " + this.createDate + "\n");
-*		System.out.print("Customer ID: " + this.customerID + "\n");
-*		System.out.print("Account Number: " + this.accountNumber + "\n");
-*		System.out.print("Description: " + this.description + "\n");
-*		System.out.printf("%s %12.2f %s", "Amount: $", this.amount, "\n");
-*		System.out.print("Transaction Number: " + this.transactionNumber + "\n");
-*/		
-		return "";
+		return String.format("%-20d %-35s %-15s %-20s %-50s $%12.2f \n", this.transactionNumber, this.createDate, this.customerID, this.accountNumber, this.description, this.amount);
 	}
 }

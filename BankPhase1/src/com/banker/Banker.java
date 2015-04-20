@@ -282,7 +282,7 @@ class ActualBanker {
 					System.out.printf("%12s %-55s %-15s %12s %s %s %15s\n", " ", "Customer Information","Account Number", "Balance", "# of Transactions", "Transaction Fee", "Total Fee");
 					chkCounter++;
 				}
-				a.toString();
+				System.out.print(a.toString());
 			}
 		}
 		for (Account a: accounts) {
@@ -292,7 +292,7 @@ class ActualBanker {
 					System.out.printf("%12s %-55s %-15s %12s %s %s %17s\n", " ", "Customer Information", "Account Number", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest");
 					regCounter++;
 				}
-				a.toString();
+				System.out.print(a.toString());
 			}
 		}
 		for (Account a: accounts) {
@@ -302,7 +302,7 @@ class ActualBanker {
 					System.out.printf("%12s %-55s %-15s %12s %s %s\n", " ", "Customer Information", "Account Number", "Balance", "     Interest Rate", "Interest Amount");
 					gldCounter++;
 				}
-				a.toString();
+				System.out.print(a.toString());
 			}
 		}
 		System.out.print("\n====================================================================================================================================================\n");
@@ -319,7 +319,7 @@ class ActualBanker {
 		System.out.print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
 		System.out.printf("%-20s %-35s %-15s %-20s %-45s %-20s \n",  "Transaction Number" , "Transaction Date", "Customer ID"  , "Account Number"  , "Transaction Description", "Transaction Amount");
 		for (Transaction t: transactions) {
-			t.toString();
+			System.out.print(t.toString());
 			totalAmnt += t.getAmount();
 		}
 		System.out.printf("%158s\n", "================");

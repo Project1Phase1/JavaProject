@@ -2,6 +2,7 @@ package com.banker;
 
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -20,8 +21,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 //import javafx.scene.text.Font;
 //import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -39,12 +43,13 @@ import javafx.stage.Stage;
  */
 public class NewFXBanker extends Application
 {
-	ActualBanker banker = new ActualBanker();
+	NewActualBanker banker = new NewActualBanker();
 	ArrayList<Customer> customers = new ArrayList<Customer>();
 	ArrayList<Account> accounts = new ArrayList<Account>();
 	ArrayList<Account> rejects = new ArrayList<Account>();
 	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	BankUtilities bu = new BankUtilities();
+	static String bankName = "";
 
    /**
     * Build menu bar with included menus for this demonstration.
@@ -114,7 +119,7 @@ public class NewFXBanker extends Application
      
      fileCustomer.setOnAction(new EventHandler<ActionEvent>() {
     	 public void handle(ActionEvent e) {
-    		 customers.add(bu.createCustomer(1));
+    		 createCustomer();
     		 //JOptionPane.showMessageDialog(null, "Customer Created");
     	 }
      });
@@ -132,7 +137,10 @@ public class NewFXBanker extends Application
    @Override
    public void start(Stage stage)
    {
-      stage.setTitle("Holtson, McKinney, and Jessop Banker, LLC");
+	   String getBankName = "";
+	   getBankName = JOptionPane.showInputDialog("What is the name of your bank?");
+	   bankName = "Welcome to ".concat(getBankName);
+      stage.setTitle(bankName);
       final Group rootGroup = new Group();
       final Scene scene = new Scene(rootGroup, 800, 400, Color.BEIGE);
       final MenuBar menuBar = buildMenuBarWithMenus(stage.widthProperty());
@@ -149,8 +157,90 @@ public class NewFXBanker extends Application
     * 
     * @param arguments Command-line arguments: none expected.
     */
-   public static void main(String[] arguments)
-   {
+   public static void main(String[] arguments) {
+	   
       Application.launch(arguments);
    }
+   
+	public void createCustomer() {
+		
+		//while ()
+			Scene myScene = new Scene(getCustPane(), 280,175, Color.BEIGE);
+			Stage test = new Stage();
+			test.setTitle("Customer Information");
+			test.setScene(myScene);
+			test.show();
+//			test.get
+//			test.hide();
+			//test.setOnC
+	}
+
+	  protected BorderPane getCustPane(){
+		  
+		  
+		  Label lblID = new Label("Customer ID");
+		  Label lblName = new Label("Customers Name");
+		  
+		  TextField txtID = new TextField();
+		  TextField txtName = new TextField();
+		  Font times = Font.font("Times New Roman", FontWeight.BOLD, 16);
+
+		  Button btnAdd = new Button("Add");
+		  Button btnExit = new Button("Exit");
+		  btnAdd.setFont(times);
+		  btnExit.setFont(times);
+		  
+		  HBox lblPane = new HBox(15);
+		  lblPane.setPadding(new Insets(15,15,15,15));  
+		  lblPane.getChildren().addAll(lblID, txtID, lblName, txtName);
+		  lblPane.setAlignment(Pos.TOP_CENTER);
+		  lblID.setFont(times);
+		  lblName.setFont(times);
+		  
+		  HBox txtPane = new HBox(5);
+		  txtPane.setPadding(new Insets(15,15,15,15));
+		  txtPane.getChildren().addAll(txtID, txtName);
+		  txtPane.setAlignment(Pos.BOTTOM_CENTER);
+		  
+		  HBox bottomPane = new HBox(2);
+		  bottomPane.setPadding(new Insets(15,15,15,15));;
+		  bottomPane.getChildren().addAll(btnAdd, btnExit);
+		  bottomPane.setAlignment(Pos.CENTER);
+		  
+
+		  BorderPane custMainPane = new BorderPane();
+		  custMainPane.setTop(lblPane);
+		  custMainPane.setCenter(txtPane);
+		  custMainPane.setBottom(bottomPane);
+		  custMainPane.setStyle("-fx-border-color: red");
+		  
+		  btnAdd.setOnAction(e -> {
+			  if(txtID.getText().isEmpty()) {
+				  JOptionPane.showMessageDialog(null,  "Please Enter Customer ID");
+				  txtID.requestFocus();
+			  } else if (txtName.getText().isEmpty()) {
+				  JOptionPane.showMessageDialog(null, "Please Enter Customer Name");
+				  txtName.requestFocus();
+			  }
+			  Customer customer = new Customer(txtID.getText(), txtName.getText());
+			  customers.add(customer);
+//			  createCustomer(1);
+		  });
+		  
+		  btnExit.setOnAction(e -> {
+//			  btnExit.set
+			// test.hide();	
+			  });
+
+	  return custMainPane;
+}
+  
+   
+   
+}
+
+class NewActualBanker {
+	//NewFXBanker fxBanker = new NewFXBanker();
+
+
 }
