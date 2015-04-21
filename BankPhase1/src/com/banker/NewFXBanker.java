@@ -135,17 +135,12 @@ public class NewFXBanker extends Application
      
      fileChecking.setOnAction(new EventHandler<ActionEvent>() {
     	 public void handle(ActionEvent e) {
-    		 noGo = true;
-		    Stage chkAddStage = new Stage();
+  		    Stage chkAddStage = new Stage();
 		    // Create a scene by calling the method above and place it in the stage
-		    Scene scene = new Scene(addAccountPane(), 800, 600);
+		    Scene scene = new Scene(addAccountPane("Checking Account"), 800, 600);
 		    chkAddStage.setTitle("Add Account"); // Set the stage title
 		    chkAddStage.setScene(scene); // Place the scene in the stage
    		    chkAddStage.show(); // Display the stage
-		    while (noGo) {
-      		 }
-   		   // chkAddStage.hide();
-
     	 }
      });
       // bind width of menu bar to width of associated stage
@@ -236,35 +231,43 @@ public class NewFXBanker extends Application
 			  }
 			  Customer customer = new Customer(txtID.getText(), txtName.getText());
 			  customers.add(customer);
-//			  createCustomer(1);
+			  JOptionPane.showMessageDialog(null,  "Customer Created successfully!");
+			  
 		  });
 		  
 		  btnExit.setOnAction(e -> {
-			  noGo = false;
-//			  btnExit.set
-			// test.hide();	
+			  Stage stage = (Stage) btnExit.getScene().getWindow();
+			  stage.close();
 			  });
-
 	  return custMainPane;
 	  }
 
 
-	  protected BorderPane addAccountPane() {
-			  
+	  protected BorderPane addAccountPane(String acctType) {
+		  
+		  String heading = "25";
+		  String txtMessage = "18";
+		  String txtLabel = "14";
+		  String acctStyleFirst = "-fx-font: ";
+		  String acctStyleLast =" arial; -fx-text-fill: blue;";
+		  String acctButtonStyle = "-fx-font: 18 arial; -fx-base: ";
+		
 		  Button btnAdd = new Button("Add");
-		  Button btnExit = new Button("Exit"); 
+		  btnAdd.setStyle(acctButtonStyle + "blue;");
+		  Button btnExit = new Button("Exit");
+		  btnExit.setStyle(acctButtonStyle + "red;");
 		  
-		  TextField txtDisplayBoxAccounts = new TextField(" ");
-		  txtDisplayBoxAccounts.setPrefSize(0,1);
-		  txtDisplayBoxAccounts.setDisable(true);
+		  Label lbltxtDisplayBoxAccounts = new Label(acctType);  // heading
+		  lbltxtDisplayBoxAccounts.setStyle(acctStyleFirst + heading  + acctStyleLast);
+		  Label lbltxtDisplayBoxMessage = new Label(" "); // error reporting
 		  
-		  TextField txtDisplayBoxMessage = new TextField(" ");
-		  txtDisplayBoxMessage.setPrefSize(0,1);
-		  txtDisplayBoxMessage.setDisable(true);
 		  
 		  Label lblAccountNumber = new Label("Account Number");
+		  lblAccountNumber.setStyle(acctStyleFirst + txtLabel + acctStyleLast);
 		  Label lblCustomerID = new Label("Customer ID");
+		  lblCustomerID.setStyle(acctStyleFirst + txtLabel + acctStyleLast);
 		  Label lblOpeningBalance = new Label("Opening Balance");
+		  lblOpeningBalance.setStyle(acctStyleFirst + txtLabel + acctStyleLast);
 		  
 		  TextField txtAccountNumber = new TextField();
 		  TextField txtCustomerID = new TextField();
@@ -289,7 +292,7 @@ public class NewFXBanker extends Application
 		  
 		  HBox accountDisplayPane = new HBox(1);
 		  accountDisplayPane.setPadding(new Insets(20,15,150,15));
-		  accountDisplayPane.getChildren().addAll(txtDisplayBoxAccounts);
+		  accountDisplayPane.getChildren().addAll(lbltxtDisplayBoxAccounts);
 		  accountDisplayPane.setAlignment(Pos.CENTER);
 		  
 		  HBox topPane = new HBox(3);
@@ -304,12 +307,12 @@ public class NewFXBanker extends Application
 		  
 		  HBox centerPane = new HBox(1);
 		  centerPane.setPadding(new Insets(15,15,150,15));
-		  centerPane.getChildren().addAll(txtDisplayBoxMessage);
+		  centerPane.getChildren().addAll(lbltxtDisplayBoxMessage);
 		  centerPane.setAlignment(Pos.CENTER);
 		  
 		  
 		  HBox bottomPane = new HBox(2);
-		  //bottomPane.setPadding(new Insets(15,15,15,15));
+		  bottomPane.setPadding(new Insets(15,15,15,15));
 		  bottomPane.getChildren().addAll(btnAdd, btnExit);
 		  bottomPane.setAlignment(Pos.CENTER);
 	/*	 
@@ -323,26 +326,51 @@ public class NewFXBanker extends Application
 		     mainPane.setCenter(centerPane);
 		     mainPane.setBottom(bottomPane);
 		     mainPane.setStyle("-fx-border-color: blue");
-			  
 		     
-		    btnExit.setOnAction(e -> {
-		    	noGo = false;
-		    }); 
+		    
+		     txtAccountNumber.setOnKeyTyped(e ->{
+		    	 lbltxtDisplayBoxMessage.setText(" ");
+		     });
+		     
+		     txtCustomerID.setOnKeyTyped(e -> {
+		    	 lbltxtDisplayBoxMessage.setText(" ");
+		     });
+		     
+		     txtOpeningBalance.setOnKeyTyped(e -> {
+		    	 lbltxtDisplayBoxMessage.setText(" ");
+		     });
+		     
+		     txtAccountNumber.setOnAction(e -> {
+		    	 if (txtAccountNumber.isFocused()) {
+		    		 lbltxtDisplayBoxMessage.setText(" ");
+		    	}
+		     });
 		     
 		     
-		     
-		     
-		     
-		     
-			  return mainPane;
-		  	
-//implement SetOnAction for btnAdd & btnExit
-	
-	
-}
-
-   
-   
+		     btnAdd.setOnAction(e -> {
+		    	 if (txtAccountNumber.getText().isEmpty()) {
+		    		 lbltxtDisplayBoxMessage.setText("You must enter an Accouont Number!");
+		    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast);
+		    		 txtAccountNumber.requestFocus();
+		    	 } else if (txtCustomerID.getText().isEmpty()) {
+		    		 lbltxtDisplayBoxMessage.setText("You must enter a Customer ID!");
+		    		 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
+		    		 txtCustomerID.requestFocus();
+		    	 } else if (txtOpeningBalance.getText().isEmpty()) {
+		    		 lbltxtDisplayBoxMessage.setText("You must the Opening Balance!");
+		    		 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
+		    		 txtOpeningBalance.requestFocus();
+		    	 } else {
+		    		 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+		    		 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
+		    	 }
+		     });
+		     btnExit.setOnAction(e -> {
+		    	 Stage stage = (Stage) btnExit.getScene().getWindow();
+		    	 stage.close();
+		    });		     
+				  return mainPane;
+	  }
 }
 
 class NewActualBanker {
