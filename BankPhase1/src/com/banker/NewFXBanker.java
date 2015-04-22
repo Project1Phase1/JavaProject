@@ -2,12 +2,13 @@ package com.banker;
 
 
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 
 import javax.swing.JOptionPane;
 
 import com.accounts.Account;
-import com.accounts.AddAccount;
+import com.accounts.Checking;
 import com.customers.Customer;
 import com.transactions.Transaction;
 import com.utilities.BankUtilities;
@@ -42,8 +43,7 @@ import javafx.stage.Stage;
  * FXBanker.java<br>
  *
  */
-public class NewFXBanker extends Application
-{
+public class NewFXBanker extends Application {
 	NewActualBanker banker = new NewActualBanker();
 	ArrayList<Customer> customers = new ArrayList<Customer>();
 	ArrayList<Account> accounts = new ArrayList<Account>();
@@ -51,7 +51,6 @@ public class NewFXBanker extends Application
 	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	BankUtilities bu = new BankUtilities();
 	static String bankName = "";
-	static boolean noGo = false;
 
    /**
     * Build menu bar with included menus for this demonstration.
@@ -63,14 +62,22 @@ public class NewFXBanker extends Application
       MenuBar menuBar = new MenuBar();
 
       // Prepare left-most 'File' drop-down menu
-      Menu fileMenu = new Menu("New");
-      MenuItem fileCustomer = new MenuItem("Customers");
-      MenuItem fileChecking = new MenuItem("Checking");
-      MenuItem fileGold = new MenuItem("Gold");
-      MenuItem fileRegular = new MenuItem("Regular");
+      Menu files = new Menu("Files");
+      MenuItem filesNew = new MenuItem("Ceate New File System");
+      MenuItem filesLoad = new MenuItem("Load All Files");
+      MenuItem filesSave = new MenuItem("Save All Files");
+      MenuItem filesBackup = new MenuItem("Make Backup Copy");
+      files.getItems().addAll(filesNew, filesLoad, filesSave, filesBackup);
+      menuBar.getMenus().add(files);
+      
+      Menu accountMenu = new Menu("New");
+      MenuItem accountCustomer = new MenuItem("Customers");
+      MenuItem accountChecking = new MenuItem("Checking");
+      MenuItem accountGold = new MenuItem("Gold");
+      MenuItem accountRegular = new MenuItem("Regular");
       //SubMenuItem subM = new SubMenuItem("This is it");
-      fileMenu.getItems().addAll(fileCustomer, fileChecking, fileGold, fileRegular);
-       menuBar.getMenus().add(fileMenu);
+      accountMenu.getItems().addAll(accountCustomer, accountChecking, accountGold, accountRegular);
+       menuBar.getMenus().add(accountMenu);
 
       // Prepare 'Examples' drop-down menu
       Menu reports = new Menu("Reports");
@@ -89,27 +96,7 @@ public class NewFXBanker extends Application
      
      transactions.getItems().addAll(tranDeposit, tranWithdraw, new SeparatorMenuItem(), tranEOM);
      menuBar.getMenus().add(transactions);
-    
-//     Menu helpMenu = new Menu("Help");
-//      final MenuItem searchMenuItem = new MenuItem("Search");
-//      searchMenuItem.setDisable(true);
-//      helpMenu.getItems().add(searchMenuItem);
-//      final MenuItem onlineManualMenuItem = new MenuItem("Online Manual");
-//      onlineManualMenuItem.setVisible(false);
-//      helpMenu.getItems().add(onlineManualMenuItem);
-//      helpMenu.getItems().add(new SeparatorMenuItem());
-//      final MenuItem aboutMenuItem = new MenuItem("About");
-//      aboutMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-//    	  @Override public void handle(ActionEvent e) {
-//    		  out.println("You clicked on About!");
-//                               }
-//                            });
- 
-      
-      //helpMenu.getItems().add(aboutMenuItem);
-      // menuBar.getMenus().add(transactions);
-      
-     //menuBar.getMenus().add(helpMenu);
+
      Menu quit = new Menu("Quit");
      quit.getItems().add(new MenuItem("Exit"));
      menuBar.getMenus().add(quit);
@@ -118,32 +105,29 @@ public class NewFXBanker extends Application
     		 System.exit(0);
     	 }
      });
-     fileCustomer.setOnAction(new EventHandler<ActionEvent>() {
-    	 public void handle(ActionEvent e) {
-    			noGo = true;
+      accountCustomer.setOnAction(e -> {
  				Scene myScene = new Scene(getCustPane(), 280,175, Color.BEIGE);
     			Stage test = new Stage();
     			test.setTitle("Customer Information");
     			test.setScene(myScene);
     			test.show();
-	   			if (!noGo) {
-	   				test.hide();
-	   			}
-
-    	 }
      });
      
-     fileChecking.setOnAction(new EventHandler<ActionEvent>() {
-    	 public void handle(ActionEvent e) {
+     accountChecking.setOnAction(e -> {
+    	 String acctType = "Checking Account";
+    	 if (customers.isEmpty()) {
+    		 JOptionPane.showMessageDialog(null, "There are no customers available to select!\n\nUnable to add " + acctType + "!!");
+    	 } else {
   		    Stage chkAddStage = new Stage();
-		    // Create a scene by calling the method above and place it in the stage
-		    Scene scene = new Scene(addAccountPane("Checking Account"), 800, 600);
+		    Scene scene = new Scene(addAccountPane(acctType), 800, 300);
 		    chkAddStage.setTitle("Add Account"); // Set the stage title
 		    chkAddStage.setScene(scene); // Place the scene in the stage
    		    chkAddStage.show(); // Display the stage
     	 }
-     });
-      // bind width of menu bar to width of associated stage
+      });
+     
+     
+     
       menuBar.prefWidthProperty().bind(menuWidthProperty);
 
       return menuBar;
@@ -157,8 +141,8 @@ public class NewFXBanker extends Application
    @Override
    public void start(Stage stage)
    {
-	   String getBankName = "";
-	   getBankName = JOptionPane.showInputDialog("What is the name of your bank?");
+	   String getBankName = "Testing 1, 2, 3!!";
+	   //getBankName = JOptionPane.showInputDialog("What is the name of your bank?");
 	   bankName = "Welcome to ".concat(getBankName);
       stage.setTitle(bankName);
       final Group rootGroup = new Group();
@@ -181,8 +165,8 @@ public class NewFXBanker extends Application
 	   
       Application.launch(arguments);
    }
-   
-	  protected BorderPane getCustPane(){
+
+	  public BorderPane getCustPane(){
 		  
 		  
 		  Label lblID = new Label("Customer ID");
@@ -221,30 +205,65 @@ public class NewFXBanker extends Application
 		  custMainPane.setBottom(bottomPane);
 		  custMainPane.setStyle("-fx-border-color: red");
 		  
-		  btnAdd.setOnAction(e -> {
-			  if(txtID.getText().isEmpty()) {
-				  JOptionPane.showMessageDialog(null,  "Please Enter Customer ID");
+		  btnAdd.setOnKeyPressed(e -> {
+			  boolean cc = false;
+			  Stage myStage = (Stage) txtID.getScene().getWindow();
+			  cc = createCustomer(txtID, txtName);
+			  if (!cc) {
+				  myStage.requestFocus();
 				  txtID.requestFocus();
-			  } else if (txtName.getText().isEmpty()) {
-				  JOptionPane.showMessageDialog(null, "Please Enter Customer Name");
-				  txtName.requestFocus();
+			  } else {
+				  txtID.setText("");
+				  txtName.setText("");
+				  //myStage.requestFocus();
+				  txtID.requestFocus();
 			  }
-			  Customer customer = new Customer(txtID.getText(), txtName.getText());
-			  customers.add(customer);
-			  JOptionPane.showMessageDialog(null,  "Customer Created successfully!");
-			  
+		  });
+		  
+		  btnAdd.setOnAction(e -> {
+			  boolean cc = false;
+			  Stage myStage = (Stage) txtID.getScene().getWindow();
+			  cc = createCustomer(txtID, txtName);
+			  if (!cc) {
+				  myStage.requestFocus();
+				  txtID.requestFocus();
+			  } else {
+				  txtID.setText("");
+				  txtName.setText("");
+				  myStage.requestFocus();
+				  txtID.requestFocus();
+			  }
 		  });
 		  
 		  btnExit.setOnAction(e -> {
-			  Stage stage = (Stage) btnExit.getScene().getWindow();
-			  stage.close();
+			  btnExit.getScene().getWindow().hide();
 			  });
 	  return custMainPane;
 	  }
 
+	  public boolean createCustomer(TextField txtID, TextField txtName) {
+		  int element = customers.size();
+		  JOptionPane.showMessageDialog(null, element);
+		  if(txtID.getText().isEmpty()) {
+			  JOptionPane.showMessageDialog(null,  "Please Enter Customer ID");
+		  } else if (txtName.getText().isEmpty()) {
+			  JOptionPane.showMessageDialog(null, "Please Enter Customer Name");
+		  } else {
+			  Customer customer = new Customer(txtID.getText(), txtName.getText());
+			  customers.add(customer);
+			  if (element < customers.size()) {
+				  JOptionPane.showMessageDialog(null,  "Customer Created successfully!");
+				  return true;
+			  } else {
+				  if (element == customers.size()) {
+					  JOptionPane.showMessageDialog(null, "Customer Creation Unsessful!!");
+				  }
+			  }
+		  }
+		  return false;
+	  }
 
-	  protected BorderPane addAccountPane(String acctType) {
-		  
+	  public BorderPane addAccountPane(String acctType) {
 		  String heading = "25";
 		  String txtMessage = "18";
 		  String txtLabel = "14";
@@ -252,16 +271,19 @@ public class NewFXBanker extends Application
 		  String acctStyleLast =" arial; -fx-text-fill: blue;";
 		  String acctButtonStyle = "-fx-font: 18 arial; -fx-base: ";
 		
+		  // declare buttons and set their styles
 		  Button btnAdd = new Button("Add");
 		  btnAdd.setStyle(acctButtonStyle + "blue;");
 		  Button btnExit = new Button("Exit");
 		  btnExit.setStyle(acctButtonStyle + "red;");
 		  
+		  // set up the account type heading
 		  Label lbltxtDisplayBoxAccounts = new Label(acctType);  // heading
 		  lbltxtDisplayBoxAccounts.setStyle(acctStyleFirst + heading  + acctStyleLast);
+		  // set up the error display message area
 		  Label lbltxtDisplayBoxMessage = new Label(" "); // error reporting
 		  
-		  
+		  // declare the heading and text boxes for 
 		  Label lblAccountNumber = new Label("Account Number");
 		  lblAccountNumber.setStyle(acctStyleFirst + txtLabel + acctStyleLast);
 		  Label lblCustomerID = new Label("Customer ID");
@@ -291,13 +313,13 @@ public class NewFXBanker extends Application
 		 
 		  
 		  HBox accountDisplayPane = new HBox(1);
-		  accountDisplayPane.setPadding(new Insets(20,15,150,15));
+		  accountDisplayPane.setPadding(new Insets(20,15,25,15));
 		  accountDisplayPane.getChildren().addAll(lbltxtDisplayBoxAccounts);
 		  accountDisplayPane.setAlignment(Pos.CENTER);
 		  
 		  HBox topPane = new HBox(3);
 		  topPane.setPadding(new Insets(15,15,15,15));
-		  topPane.getChildren().addAll(accountPane,customerPane,balancePane);
+		  topPane.getChildren().addAll(customerPane,accountPane,balancePane);
 		  topPane.setAlignment(Pos.CENTER);
 		  
 		  VBox finaTopPane = new VBox(2);
@@ -306,7 +328,7 @@ public class NewFXBanker extends Application
 		  finaTopPane.setAlignment(Pos.CENTER);
 		  
 		  HBox centerPane = new HBox(1);
-		  centerPane.setPadding(new Insets(15,15,150,15));
+		  centerPane.setPadding(new Insets(15,15,25,15));
 		  centerPane.getChildren().addAll(lbltxtDisplayBoxMessage);
 		  centerPane.setAlignment(Pos.CENTER);
 		  
@@ -315,21 +337,20 @@ public class NewFXBanker extends Application
 		  bottomPane.setPadding(new Insets(15,15,15,15));
 		  bottomPane.getChildren().addAll(btnAdd, btnExit);
 		  bottomPane.setAlignment(Pos.CENTER);
-	/*	 
-		  HBox finalPane = new HBox(3);
-		  //bottomPane.setPadding(new Insets(15,15,15,15));
-		  finalPane.getChildren().addAll(accountDisplayPane,topPane);
-		 finalPane.setAlignment(Pos.CENTER);
-	*/
 		  BorderPane mainPane = new BorderPane();
-			 mainPane.setTop(finaTopPane);
-		     mainPane.setCenter(centerPane);
-		     mainPane.setBottom(bottomPane);
-		     mainPane.setStyle("-fx-border-color: blue");
+			  mainPane.setTop(finaTopPane);
+			  mainPane.setCenter(centerPane);
+			  mainPane.setBottom(bottomPane);
+			  mainPane.setStyle("-fx-border-color: blue");
 		     
-		    
-		     txtAccountNumber.setOnKeyTyped(e ->{
-		    	 lbltxtDisplayBoxMessage.setText(" ");
+			  txtAccountNumber.setOnAction(e -> {
+				  txtCustomerID.requestFocus();
+			  });
+			  txtCustomerID.setOnAction(e -> {
+				  txtOpeningBalance.requestFocus();
+			  });
+			  txtAccountNumber.setOnKeyTyped(e ->{
+				  lbltxtDisplayBoxMessage.setText(" ");
 		     });
 		     
 		     txtCustomerID.setOnKeyTyped(e -> {
@@ -340,14 +361,30 @@ public class NewFXBanker extends Application
 		    	 lbltxtDisplayBoxMessage.setText(" ");
 		     });
 		     
-		     txtAccountNumber.setOnAction(e -> {
-		    	 if (txtAccountNumber.isFocused()) {
-		    		 lbltxtDisplayBoxMessage.setText(" ");
-		    	}
+		     txtOpeningBalance.setOnAction(e -> {
+		    	double amount = -1;
+		    	try {
+			    	amount = Double.parseDouble(txtOpeningBalance.getText());
+			    	if (amount < 0.0) {
+	    				 JOptionPane.showMessageDialog(null, "Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
+	    				 Stage myStage = (Stage) txtOpeningBalance.getScene().getWindow();
+	    				 myStage.requestFocus();
+		    			 txtOpeningBalance.requestFocus();
+			    	}
+	    		 } catch (NumberFormatException h) {
+	    			 JOptionPane.showMessageDialog(null, "I was expecting a Account Opening Balance, Please re-enter");
+	    			 txtOpeningBalance.requestFocus();
+	    		 } catch (InputMismatchException  g) {
+	    			 JOptionPane.showMessageDialog(null, "You must enter the Opening Balance to the Account");
+	    			 txtOpeningBalance.requestFocus();
+	    		 } catch (NoSuchElementException f) {
+	    			 JOptionPane.showMessageDialog(null, "Out of Range, Please re-enter the Opening Balance Ammount!");
+	    			 txtOpeningBalance.requestFocus();
+	    		 }
 		     });
 		     
-		     
 		     btnAdd.setOnAction(e -> {
+		    	 // check to see if the text boxes are empty and notify user
 		    	 if (txtAccountNumber.getText().isEmpty()) {
 		    		 lbltxtDisplayBoxMessage.setText("You must enter an Accouont Number!");
 		    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast);
@@ -361,20 +398,75 @@ public class NewFXBanker extends Application
 		    		 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
 		    		 txtOpeningBalance.requestFocus();
 		    	 } else {
-		    		 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
-		    		 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
+		    		 int element = accounts.size();
+		    		 double amount = -1.0;
+		    		 boolean isOk = false;
+			    		 try {
+			    			 amount = Double.parseDouble(txtOpeningBalance.getText());
+			    			 if (amount < 0.0) {
+			    				 JOptionPane.showMessageDialog(null, "Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
+			    				 txtOpeningBalance.requestFocus();
+			    			
+			    			 } else {
+					    		 JOptionPane.showMessageDialog(null, amount);
+					    		 isOk = true;
+			    			 }
+			    		 } catch (NumberFormatException h) {
+			    			 JOptionPane.showMessageDialog(null, "I was expecting a Account Opening Balance, Please re-enter");
+			    			 txtOpeningBalance.requestFocus();
+			    		
+			    		 } catch (InputMismatchException  g) {
+			    			 JOptionPane.showMessageDialog(null, "You must enter the Opening Balance to the Account");
+			    			 txtOpeningBalance.requestFocus();
+			    			
+			    		 } catch (NoSuchElementException f) {
+			    			 JOptionPane.showMessageDialog(null, "Out of Range, Please re-enter the Opening Balance Ammount!");
+			    		 }
+		    		 if (isOk) {
+		    			 Customer customer = customers.get(0);
+		    			 for (int x = 0; x < customers.size(); x++) {
+			    			 if (customers.get(x).getCustomerID() == txtCustomerID.getText()) {
+			    				 customer = customers.get(x);
+			    			 }
+		    			 }
+		    			 // notify the user
+		    			 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer));
+			    		 if (element< accounts.size()) {
+			    			 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+			    			 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
+			    		 } else {
+			    			 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+			    			 lbltxtDisplayBoxMessage.setText("Adding Account was Unsuccessful!");
+			    		 }
+		    		 } else {
+		    			 txtOpeningBalance.requestFocus();
+		    			 
+		    		 }
 		    	 }
 		     });
+		     
 		     btnExit.setOnAction(e -> {
-		    	 Stage stage = (Stage) btnExit.getScene().getWindow();
-		    	 stage.close();
+		    	 btnExit.getScene().getWindow().hide();
 		    });		     
 				  return mainPane;
+	  }
+	  
+	  public boolean createAccount() {
+		  
+		  
+		  
+		  return false;
 	  }
 }
 
 class NewActualBanker {
 	//NewFXBanker fxBanker = new NewFXBanker();
+	
+	public void addCustomer() {
+		// Customer customer = fxBanker.customers.get(0);
+		// Account account = new Checking("", 0.0, customer);
+		
+	}
 
 
 }
