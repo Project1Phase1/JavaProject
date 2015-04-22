@@ -243,7 +243,7 @@ public class NewFXBanker extends Application {
 
 	  public boolean createCustomer(TextField txtID, TextField txtName) {
 		  int element = customers.size();
-		  JOptionPane.showMessageDialog(null, element);
+		  //JOptionPane.showMessageDialog(null, element);
 		  if(txtID.getText().isEmpty()) {
 			  JOptionPane.showMessageDialog(null,  "Please Enter Customer ID");
 		  } else if (txtName.getText().isEmpty()) {
@@ -264,11 +264,23 @@ public class NewFXBanker extends Application {
 	  }
 
 	  public BorderPane addAccountPane(String acctType) {
+		  // heading font size
 		  String heading = "25";
+		  // message box font size
 		  String txtMessage = "18";
+		  // label font size
 		  String txtLabel = "14";
+		  // the beginning of the style string
 		  String acctStyleFirst = "-fx-font: ";
-		  String acctStyleLast =" arial; -fx-text-fill: blue;";
+		  // the last pert of the style string before the color
+		  String acctStyleLast =" arial; -fx-text-fill: ";
+		  // the blue color
+		  String acctStyleBlue = "blue;";
+		  // the red color
+		  String acctStyleRed = "red;";
+		  // the black color
+		  String acctStyleBlack = "black;";
+		  // all buttons styles not including the color
 		  String acctButtonStyle = "-fx-font: 18 arial; -fx-base: ";
 		
 		  // declare buttons and set their styles
@@ -279,17 +291,17 @@ public class NewFXBanker extends Application {
 		  
 		  // set up the account type heading
 		  Label lbltxtDisplayBoxAccounts = new Label(acctType);  // heading
-		  lbltxtDisplayBoxAccounts.setStyle(acctStyleFirst + heading  + acctStyleLast);
+		  lbltxtDisplayBoxAccounts.setStyle(acctStyleFirst + heading  + acctStyleLast + acctStyleBlue);
 		  // set up the error display message area
 		  Label lbltxtDisplayBoxMessage = new Label(" "); // error reporting
 		  
 		  // declare the heading and text boxes for 
 		  Label lblAccountNumber = new Label("Account Number");
-		  lblAccountNumber.setStyle(acctStyleFirst + txtLabel + acctStyleLast);
+		  lblAccountNumber.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
 		  Label lblCustomerID = new Label("Customer ID");
-		  lblCustomerID.setStyle(acctStyleFirst + txtLabel + acctStyleLast);
+		  lblCustomerID.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
 		  Label lblOpeningBalance = new Label("Opening Balance");
-		  lblOpeningBalance.setStyle(acctStyleFirst + txtLabel + acctStyleLast);
+		  lblOpeningBalance.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
 		  
 		  TextField txtAccountNumber = new TextField();
 		  TextField txtCustomerID = new TextField();
@@ -343,112 +355,125 @@ public class NewFXBanker extends Application {
 			  mainPane.setBottom(bottomPane);
 			  mainPane.setStyle("-fx-border-color: blue");
 		     
-			  txtAccountNumber.setOnAction(e -> {
-				  txtCustomerID.requestFocus();
-			  });
-			  txtCustomerID.setOnAction(e -> {
-				  txtOpeningBalance.requestFocus();
-			  });
-			  txtAccountNumber.setOnKeyTyped(e ->{
-				  lbltxtDisplayBoxMessage.setText(" ");
-		     });
-		     
-		     txtCustomerID.setOnKeyTyped(e -> {
-		    	 lbltxtDisplayBoxMessage.setText(" ");
-		     });
-		     
-		     txtOpeningBalance.setOnKeyTyped(e -> {
-		    	 lbltxtDisplayBoxMessage.setText(" ");
-		     });
-		     
-		     txtOpeningBalance.setOnAction(e -> {
-		    	double amount = -1;
-		    	try {
-			    	amount = Double.parseDouble(txtOpeningBalance.getText());
-			    	if (amount < 0.0) {
-	    				 JOptionPane.showMessageDialog(null, "Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
-	    				 Stage myStage = (Stage) txtOpeningBalance.getScene().getWindow();
-	    				 myStage.requestFocus();
-		    			 txtOpeningBalance.requestFocus();
-			    	}
-	    		 } catch (NumberFormatException h) {
-	    			 JOptionPane.showMessageDialog(null, "I was expecting a Account Opening Balance, Please re-enter");
+		  txtAccountNumber.setOnAction(e -> {
+			  txtCustomerID.requestFocus();
+		  });
+		  txtCustomerID.setOnAction(e -> {
+			  txtOpeningBalance.requestFocus();
+		  });
+		  txtAccountNumber.setOnKeyTyped(e ->{
+			  lbltxtDisplayBoxMessage.setText(" ");
+	     });
+	     
+	     txtCustomerID.setOnKeyTyped(e -> {
+	    	 lbltxtDisplayBoxMessage.setText(" ");
+	     });
+	     
+	     txtOpeningBalance.setOnKeyTyped(e -> {
+	    	 lbltxtDisplayBoxMessage.setText(" ");
+	     });
+	     
+	     txtOpeningBalance.setOnAction(e -> {
+	    	double amount = -1;
+	    	try {
+		    	amount = Double.parseDouble(txtOpeningBalance.getText());
+		    	if (amount < 0.0) {
+    				 lbltxtDisplayBoxMessage.setText("Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
+    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    				 Stage myStage = (Stage) txtOpeningBalance.getScene().getWindow();
+    				 myStage.requestFocus();
 	    			 txtOpeningBalance.requestFocus();
-	    		 } catch (InputMismatchException  g) {
-	    			 JOptionPane.showMessageDialog(null, "You must enter the Opening Balance to the Account");
-	    			 txtOpeningBalance.requestFocus();
-	    		 } catch (NoSuchElementException f) {
-	    			 JOptionPane.showMessageDialog(null, "Out of Range, Please re-enter the Opening Balance Ammount!");
-	    			 txtOpeningBalance.requestFocus();
-	    		 }
-		     });
-		     
-		     btnAdd.setOnAction(e -> {
-		    	 // check to see if the text boxes are empty and notify user
-		    	 if (txtAccountNumber.getText().isEmpty()) {
-		    		 lbltxtDisplayBoxMessage.setText("You must enter an Accouont Number!");
-		    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast);
-		    		 txtAccountNumber.requestFocus();
-		    	 } else if (txtCustomerID.getText().isEmpty()) {
-		    		 lbltxtDisplayBoxMessage.setText("You must enter a Customer ID!");
-		    		 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
-		    		 txtCustomerID.requestFocus();
-		    	 } else if (txtOpeningBalance.getText().isEmpty()) {
-		    		 lbltxtDisplayBoxMessage.setText("You must the Opening Balance!");
-		    		 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
-		    		 txtOpeningBalance.requestFocus();
-		    	 } else {
-		    		 int element = accounts.size();
-		    		 double amount = -1.0;
-		    		 boolean isOk = false;
-			    		 try {
-			    			 amount = Double.parseDouble(txtOpeningBalance.getText());
-			    			 if (amount < 0.0) {
-			    				 JOptionPane.showMessageDialog(null, "Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
-			    				 txtOpeningBalance.requestFocus();
-			    			
-			    			 } else {
-					    		 JOptionPane.showMessageDialog(null, amount);
-					    		 isOk = true;
-			    			 }
-			    		 } catch (NumberFormatException h) {
-			    			 JOptionPane.showMessageDialog(null, "I was expecting a Account Opening Balance, Please re-enter");
-			    			 txtOpeningBalance.requestFocus();
-			    		
-			    		 } catch (InputMismatchException  g) {
-			    			 JOptionPane.showMessageDialog(null, "You must enter the Opening Balance to the Account");
-			    			 txtOpeningBalance.requestFocus();
-			    			
-			    		 } catch (NoSuchElementException f) {
-			    			 JOptionPane.showMessageDialog(null, "Out of Range, Please re-enter the Opening Balance Ammount!");
-			    		 }
-		    		 if (isOk) {
-		    			 Customer customer = customers.get(0);
-		    			 for (int x = 0; x < customers.size(); x++) {
-			    			 if (customers.get(x).getCustomerID() == txtCustomerID.getText()) {
-			    				 customer = customers.get(x);
-			    			 }
+		    	}
+    		 } catch (NumberFormatException h) {
+    			 lbltxtDisplayBoxMessage.setText("I was expecting a Account Opening Balance, Please re-enter");
+				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    			 txtOpeningBalance.requestFocus();
+    		 } catch (InputMismatchException  g) {
+    			 lbltxtDisplayBoxMessage.setText("You must enter the Opening Balance to the Account");
+				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    			 txtOpeningBalance.requestFocus();
+    		 } catch (NoSuchElementException f) {
+    			 lbltxtDisplayBoxMessage.setText("Out of Range, Please re-enter the Opening Balance Ammount!");
+				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    			 txtOpeningBalance.requestFocus();
+    		 }
+	     });
+	     
+	     btnAdd.setOnAction(e -> {
+	    	 // check to see if the text boxes are empty and notify user
+	    	 if (txtAccountNumber.getText().isEmpty()) {
+	    		 lbltxtDisplayBoxMessage.setText("You must enter an Accouont Number!");
+	    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    		 txtAccountNumber.requestFocus();
+	    	 } else if (txtCustomerID.getText().isEmpty()) {
+	    		 lbltxtDisplayBoxMessage.setText("You must enter a Customer ID!");
+	    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    		 txtCustomerID.requestFocus();
+	    	 } else if (txtOpeningBalance.getText().isEmpty()) {
+	    		 lbltxtDisplayBoxMessage.setText("You must the Opening Balance!");
+	    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    		 txtOpeningBalance.requestFocus();
+	    	 } else {
+	    		 int element = accounts.size();
+	    		 double amount = -1.0;
+	    		 boolean isOk = false;
+		    		 try {
+		    			 amount = Double.parseDouble(txtOpeningBalance.getText());
+		    			 if (amount < 0.0) {
+		    				 lbltxtDisplayBoxMessage.setText("Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
+		    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+		    				 txtOpeningBalance.requestFocus();
+		    			
+		    			 } else {
+				    		 JOptionPane.showMessageDialog(null, amount);
+				    		 isOk = true;
 		    			 }
-		    			 // notify the user
-		    			 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer));
-			    		 if (element< accounts.size()) {
-			    			 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
-			    			 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
-			    		 } else {
-			    			 lbltxtDisplayBoxMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
-			    			 lbltxtDisplayBoxMessage.setText("Adding Account was Unsuccessful!");
-			    		 }
-		    		 } else {
+		    		 } catch (NumberFormatException h) {
+		    			 lbltxtDisplayBoxMessage.setText("I was expecting a Account Opening Balance, Please re-enter");
+	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
 		    			 txtOpeningBalance.requestFocus();
-		    			 
+		    		
+		    		 } catch (InputMismatchException  g) {
+		    			 lbltxtDisplayBoxMessage.setText("You must enter the Opening Balance to the Account");
+	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+		    			 txtOpeningBalance.requestFocus();
+		    			
+		    		 } catch (NoSuchElementException f) {
+	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+		    			 JOptionPane.showMessageDialog(null, "Out of Range, Please re-enter the Opening Balance Ammount!");
 		    		 }
-		    	 }
-		     });
-		     
-		     btnExit.setOnAction(e -> {
-		    	 btnExit.getScene().getWindow().hide();
-		    });		     
-				  return mainPane;
+	    		 if (isOk) {
+	    			 Customer customer = customers.get(0);
+	    			 for (int x = 0; x < customers.size(); x++) {
+		    			 if (customers.get(x).getCustomerID() == txtCustomerID.getText().trim()) {
+		    				 JOptionPane.showMessageDialog(null, customers.get(x));
+		    				 customer = customers.get(x);
+		    			 } else {
+		    				 lbltxtDisplayBoxMessage.setText("Customer not fount!\n\nPlease re-enter Customer ID");
+		    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+		    				 txtCustomerID.requestFocus();
+		    			 }
+	    			 }
+	    			 // notify the user
+	    			 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer));
+		    		 if (element< accounts.size()) {
+	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlack);
+	    	 			 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
+		    		 } else {
+	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+		    			 lbltxtDisplayBoxMessage.setText("Adding Account was Unsuccessful!");
+		    		 }
+	    		 } else {
+	    			 txtOpeningBalance.requestFocus();
+	    			 
+	    		 }
+	    	 }
+	     });
+	     
+	     btnExit.setOnAction(e -> {
+	    	 btnExit.getScene().getWindow().hide();
+	    });		     
+		return mainPane;
 	  }
 	  
 	  public boolean createAccount() {
