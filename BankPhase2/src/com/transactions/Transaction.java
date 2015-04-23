@@ -42,12 +42,12 @@ public class Transaction {
 		this.transactionNumber = transactionNumber;
 	}
 	
-	public Transaction(java.util.Date createDate, String customerID, String description, int transactionNumber) {
+	public Transaction(java.util.Date createDate, String description, int transactionNumber) {
 		this.createDate = createDate;
-		this.customerID = customerID;
-		this.accountNumber = "No Accounts";
+		this.customerID = null;
+		this.accountNumber = null;
 		this.description = description;
-		this.amount = 0.00;
+		this.amount = -1.0;
 		this.transactionNumber = transactionNumber;
 	}
 

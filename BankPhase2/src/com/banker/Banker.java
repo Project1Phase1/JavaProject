@@ -188,7 +188,7 @@ class ActualBanker {
 			String getBankName = "";
 			System.out.print("\n\nWhat is the name of your bank? ");
 			getBankName = input.nextLine();
-			bankName = getBankName;
+			bankName = "   Welcome To ".concat(getBankName);
 		}
 		// define the menu options
 		String[] dispMenu = new String[15];
@@ -210,7 +210,7 @@ class ActualBanker {
 		// set the number of menu options
 		menuItems = dispMenu.length;
 		System.out.println();
-		System.out.println("   Welcome To " + bankName);
+		System.out.println(bankName);
 		System.out.println("=================================================");
 		// generate the menu
 		for (int x = 0; x < dispMenu.length; x++) {
@@ -569,8 +569,8 @@ class ActualBanker {
 	 * 
 	 * @param description the description of the transaction
 	 */
-	public void createCustomerTransaction(String customerID, String description) {
-		transactions.add(new Transaction(new java.util.Date(), customerID, description, bu.generateUniqueTransNumber()));
+	public void createCustomerTransaction(String description) {
+		transactions.add(new Transaction(new java.util.Date(), description, bu.generateUniqueTransNumber()));
 	}
 	
 	/** create account<br><br>
@@ -633,15 +633,12 @@ class ActualBanker {
 		
 		switch (threeAcct) {
 			case 0:
-				customer.setActive(true);
 				accounts.add(new Checking(accountNumber, accountBalance, customer));
 				break;
 			case 1:
-				customer.setActive(true);
 				accounts.add(new Regular(accountNumber, accountBalance, customer));
 				break;
 			case 2:
-				customer.setActive(true);
 				accounts.add(new Gold(accountNumber, accountBalance, customer));
 				break;
 		}
@@ -935,20 +932,6 @@ class ActualBanker {
 			System.out.println("There are no customers to remove!\nTerminating remove customer!\n");
 			return;
 		}
-		boolean isActive = false;
-		for (int y = 0; y < customers.size(); y++) {
-			for (int x = 0; x < accounts.size(); x++) {
-				if (customers.get(y).equals(accounts.get(x).getCustomer())) {
-					isActive = true;
-				}
-			}
-			if (isActive) {
-				customers.get(y).setActive(true);
-			} else {
-				customers.get(y).setActive(false);
-			}
-			isActive = false;
-		}
 		// clear input not closed warning and declare scanner input
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
@@ -957,25 +940,16 @@ class ActualBanker {
 		System.out.print("\n=============================================================\n");
 		int counter = 0;
 		System.out.print("Available customers\n-----------------------------------------\n");
-		System.out.print("0.) To Exit!\n-------------------------\n");
 		// list available customers in a menu style
-		ArrayList<Integer> element = new ArrayList<Integer>();
-		for (int x = 0; x < customers.size(); x++) {
-			if(!(customers.get(x).getActive())) {
-				counter++;
-				element.add(x);
-				System.out.print(counter + ".) " + customers.get(x).toString() + "\n");
-			}
-		}
-		if (counter == 0) {
-			System.out.print("\nThere are no customers available to remove!\n\nTerminating Customer Removal!\n");
-			return;
+		for (Customer c: customers) {
+			counter++;
+			System.out.print(counter + ".) " + c.toString() + "\n");
 		}
 		// get users choice
-		int whichAccount = -1;
+		System.out.print("\nChoose which customer to remove: (1 - " + counter + ") ");
+		int whichAccount = 0;
 		// validate users choice
-		while (whichAccount < 0 || whichAccount > counter) {
-			System.out.print("\nChoose which customer to remove: (0 - " + counter + ") ");
+		while (whichAccount < 1 || whichAccount > counter) {
 			//begin try-catch
 			boolean validateInput=true;
 			while (validateInput) {
@@ -986,25 +960,20 @@ class ActualBanker {
 					System.out.print("Invalid Input: Please enter Integer Value");
 				}
 			}
-			
 			//end try catch
-		}
-		if (whichAccount == 0) {
-			System.out.print("\nTerminating Remove Customer!\n");
-			return;
 		}
 		// lower choice to array type value (starts at 0)
 		whichAccount -= 1;
 		Customer customer;
-		customer = customers.get(element.get(whichAccount));
+		customer = customers.get(whichAccount);
 		// set description to customer ID and customer name along with "Removed"
 		String description = customer.getCustomerID() + " " + customer.getCustomerName() + " Removed";
 		// remove customer
 		customers.remove(customer);
 		// add customer removal to transactions
-		createCustomerTransaction(customer.getCustomerID(), description);
+		createCustomerTransaction(description);
 		// Notify user that customer was removed
-		System.out.print("\n" + description + "!\n");
+		System.out.print("\nSuccessfully removed customer!\n");
 
 	}
 	
