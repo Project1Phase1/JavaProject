@@ -14,6 +14,7 @@ package com.customers;
 public class Customer {
 	private String customerID;
 	private String customerName;
+	private boolean active;
 	
 	/** customer constructor non-default
 	 * 
@@ -23,6 +24,7 @@ public class Customer {
 	public Customer(String id, String name) {
 		this.customerID = id;
 		this.customerName = name;
+		this.active = false;
 	}
 	
 	// get
@@ -31,14 +33,22 @@ public class Customer {
 	 * @return the customerID
 	 */
 	public String getCustomerID() {
-		return customerID;
+		return this.customerID;
 	}
 	
 	/**
 	 * @return the customerName
 	 */
 	public String getCustomerName() {
-		return customerName;
+		return this.customerName;
+	}
+	
+	/**
+	 * 
+	 * @return whether the customer is an active customer
+	 */
+	public boolean getActive() {
+		return this.active;
 	}
 	
 	// set
@@ -55,6 +65,10 @@ public class Customer {
 	 */
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public String toString() {
