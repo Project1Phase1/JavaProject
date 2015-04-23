@@ -9,6 +9,8 @@ import javax.swing.JOptionPane;
 
 import com.accounts.Account;
 import com.accounts.Checking;
+import com.accounts.Gold;
+import com.accounts.Regular;
 import com.customers.Customer;
 import com.transactions.Transaction;
 import com.utilities.BankUtilities;
@@ -44,7 +46,7 @@ import javafx.stage.Stage;
  *
  */
 public class NewFXBanker extends Application {
-	NewActualBanker banker = new NewActualBanker();
+	//NewActualBanker banker = new NewActualBanker();
 	ArrayList<Customer> customers = new ArrayList<Customer>();
 	ArrayList<Account> accounts = new ArrayList<Account>();
 	ArrayList<Account> rejects = new ArrayList<Account>();
@@ -106,7 +108,7 @@ public class NewFXBanker extends Application {
     	 }
      });
       accountCustomer.setOnAction(e -> {
- 				Scene myScene = new Scene(getCustPane(), 280,175, Color.BEIGE);
+ 				Scene myScene = new Scene(getCustPane(), 375, 200, Color.BEIGE);
     			Stage test = new Stage();
     			test.setTitle("Customer Information");
     			test.setScene(myScene);
@@ -114,12 +116,11 @@ public class NewFXBanker extends Application {
      });
      
      accountChecking.setOnAction(e -> {
-    	 String acctType = "Checking Account";
     	 if (customers.isEmpty()) {
-    		 JOptionPane.showMessageDialog(null, "There are no customers available to select!\n\nUnable to add " + acctType + "!!");
+    		 JOptionPane.showMessageDialog(null, "There are no customers available to select!\n\nUnable to add Checking Account!!");
     	 } else {
   		    Stage chkAddStage = new Stage();
-		    Scene scene = new Scene(addAccountPane(acctType), 800, 300);
+		    Scene scene = new Scene(addAccountPane(0), 800, 300);
 		    chkAddStage.setTitle("Add Account"); // Set the stage title
 		    chkAddStage.setScene(scene); // Place the scene in the stage
    		    chkAddStage.show(); // Display the stage
@@ -165,12 +166,20 @@ public class NewFXBanker extends Application {
 	   
       Application.launch(arguments);
    }
-
+   	
+   	/** get customer pane<br><br>
+   	 * 
+   	 * declare the scene for making the customer screen for adding<br>
+   	 * new customers<br>
+   	 * 
+   	 * 
+   	 * @return the boarder pane that will generate the stage and scene
+   	 */
 	  public BorderPane getCustPane(){
-		  
 		  
 		  Label lblID = new Label("Customer ID");
 		  Label lblName = new Label("Customers Name");
+		  Label lblMessage = new Label("");
 		  
 		  TextField txtID = new TextField();
 		  TextField txtName = new TextField();
@@ -181,41 +190,83 @@ public class NewFXBanker extends Application {
 		  btnAdd.setFont(times);
 		  btnExit.setFont(times);
 		  
-		  HBox lblPane = new HBox(15);
-		  lblPane.setPadding(new Insets(15,15,15,15));  
-		  lblPane.getChildren().addAll(lblID, txtID, lblName, txtName);
-		  lblPane.setAlignment(Pos.TOP_CENTER);
+		  // set the color to the buttons
+		  btnAdd.setStyle("-fx-font: 18 arial; -fx-base: blue;");
+		  btnExit.setStyle("-fx-font: 18 arial; -fx-base: red;");
+
+		  VBox idPane = new VBox(2);
+		  idPane.setAlignment(Pos.CENTER);
+		 idPane.getChildren().addAll(lblID, txtID);
+		 
+		  VBox namePane = new VBox(2);
+		  namePane.setAlignment(Pos.CENTER);
+		  namePane.getChildren().addAll(lblName, txtName);
+		  
+		  HBox messagePane = new HBox(1);
+		  messagePane.setAlignment(Pos.CENTER);
+		  messagePane.getChildren().add(lblMessage);
+		  
+		  HBox txtPane = new HBox(2);
+		  txtPane.setPadding(new Insets(30,30,30,30));  
+		  txtPane.getChildren().addAll(idPane, namePane);
+		  txtPane.setAlignment(Pos.TOP_CENTER);
 		  lblID.setFont(times);
 		  lblName.setFont(times);
-		  
-		  HBox txtPane = new HBox(5);
-		  txtPane.setPadding(new Insets(15,15,15,15));
-		  txtPane.getChildren().addAll(txtID, txtName);
-		  txtPane.setAlignment(Pos.BOTTOM_CENTER);
 		  
 		  HBox bottomPane = new HBox(2);
 		  bottomPane.setPadding(new Insets(15,15,15,15));;
 		  bottomPane.getChildren().addAll(btnAdd, btnExit);
 		  bottomPane.setAlignment(Pos.CENTER);
 		  
-
 		  BorderPane custMainPane = new BorderPane();
-		  custMainPane.setTop(lblPane);
-		  custMainPane.setCenter(txtPane);
+		  custMainPane.setTop(txtPane);
+		  custMainPane.setCenter(messagePane);
 		  custMainPane.setBottom(bottomPane);
-		  custMainPane.setStyle("-fx-border-color: red");
+		  custMainPane.setStyle("-fx-border-color: blue");
+
+		  txtID.setOnKeyTyped(e -> {
+			  if (txtID.getText().equals("0")) {
+				  // need to work on this and make it either pop up another window showing all the available customerID numbers
+				  // or in a combo box on this form
+				  lblMessage.setText("You entered a 0");
+				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+			  } else {
+				  lblMessage.setText(" ");
+				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+			  }
+		  });
+		  
+		  txtName.setOnKeyTyped(e -> {
+				  lblMessage.setText(" ");
+				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+		  });
+		  
+		  txtID.setOnAction(e -> {
+			  if (txtID.getText().equals("0")) {
+				  // need to work on this and make it either pop up another window showing all the available customerID numbers
+				  // or in a combo box on this form
+				  lblMessage.setText("You entered a 0");
+ 				 lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+			  } else {
+			  txtName.requestFocus();
+			  }
+		  });
+		  
+		  txtName.setOnAction(e -> {
+			  btnAdd.requestFocus();
+		  });
 		  
 		  btnAdd.setOnKeyPressed(e -> {
 			  boolean cc = false;
 			  Stage myStage = (Stage) txtID.getScene().getWindow();
-			  cc = createCustomer(txtID, txtName);
+			  cc = createCustomer(txtID, txtName, lblMessage);
 			  if (!cc) {
 				  myStage.requestFocus();
 				  txtID.requestFocus();
 			  } else {
 				  txtID.setText("");
 				  txtName.setText("");
-				  //myStage.requestFocus();
+				  myStage.requestFocus();
 				  txtID.requestFocus();
 			  }
 		  });
@@ -223,7 +274,7 @@ public class NewFXBanker extends Application {
 		  btnAdd.setOnAction(e -> {
 			  boolean cc = false;
 			  Stage myStage = (Stage) txtID.getScene().getWindow();
-			  cc = createCustomer(txtID, txtName);
+			  cc = createCustomer(txtID, txtName, lblMessage);
 			  if (!cc) {
 				  myStage.requestFocus();
 				  txtID.requestFocus();
@@ -241,29 +292,57 @@ public class NewFXBanker extends Application {
 	  return custMainPane;
 	  }
 
-	  public boolean createCustomer(TextField txtID, TextField txtName) {
+	  /** create Customer<br><br>
+	   * 
+	   * a method that will perform the creation of the Customer<br>
+	   * this will allow for multiple areas to create the Customer<br>
+	   * and easier to maintain and debug the code<br>
+	   * 
+	   * @param txtID the TextField for CustomerID
+	   * @param txtName the TextField for CustomerName
+	   * @param message the message that will be displayed to the user on the form
+	   * @return whether it was successful (true or false)
+	   */
+	  public boolean createCustomer(TextField txtID, TextField txtName, Label lblMessage) {
 		  int element = customers.size();
 		  //JOptionPane.showMessageDialog(null, element);
 		  if(txtID.getText().isEmpty()) {
-			  JOptionPane.showMessageDialog(null,  "Please Enter Customer ID");
+			  lblMessage.setText("Please Enter Customer ID");
+			  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
+			  //JOptionPane.showMessageDialog(null,  );
 		  } else if (txtName.getText().isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "Please Enter Customer Name");
+			  lblMessage.setText("Please Enter Customer Name");
+			  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
 		  } else {
 			  Customer customer = new Customer(txtID.getText(), txtName.getText());
 			  customers.add(customer);
 			  if (element < customers.size()) {
-				  JOptionPane.showMessageDialog(null,  "Customer Created successfully!");
+				  lblMessage.setText("Customer Created successfully!");
+				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
 				  return true;
 			  } else {
 				  if (element == customers.size()) {
-					  JOptionPane.showMessageDialog(null, "Customer Creation Unsessful!!");
+					  lblMessage.setText("Customer Creation Unsessful!!");
+					  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
 				  }
 			  }
 		  }
 		  return false;
 	  }
-
-	  public BorderPane addAccountPane(String acctType) {
+	  
+	  /** add Account pane<br><br>
+	   * 
+	   * this paints the scene for the account pane<br>
+	   * and generates the code for adding a new Account<br><br>
+	   * 
+	   * 0 - Checking<br>
+	   * 1 - Regular<br>
+	   * 2 - Gold<br>
+	   * 
+	   * @param acctNum this determines which account to create: Checking, Regular, or Gold
+	   * @return the boarder pane that will generate the form
+	   */
+	  public BorderPane addAccountPane(int acctNum) {
 		  // heading font size
 		  String heading = "25";
 		  // message box font size
@@ -272,17 +351,26 @@ public class NewFXBanker extends Application {
 		  String txtLabel = "14";
 		  // the beginning of the style string
 		  String acctStyleFirst = "-fx-font: ";
-		  // the last pert of the style string before the color
+		  // the last part of the style string before the color
 		  String acctStyleLast =" arial; -fx-text-fill: ";
 		  // the blue color
 		  String acctStyleBlue = "blue;";
 		  // the red color
 		  String acctStyleRed = "red;";
-		  // the black color
-		  String acctStyleBlack = "black;";
 		  // all buttons styles not including the color
 		  String acctButtonStyle = "-fx-font: 18 arial; -fx-base: ";
-		
+		  String acctType = "";
+		switch (acctNum) {
+			case 0: // checking
+				acctType = "Checking Account";
+				break;
+			case 1:// regular
+				acctType = "Regular Account";
+				break;
+			case 2: // gold
+				acctType = "Gold Account";
+				break;
+		}
 		  // declare buttons and set their styles
 		  Button btnAdd = new Button("Add");
 		  btnAdd.setStyle(acctButtonStyle + "blue;");
@@ -295,7 +383,7 @@ public class NewFXBanker extends Application {
 		  // set up the error display message area
 		  Label lbltxtDisplayBoxMessage = new Label(" "); // error reporting
 		  
-		  // declare the heading and text boxes for 
+		  // declare the heading and labels
 		  Label lblAccountNumber = new Label("Account Number");
 		  lblAccountNumber.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
 		  Label lblCustomerID = new Label("Customer ID");
@@ -303,76 +391,89 @@ public class NewFXBanker extends Application {
 		  Label lblOpeningBalance = new Label("Opening Balance");
 		  lblOpeningBalance.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
 		  
+		  // declare the text boxes
 		  TextField txtAccountNumber = new TextField();
 		  TextField txtCustomerID = new TextField();
 		  TextField txtOpeningBalance = new TextField();
 		  
+		  // put account number label and text box together in a vertical box
 		  VBox accountPane = new VBox(2);
-		  //bottomPane.setPadding(new Insets(15,15,15,15));
 		  accountPane.getChildren().addAll(lblAccountNumber, txtAccountNumber);
 		  accountPane.setAlignment(Pos.CENTER);
 		  
+		  // put the customer id label and text box together in a vertical box
 		  VBox customerPane = new VBox(2);
-		  //bottomPane.setPadding(new Insets(15,15,15,15));
 		  customerPane.getChildren().addAll(lblCustomerID,txtCustomerID);
 		  customerPane.setAlignment(Pos.CENTER);
 		 
-		  
+		  // put the opening balance label and text box in a vertical box
 		  VBox balancePane = new VBox(2);
-		  //bottomPane.setPadding(new Insets(15,15,15,15));
 		  balancePane.getChildren().addAll(lblOpeningBalance,txtOpeningBalance);
 		  balancePane.setAlignment(Pos.CENTER);
 		 
-		  
+		  // put the display message label in a horizontal box
 		  HBox accountDisplayPane = new HBox(1);
 		  accountDisplayPane.setPadding(new Insets(20,15,25,15));
 		  accountDisplayPane.getChildren().addAll(lbltxtDisplayBoxAccounts);
 		  accountDisplayPane.setAlignment(Pos.CENTER);
 		  
+		  // add the customer, account, and opeening balance panes into an horizontal box
 		  HBox topPane = new HBox(3);
 		  topPane.setPadding(new Insets(15,15,15,15));
 		  topPane.getChildren().addAll(customerPane,accountPane,balancePane);
 		  topPane.setAlignment(Pos.CENTER);
 		  
+		  // add the account type display label and top pane into a vertical box
 		  VBox finaTopPane = new VBox(2);
-		  //bottomPane.setPadding(new Insets(15,15,15,15));
 		  finaTopPane.getChildren().addAll(accountDisplayPane, topPane);
 		  finaTopPane.setAlignment(Pos.CENTER);
 		  
+		  // add the label display box to a horizontal box
 		  HBox centerPane = new HBox(1);
 		  centerPane.setPadding(new Insets(15,15,25,15));
 		  centerPane.getChildren().addAll(lbltxtDisplayBoxMessage);
 		  centerPane.setAlignment(Pos.CENTER);
 		  
-		  
+		  // add the buttons to the bottom pane
 		  HBox bottomPane = new HBox(2);
 		  bottomPane.setPadding(new Insets(15,15,15,15));
 		  bottomPane.getChildren().addAll(btnAdd, btnExit);
 		  bottomPane.setAlignment(Pos.CENTER);
+		  
+		  // generate the actual panes that will create the form
+		  // and return it to the scene
 		  BorderPane mainPane = new BorderPane();
-			  mainPane.setTop(finaTopPane);
-			  mainPane.setCenter(centerPane);
-			  mainPane.setBottom(bottomPane);
-			  mainPane.setStyle("-fx-border-color: blue");
-		     
+		  mainPane.setTop(finaTopPane);
+		  mainPane.setCenter(centerPane);
+		  mainPane.setBottom(bottomPane);
+		  mainPane.setStyle("-fx-border-color: blue");
+		  
+		  // if the enter key is pressed in the account number move to the next box
 		  txtAccountNumber.setOnAction(e -> {
 			  txtCustomerID.requestFocus();
 		  });
+		  
+		  // if the enter key is pressed in the customerID move to the next box
 		  txtCustomerID.setOnAction(e -> {
-			  txtOpeningBalance.requestFocus();
+				  txtOpeningBalance.requestFocus();
 		  });
+		  
+		  // if any key is pressed in the account number box, clear the message display label
 		  txtAccountNumber.setOnKeyTyped(e ->{
 			  lbltxtDisplayBoxMessage.setText(" ");
 	     });
 	     
+		  // if any key is pressed in the customer id box, clear the message display label
 	     txtCustomerID.setOnKeyTyped(e -> {
 	    	 lbltxtDisplayBoxMessage.setText(" ");
 	     });
 	     
+	     // if any key is pressed in the opening balance box, clear the message display label
 	     txtOpeningBalance.setOnKeyTyped(e -> {
 	    	 lbltxtDisplayBoxMessage.setText(" ");
 	     });
 	     
+	     // if the enter key is pressed in the opening balance box, validate the input before continuing
 	     txtOpeningBalance.setOnAction(e -> {
 	    	double amount = -1;
 	    	try {
@@ -399,84 +500,145 @@ public class NewFXBanker extends Application {
     		 }
 	     });
 	     
+	     // if the user pressed enter on the add button, call the create account method
+	     btnAdd.setOnKeyTyped(e -> {
+	    	 boolean isAcctOk = false;
+	    	 isAcctOk = createAccount( txtAccountNumber, txtCustomerID, txtOpeningBalance, lbltxtDisplayBoxMessage, acctNum);
+	    	 if (isAcctOk) {
+	    		 
+	    	 }
+	     });
+
+	     // if the user clicks the add button, call the create account method
 	     btnAdd.setOnAction(e -> {
-	    	 // check to see if the text boxes are empty and notify user
-	    	 if (txtAccountNumber.getText().isEmpty()) {
-	    		 lbltxtDisplayBoxMessage.setText("You must enter an Accouont Number!");
-	    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-	    		 txtAccountNumber.requestFocus();
-	    	 } else if (txtCustomerID.getText().isEmpty()) {
-	    		 lbltxtDisplayBoxMessage.setText("You must enter a Customer ID!");
-	    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-	    		 txtCustomerID.requestFocus();
-	    	 } else if (txtOpeningBalance.getText().isEmpty()) {
-	    		 lbltxtDisplayBoxMessage.setText("You must the Opening Balance!");
-	    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-	    		 txtOpeningBalance.requestFocus();
-	    	 } else {
-	    		 int element = accounts.size();
-	    		 double amount = -1.0;
-	    		 boolean isOk = false;
-		    		 try {
-		    			 amount = Double.parseDouble(txtOpeningBalance.getText());
-		    			 if (amount < 0.0) {
-		    				 lbltxtDisplayBoxMessage.setText("Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
-		    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-		    				 txtOpeningBalance.requestFocus();
-		    			
-		    			 } else {
-				    		 JOptionPane.showMessageDialog(null, amount);
-				    		 isOk = true;
-		    			 }
-		    		 } catch (NumberFormatException h) {
-		    			 lbltxtDisplayBoxMessage.setText("I was expecting a Account Opening Balance, Please re-enter");
-	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-		    			 txtOpeningBalance.requestFocus();
-		    		
-		    		 } catch (InputMismatchException  g) {
-		    			 lbltxtDisplayBoxMessage.setText("You must enter the Opening Balance to the Account");
-	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-		    			 txtOpeningBalance.requestFocus();
-		    			
-		    		 } catch (NoSuchElementException f) {
-	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-		    			 JOptionPane.showMessageDialog(null, "Out of Range, Please re-enter the Opening Balance Ammount!");
-		    		 }
-	    		 if (isOk) {
-	    			 Customer customer = customers.get(0);
-	    			 for (int x = 0; x < customers.size(); x++) {
-		    			 if (customers.get(x).getCustomerID() == txtCustomerID.getText().trim()) {
-		    				 JOptionPane.showMessageDialog(null, customers.get(x));
-		    				 customer = customers.get(x);
-		    			 } else {
-		    				 lbltxtDisplayBoxMessage.setText("Customer not fount!\n\nPlease re-enter Customer ID");
-		    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-		    				 txtCustomerID.requestFocus();
-		    			 }
-	    			 }
-	    			 // notify the user
-	    			 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer));
-		    		 if (element< accounts.size()) {
-	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlack);
-	    	 			 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
-		    		 } else {
-	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
-		    			 lbltxtDisplayBoxMessage.setText("Adding Account was Unsuccessful!");
-		    		 }
-	    		 } else {
-	    			 txtOpeningBalance.requestFocus();
-	    			 
-	    		 }
+	    	 boolean isAcctOk = false;
+	    	 isAcctOk = createAccount( txtAccountNumber, txtCustomerID, txtOpeningBalance, lbltxtDisplayBoxMessage, acctNum);
+	    	 if (isAcctOk) {
+	    		 
 	    	 }
 	     });
 	     
+	     // if the user presses enter on the exit button, close the window
+	     btnExit.setOnKeyTyped(e -> {
+	    	 btnExit.getScene().getWindow().hide();
+	    });		     
+
+	     // if the user clicks the exit button close the window
 	     btnExit.setOnAction(e -> {
 	    	 btnExit.getScene().getWindow().hide();
 	    });		     
 		return mainPane;
 	  }
 	  
-	  public boolean createAccount() {
+	  /** create Account<br><br>
+	   * 
+	   * using the acctNum will determine whether it is for Checking, Regular or Gold<br><br>
+	   * 
+	   * 0 - Checking<br>
+	   * 1 - Regular<br>
+	   * 2 - Gold<br>
+	   * 
+	   * 
+	   * 
+	   * @param txtAccountNumber the account number from the form
+	   * @param txtCustomerID the customer id from the form
+	   * @param txtOpeningBalance the opening balance from the form
+	   * @param lbltxtDisplayBoxMessage the display box on the form
+	   * @param acctNum the number that will determine Checking, Regular, or Gold
+	   * @return whether it was successful or not (true or false)
+	   */
+	  public boolean createAccount( TextField txtAccountNumber, TextField txtCustomerID, TextField txtOpeningBalance, Label lbltxtDisplayBoxMessage, int acctNum) {
+		  // message box font size
+		  String txtMessage = "18";
+		  // the beginning of the style string
+		  String acctStyleFirst = "-fx-font: ";
+		  // the last pert of the style string before the color
+		  String acctStyleLast =" arial; -fx-text-fill: ";
+		  // the blue color
+		  String acctStyleBlue = "blue;";
+		  // the red color
+		  String acctStyleRed = "red;";
+		  // the black color
+		  String acctStyleBlack = "black;";
+
+    	 // check to see if the text boxes are empty and notify user
+    	 if (txtAccountNumber.getText().isEmpty()) {
+    		 lbltxtDisplayBoxMessage.setText("You must enter an Accouont Number!");
+    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    		 txtAccountNumber.requestFocus();
+    	 } else if (txtCustomerID.getText().isEmpty()) {
+    		 lbltxtDisplayBoxMessage.setText("You must enter a Customer ID!");
+    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    		 txtCustomerID.requestFocus();
+    	 } else if (txtOpeningBalance.getText().isEmpty()) {
+    		 lbltxtDisplayBoxMessage.setText("You must the Opening Balance!");
+    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    		 txtOpeningBalance.requestFocus();
+    	 } else {
+    		 int element = accounts.size();
+    		 double amount = -1.0;
+    		 boolean isOk = false;
+	    		 try {
+	    			 amount = Double.parseDouble(txtOpeningBalance.getText());
+	    			 if (amount < 0.0) {
+	    				 lbltxtDisplayBoxMessage.setText("Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
+	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    				 txtOpeningBalance.requestFocus();
+	    			
+	    			 } else {
+			    		 // JOptionPane.showMessageDialog(null, amount);
+			    		 isOk = true;
+	    			 }
+	    		 } catch (NumberFormatException h) {
+	    			 lbltxtDisplayBoxMessage.setText("I was expecting a Account Opening Balance, Please re-enter");
+    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    			 txtOpeningBalance.requestFocus();
+	    		
+	    		 } catch (InputMismatchException  g) {
+	    			 lbltxtDisplayBoxMessage.setText("You must enter the Opening Balance to the Account");
+    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    			 txtOpeningBalance.requestFocus();
+	    			
+	    		 } catch (NoSuchElementException f) {
+    				 lbltxtDisplayBoxMessage.setText("Out of Range, Please re-enter the Opening Balance Ammount!");
+    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    		 }
+    		 if (isOk) {
+    			 Customer customer = customers.get(0);
+    			 for (int x = 0; x < customers.size(); x++) {
+ 	    			 if (customers.get(x).getCustomerID().equals(txtCustomerID.getText())) {
+	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlack);
+	    				 customer = customers.get(x);
+	    				 switch (acctNum) {
+	    				 case 0: // checking
+	    					 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer));
+	    					 break;
+	    				 case 1: // regular
+	    					 accounts.add(new Regular(txtAccountNumber.getText(), amount, customer));
+	    					 break;
+	    				 case 2: // gold
+	    					 accounts.add(new Gold(txtAccountNumber.getText(), amount, customer));
+	    					 break;
+	    				 }
+	    			 } else {
+	    				 lbltxtDisplayBoxMessage.setText("Customer not fount!\n\nPlease re-enter Customer ID");
+	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    				 txtCustomerID.requestFocus();
+	    			 }
+    			 }
+    			 // notify the user
+ 	    		 if (element < accounts.size()) {
+    	 			 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
+    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+	    		 } else {
+	    			 lbltxtDisplayBoxMessage.setText("Adding Checking Account Unsuccessful!");
+    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    		 }
+    		 } else {
+    			 txtOpeningBalance.requestFocus();
+    			 
+    		 }
+    	 }
 		  
 		  
 		  
@@ -484,14 +646,14 @@ public class NewFXBanker extends Application {
 	  }
 }
 
-class NewActualBanker {
+//class NewActualBanker {
 	//NewFXBanker fxBanker = new NewFXBanker();
 	
-	public void addCustomer() {
+	//public void addCustomer() {
 		// Customer customer = fxBanker.customers.get(0);
 		// Account account = new Checking("", 0.0, customer);
 		
-	}
+//	}
 
 
-}
+//}
