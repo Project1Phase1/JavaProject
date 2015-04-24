@@ -14,6 +14,7 @@ package com.accounts;
 import com.customers.Customer;
 
 public class Regular extends Account {
+	private static final long serialVersionUID = 2013194002530097374L;
 	private double regularInterestRate;
 	private double regularInterestAmount;
 	private double regularFixedCharge;

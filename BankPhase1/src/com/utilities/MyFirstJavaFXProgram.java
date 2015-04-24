@@ -59,7 +59,7 @@ public class MyFirstJavaFXProgram extends Application {
 	  TextField txtNumber = new TextField();
 	  TextArea taOutput = new TextArea();
 	  taOutput.setPrefRowCount(5);
-	  taOutput.setPrefColumnCount(35);
+	  taOutput.setPrefColumnCount(25);
 	  taOutput.setFont(sansbold12);
 
 	  //Create some Panes:
@@ -102,7 +102,7 @@ public class MyFirstJavaFXProgram extends Application {
 	  btnName.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
 				String name = txtName.getText();
-				taOutput.setText("The name you entered is: " + name);
+				taOutput.setText("The name you entered is: " + name + "\n");
 		    }
 		});
 

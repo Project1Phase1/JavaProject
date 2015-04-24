@@ -15,7 +15,8 @@ package com.transactions;
  * Banker.java<br>
  *
  */
-public class Transaction {
+public class Transaction implements java.io.Serializable {
+	private static final long serialVersionUID = 5511205321959105751L;
 	private java.util.Date createDate;
 	private String customerID;
 	private String accountNumber;

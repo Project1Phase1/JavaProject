@@ -13,7 +13,8 @@ package com.accounts;
 
 import com.customers.Customer;
 
-public abstract class Account {
+public abstract class Account implements java.io.Serializable {
+	private static final long serialVersionUID = 1777611210940742188L;
 	private String accountNumber;
 	private double accountBalance;
 	
@@ -22,6 +23,7 @@ public abstract class Account {
 		this.accountNumber = accountNumber;
 		this.accountBalance = accountBalance;
 		this.customer = customer;
+		this.customer.setActive(true);
 	}
 	
 	// get

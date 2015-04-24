@@ -22,6 +22,7 @@ public abstract class Account {
 		this.accountNumber = accountNumber;
 		this.accountBalance = accountBalance;
 		this.customer = customer;
+		this.customer.setActive(true);
 	}
 	
 	// get
