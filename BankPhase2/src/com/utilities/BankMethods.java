@@ -602,6 +602,7 @@ public class BankMethods {
 		  if (!(file.exists())) {
 			  bankName = JOptionPane.showInputDialog("Please Enter the Bank Name");
 			  bakup = 0;
+			  return;
 		  }
 		  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[0]));){
 			  while (true) {
@@ -610,10 +611,10 @@ public class BankMethods {
 			  }
 		  } catch (EOFException e) {
 			  //JOptionPane.showMessageDialog(null, "Configuration Data Loaded successfully!", "Config Load Data", JOptionPane.INFORMATION_MESSAGE);
-			  
+			  return;
 		  } catch (FileNotFoundException e1) {
-			  JOptionPane.showMessageDialog(null, "Configuration file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-			  
+			  //JOptionPane.showMessageDialog(null, "Configuration file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+			  return;
 		  } catch (IOException e1) {
 			  JOptionPane.showMessageDialog(null, "Configuration File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
 			  
@@ -637,10 +638,10 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				 // JOptionPane.showMessageDialog(null, counter + " Customer(s) Data Loaded successfully!", "Customer Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  
+				 return;
 			  } catch (FileNotFoundException e1) {
-				  JOptionPane.showMessageDialog(null, "Customer file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  //JOptionPane.showMessageDialog(null, "Customer file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  return;
 			  } catch (IOException e1) {
 				  JOptionPane.showMessageDialog(null, "Customer File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
 				  
@@ -687,10 +688,10 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				  //JOptionPane.showMessageDialog(null, counter + " Checking Account Data Loaded successfully!", "Checking Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  
+				  return;
 			  } catch (FileNotFoundException e1) {
-				  JOptionPane.showMessageDialog(null, "Account file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  //JOptionPane.showMessageDialog(null, "Account file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  return;
 			  } catch (IOException e1) {
 				  JOptionPane.showMessageDialog(null, "Account File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
 				  
@@ -737,10 +738,10 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				  //JOptionPane.showMessageDialog(null, counter + " Regular Account Data Loaded successfully!", "Regular Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  
+				  return;
 			  } catch (FileNotFoundException e1) {
-				  JOptionPane.showMessageDialog(null, "Regular file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  //JOptionPane.showMessageDialog(null, "Regular file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  return;
 			  } catch (IOException e1) {
 				  JOptionPane.showMessageDialog(null, "Regular File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
 				  
@@ -786,10 +787,10 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				  //JOptionPane.showMessageDialog(null, counter + " Gold Account Data Loaded successfully!", "Gold Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  
+				  return;
 			  } catch (FileNotFoundException e1) {
-				  JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  return;
 			  } catch (IOException e1) {
 				  JOptionPane.showMessageDialog(null, "Gold File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
 				  
@@ -805,16 +806,14 @@ public class BankMethods {
 	  // *************************** config ***************************
 
 	  public void saveConfigData() {
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[0]));) {
+		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[0], false));) {
 			  output.writeUTF(bankName);
 			  output.writeInt(bakup);
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, "Config Data Saved successfully!", "Config Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
 		  } catch (IOException e1) {
 			  JOptionPane.showMessageDialog(null, "Config File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
 			  
 		  }
+		  JOptionPane.showMessageDialog(null, "Config Data Saved successfully!", "Config Save Data", JOptionPane.INFORMATION_MESSAGE);
 	  }
 	  
 	  
@@ -829,13 +828,11 @@ public class BankMethods {
 				  output.writeBoolean(c.getActive());
 				  counter++;
 			  }
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, counter + " Customer Data Saved successfully!", "Customer Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
 		  } catch (IOException e1) {
 			  JOptionPane.showMessageDialog(null, "Customer File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
 			  
 		  }
+		  JOptionPane.showMessageDialog(null, counter + " Customer Data Saved successfully!", "Customer Save Data", JOptionPane.INFORMATION_MESSAGE);
 		  
 	  }
 	  
@@ -855,13 +852,11 @@ public class BankMethods {
 					  counter++;
 				  }
 			  }
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, counter + " Checking Data Saved successfully!", "Checking Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
 		  } catch (IOException e1) {
 			  JOptionPane.showMessageDialog(null, "Checking File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
 			  
 		  }
+		  JOptionPane.showMessageDialog(null, counter + " Checking Data Saved successfully!", "Checking Save Data", JOptionPane.INFORMATION_MESSAGE);
 		  
 	  }
 	  
@@ -881,13 +876,11 @@ public class BankMethods {
 					  counter++;
 				  }
 			  }
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, counter + " Regular Data Saved successfully!", "Regular Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
 		  } catch (IOException e1) {
 			  JOptionPane.showMessageDialog(null, "Regular File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
 			  
 		  }
+		  JOptionPane.showMessageDialog(null, counter + " Regular Data Saved successfully!", "Regular Save Data", JOptionPane.INFORMATION_MESSAGE);
 	  }
 	
 	  // *************************** gold ***************************
@@ -906,13 +899,11 @@ public class BankMethods {
 					  counter++;
 				  }
 			  }
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, counter + " Gold Data Saved successfully!", "Gold Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
 		  } catch (IOException e1) {
 			  JOptionPane.showMessageDialog(null, "Gold File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
 			  
 		  }
+		  JOptionPane.showMessageDialog(null, counter + " Gold Data Saved successfully!", "Gold Save Data", JOptionPane.INFORMATION_MESSAGE);
 	  }
 	
 }

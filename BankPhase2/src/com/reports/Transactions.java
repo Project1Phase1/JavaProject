@@ -20,7 +20,7 @@ public class Transactions extends Application{
 	
 	public void start(Stage primaryStage) {
 	    // Create a scene by calling the method above and place it in the stage
-	    Scene scene = new Scene(getPane(), 1300, 300);
+	    Scene scene = new Scene(getPane(), 300, 300);
 	    primaryStage.setTitle("Transactions"); // Set the stage title
 	    primaryStage.setScene(scene); // Place the scene in the stage
 	    primaryStage.show(); // Display the stage
