@@ -1,9 +1,8 @@
 package com.utilities;
 
-import java.io.*;
-import java.util.*;
-
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,34 +25,14 @@ import com.accounts.Regular;
 import com.customers.Customer;
 import com.transactions.Transaction;
 
-// http://docs.oracle.com/javase/tutorial/essential/io/index.html
 
 public class BankMethods {
 	public ArrayList<Customer> customers = new ArrayList<Customer>();
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public ArrayList<Account> rejects = new ArrayList<Account>();
 	public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-	//public ArrayList<Configuration> config = new ArrayList<Configuration>();
 	public BankUtilities bu = new BankUtilities();
-	public String[] filename = new String[12];
-	public String bankName;
-	public int bakup;
-	
-	
-	public void loadFileName() {
-		filename[0]  = "data/config/config.dat";
-		filename[1]  = "data/customers/customers.dat";
-		filename[2]  = "data/accounts/checking.dat";
-		filename[3]  = "data/accounts/regular.dat";
-		filename[4]  = "data/accounts/gold.dat";
-		filename[5]  = "data/transactions/transactions.dat";
-		filename[6]  = "backup/config/config";
-		filename[7]  = "backup/customers/customers";
-		filename[8]  = "backup/accounts/checking";
-		filename[9]  = "backup/accounts/regular";
-		filename[10] = "backup/accounts/gold";
-		filename[11] = "backup/transactions/transactions";
-	}
+
 	
   	/** get customer pane<br><br>
    	 * 
@@ -390,7 +369,6 @@ public class BankMethods {
 						  listCust.appendText(c.toString() + "\n");
 					  }
 				  }
-				 listCust.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
 			  txtAccountNumber.requestFocus();
 		  });
 		  
@@ -549,7 +527,6 @@ public class BankMethods {
     				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
 	    		 }
     		 if (isOk) {
-    			 String desc = "";
     			 Customer customer = customers.get(0);
     			 for (int x = 0; x < customers.size(); x++) {
  	    			 if (customers.get(x).getCustomerID().equals(txtCustomerID.getText())) {
@@ -557,19 +534,13 @@ public class BankMethods {
 	    				 customer = customers.get(x);
 	    				 switch (acctNum) {
 	    				 case 0: // checking
-	    					 desc = "Checking Opening Balance";
 	    					 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer));
-	    					 transactions.add(new Transaction(bu.generateDate(), customer.getCustomerID(), txtAccountNumber.getText(), desc, amount, bu.generateUniqueTransNumber()));
 	    					 break;
 	    				 case 1: // regular
-	    					 desc = "Regular Opening Balance";
 	    					 accounts.add(new Regular(txtAccountNumber.getText(), amount, customer));
-	    					 transactions.add(new Transaction(bu.generateDate(), customer.getCustomerID(), txtAccountNumber.getText(), desc, amount, bu.generateUniqueTransNumber()));
 	    					 break;
 	    				 case 2: // gold
-	    					 desc = "Gold Opening Balance";
 	    					 accounts.add(new Gold(txtAccountNumber.getText(), amount, customer));
-	    					 transactions.add(new Transaction(bu.generateDate(), customer.getCustomerID(), txtAccountNumber.getText(), desc, amount, bu.generateUniqueTransNumber()));
 	    					 break;
 	    				 }
 	    			 } else {
@@ -582,7 +553,6 @@ public class BankMethods {
  	    		 if (element < accounts.size()) {
     	 			 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
     				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
-    				 return true;
 	    		 } else {
 	    			 lbltxtDisplayBoxMessage.setText("Adding Checking Account Unsuccessful!");
     				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
@@ -592,327 +562,11 @@ public class BankMethods {
     			 
     		 }
     	 }
+		  
+		  
+		  
 		  return false;
 	  }
-// ************************************************************* file system *************************************************************
-	  // **************************************** load ****************************************
-	  // *************************** config ***************************
-	  public void loadConfigData() {
-		  File file = new File(filename[0]);
-		  if (!(file.exists())) {
-			  bankName = JOptionPane.showInputDialog("Please Enter the Bank Name");
-			  bakup = 0;
-		  }
-		  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[0]));){
-			  while (true) {
-				  bankName = input.readUTF();
-				  bakup = input.readInt();
-			  }
-		  } catch (EOFException e) {
-			  //JOptionPane.showMessageDialog(null, "Configuration Data Loaded successfully!", "Config Load Data", JOptionPane.INFORMATION_MESSAGE);
-			  
-		  } catch (FileNotFoundException e1) {
-			  JOptionPane.showMessageDialog(null, "Configuration file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-			  
-		  } catch (IOException e1) {
-			  JOptionPane.showMessageDialog(null, "Configuration File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-			  
-		  }
-	  }
-	  
-	  // *************************** customer ***************************
-	  public void loadCustomerData() {
-		  if (customers.isEmpty()) {
-			  String custID = "", custName = "";
-			  @SuppressWarnings("unused")
-			int counter = 0;
-			  boolean active = false;
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[1]));){
-				  while (true) {
-					  custID = input.readUTF();
-					  custName = input.readUTF();
-					  active = input.readBoolean();
-					  customers.add(new Customer(custID, custName, active));
-					  counter++;
-				  }
-			  } catch (EOFException e) {
-				 // JOptionPane.showMessageDialog(null, counter + " Customer(s) Data Loaded successfully!", "Customer Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  
-			  } catch (FileNotFoundException e1) {
-				  JOptionPane.showMessageDialog(null, "Customer file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  
-			  } catch (IOException e1) {
-				  JOptionPane.showMessageDialog(null, "Customer File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Customers have already been loaded!", "Load Customer Error", JOptionPane.INFORMATION_MESSAGE);
-			  
-		  }
-	  }
-	  
-	  // *************************** checking ***************************
-	  public void loadCheckingData() {
-		  if (customers.isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Checking!", "Error Load Checking", JOptionPane.ERROR_MESSAGE);
-			  return;
-		  }
-		  boolean isOk = true;
-		  for (Account a: accounts) {
-			  if (a instanceof Checking) {
-				  isOk = false;
-			  }
-		  }
-		  if (isOk) {
-			  String custID = "", custName = "", acctNum = "";
-			  double acctBal = 0.0, acctFee = 0.0, acctFeeAmount = 0.0;
-			  @SuppressWarnings("unused")
-			int counter = 0;
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[2]));) {
-				  while (true) {
-					  custID = input.readUTF();
-					  custName = input.readUTF();
-					  acctNum = input.readUTF();
-					  acctBal = input.readDouble();
-					  acctFee = input.readDouble();
-					  acctFeeAmount = input.readDouble();
-					  Customer customer = customers.get(0);
-					  for (Customer c: customers) {
-						  if (c.getCustomerID().equals(custID) && c.getCustomerName().equals(custName)) {
-							  customer = c;
-						  }
-					  }
-					  accounts.add(new Checking(acctNum, acctBal, customer, acctFee, acctFeeAmount));
-					  counter++;
-				  }
-			  } catch (EOFException e) {
-				  //JOptionPane.showMessageDialog(null, counter + " Checking Account Data Loaded successfully!", "Checking Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  
-			  } catch (FileNotFoundException e1) {
-				  JOptionPane.showMessageDialog(null, "Account file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  
-			  } catch (IOException e1) {
-				  JOptionPane.showMessageDialog(null, "Account File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Checking Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
-		  }
-	  }
-	  
-	  // *************************** regular ***************************
-	  public void loadRegularData() {
-		  if (customers.isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Regular!", "Error Load Regular", JOptionPane.ERROR_MESSAGE);
-			  return;
-		  }
-		  boolean isOk = true;
-		  for (Account a: accounts) {
-			  if (a instanceof Regular) {
-				  isOk = false;
-			  }
-		  }
-		  if (isOk) {
-			  String custID = "", custName = "", acctNum = "";
-			  double acctBal = 0.0, acctIntRate = 0.0, acctIntAmount = 0.0, acctFixed = 0.0;
-			  @SuppressWarnings("unused")
-			int counter = 0;
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[3]));) {
-				  while (true) {
-					  custID = input.readUTF();
-					  custName = input.readUTF();
-					  acctNum = input.readUTF();
-					  acctBal = input.readDouble();
-					  acctIntRate = input.readDouble();
-					  acctIntAmount = input.readDouble();
-					  acctFixed = input.readDouble();
-					  Customer customer = customers.get(0);
-					  for (Customer c: customers) {
-						  if (c.getCustomerID().equals(custID) && c.getCustomerName().equals(custName)) {
-							  customer = c;
-						  }
-					  }
-					  accounts.add(new Regular(acctNum, acctBal, customer, acctIntRate, acctIntAmount, acctFixed));
-					  counter++;
-				  }
-			  } catch (EOFException e) {
-				  //JOptionPane.showMessageDialog(null, counter + " Regular Account Data Loaded successfully!", "Regular Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  
-			  } catch (FileNotFoundException e1) {
-				  JOptionPane.showMessageDialog(null, "Regular file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  
-			  } catch (IOException e1) {
-				  JOptionPane.showMessageDialog(null, "Regular File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Regular Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
-		  }
-	  }
-	  
-	  // *************************** gold ***************************
-	  public void loadGoldData() {
-		  if (customers.isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Gold!", "Error Load Gold", JOptionPane.ERROR_MESSAGE);
-			  return;
-		  }
-		  boolean isOk = true;
-		  for (Account a: accounts) {
-			  if (a instanceof Gold) {
-				  isOk = false;
-			  }
-		  }
-		  if (isOk) {
-			  String custID = "", custName = "", acctNum = "";
-			  double acctBal = 0.0, acctIntRate = 0.0, acctIntAmount = 0.0;
-			  @SuppressWarnings("unused")
-			int counter = 0;
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[4]));) {
-				  while (true) {
-					  custID = input.readUTF();
-					  custName = input.readUTF();
-					  acctNum = input.readUTF();
-					  acctBal = input.readDouble();
-					  acctIntAmount = input.readDouble();
-					  acctIntRate = input.readDouble();
-					  Customer customer = customers.get(0);
-					  for (Customer c: customers) {
-						  if (c.getCustomerID().equals(custID) && c.getCustomerName().equals(custName)) {
-							  customer = c;
-						  }
-					  }
-					  accounts.add(new Gold(acctNum, acctBal, customer, acctIntAmount, acctIntRate));
-					  counter++;
-				  }
-			  } catch (EOFException e) {
-				  //JOptionPane.showMessageDialog(null, counter + " Gold Account Data Loaded successfully!", "Gold Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  
-			  } catch (FileNotFoundException e1) {
-				  JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  
-			  } catch (IOException e1) {
-				  JOptionPane.showMessageDialog(null, "Gold File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Gold Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
-		  }
-	  }
 
-	  
-// **************************************** save ****************************************
-	  
-	  // *************************** config ***************************
-
-	  public void saveConfigData() {
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[0]));) {
-			  output.writeUTF(bankName);
-			  output.writeInt(bakup);
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, "Config Data Saved successfully!", "Config Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
-		  } catch (IOException e1) {
-			  JOptionPane.showMessageDialog(null, "Config File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
-		  }
-	  }
-	  
-	  
-	  // *************************** customer ***************************
-	  
-	  public void saveCustomerData() {
-		  int counter = 0;
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[1], ((counter==0)?false:true)));) {
-			  for (Customer c: customers) {
-				  output.writeUTF(c.getCustomerID());
-				  output.writeUTF(c.getCustomerName());
-				  output.writeBoolean(c.getActive());
-				  counter++;
-			  }
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, counter + " Customer Data Saved successfully!", "Customer Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
-		  } catch (IOException e1) {
-			  JOptionPane.showMessageDialog(null, "Customer File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
-		  }
-		  
-	  }
-	  
-	  // *************************** checking ***************************
-	  
-	  public void saveCheckingData() {
-		  int counter = 0;
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[2], ((counter==0)?false:true)));) {
-			  for (Account a: accounts) {
-				  if (a instanceof Checking) {
-					  output.writeUTF(a.getCustomer().getCustomerID());
-					  output.writeUTF(a.getCustomer().getCustomerName());
-					  output.writeUTF(a.getAccountNumber());
-					  output.writeDouble(a.getAccountBalance());
-					  output.writeDouble(((Checking) a).getCheckingTransactionFee());
-					  output.writeDouble(((Checking) a).getCheckingTransactionFeeAmount());
-					  counter++;
-				  }
-			  }
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, counter + " Checking Data Saved successfully!", "Checking Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
-		  } catch (IOException e1) {
-			  JOptionPane.showMessageDialog(null, "Checking File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
-		  }
-		  
-	  }
-	  
-	  // *************************** regular ***************************
-	  
-	  public void saveRegularData() {
-		  int counter = 0;
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[3], ((counter==0)?false:true)));) {
-			  for (Account a: accounts) {
-				  if (a instanceof Regular) {
-					  output.writeUTF(a.getCustomer().getCustomerID());
-					  output.writeUTF(a.getCustomer().getCustomerName());
-					  output.writeDouble(a.getAccountBalance());
-					  output.writeDouble(((Regular) a).getRegularInterestRate());
-					  output.writeDouble(((Regular) a).getRegularInterestAmount());
-					  output.writeDouble(((Regular) a).getRegularFixedCharge());
-					  counter++;
-				  }
-			  }
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, counter + " Regular Data Saved successfully!", "Regular Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
-		  } catch (IOException e1) {
-			  JOptionPane.showMessageDialog(null, "Regular File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
-		  }
-	  }
-	
-	  // *************************** gold ***************************
-
-	  public void saveGoldData() {
-		  int counter = 0;
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[4], ((counter==0)?false:true)));) {
-			  for (Account a: accounts) {
-				  if (a instanceof Gold) {
-					  output.writeUTF(a.getCustomer().getCustomerID());
-					  output.writeUTF(a.getCustomer().getCustomerName());
-					  output.writeUTF(a.getAccountNumber());
-					  output.writeDouble(a.getAccountBalance());
-					  output.writeDouble(((Gold) a).getGoldInterestAmount());
-					  output.writeDouble(((Gold) a).getGoldInterestRate());
-					  counter++;
-				  }
-			  }
-		  } catch (EOFException e) {
-			  JOptionPane.showMessageDialog(null, counter + " Gold Data Saved successfully!", "Gold Save Data", JOptionPane.INFORMATION_MESSAGE);
-			  
-		  } catch (IOException e1) {
-			  JOptionPane.showMessageDialog(null, "Gold File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
-		  }
-	  }
 	
 }

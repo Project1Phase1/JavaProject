@@ -6,17 +6,19 @@
  * 
  * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
  * Apr 6, 2015<br>
- * Banker.java<br>
+ * Customer.java<br>
  *
  */
 package com.customers;
 
-public class Customer implements java.io.Serializable {
-	private static final long serialVersionUID = 7610536679838430520L;
+public class Customer {
 	private String customerID;
 	private String customerName;
 	private boolean active;
 	
+	public Customer() {
+		
+	}
 	/** customer constructor non-default
 	 * 
 	 * @param id
@@ -26,6 +28,12 @@ public class Customer implements java.io.Serializable {
 		this.customerID = id;
 		this.customerName = name;
 		this.active = false;
+	}
+	
+	public Customer(String id, String name, boolean active) {
+		this.customerID = id;
+		this.customerName = name;
+		this.active = active;
 	}
 	
 	// get

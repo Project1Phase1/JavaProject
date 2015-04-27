@@ -6,7 +6,7 @@
  * 
  * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
  * Apr 6, 2015<br>
- * Banker.java<br>
+ * Gold.java<br>
  *
  */
 package com.accounts;
@@ -14,9 +14,12 @@ package com.accounts;
 import com.customers.Customer;
 
 public class Gold extends Account {
-	private static final long serialVersionUID = 1457630762559556317L;
 	private double goldInterestAmount;
 	private double goldInterestRate;
+	
+	public Gold() {
+		
+	}
 	
 	/**
 	 * @param accountNumber
@@ -30,6 +33,11 @@ public class Gold extends Account {
 
 	}
 
+	public Gold(String accountNumber, double accountBalance, Customer customer, double goldInterestAmount, double goldInterestRate) {
+		super(accountNumber, accountBalance, customer);
+		this.goldInterestAmount = goldInterestAmount;
+		this.goldInterestRate = goldInterestRate;
+	}
 	
 	
 	/**

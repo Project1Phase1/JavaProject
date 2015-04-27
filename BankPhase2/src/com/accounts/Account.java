@@ -6,19 +6,23 @@
  * 
  * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
  * Apr 6, 2015<br>
- * Banker.java<br>
+ * Account.java<br>
  *
  */
 package com.accounts;
 
 import com.customers.Customer;
 
-public abstract class Account implements java.io.Serializable {
-	private static final long serialVersionUID = 1777611210940742188L;
+public abstract class Account{
 	private String accountNumber;
 	private double accountBalance;
 	
 	private Customer customer;
+	
+	public Account() {
+		
+	}
+	
 	public Account(String accountNumber, double accountBalance, Customer customer){
 		this.accountNumber = accountNumber;
 		this.accountBalance = accountBalance;

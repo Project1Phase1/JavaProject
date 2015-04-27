@@ -6,7 +6,7 @@
  * 
  * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
  * Apr 6, 2015<br>
- * Banker.java<br>
+ * Checking.java<br>
  *
  */
 package com.accounts;
@@ -14,10 +14,20 @@ package com.accounts;
 import com.customers.Customer;
 
 public class Checking extends Account {
-	private static final long serialVersionUID = 7963257644808097220L;
 	private double checkingTransactionFee;
 	private double checkingTransactionFeeAmount;
 	private int numberOfTransactions;
+	/** all parameter constructor
+	 * 
+	 * @param accountNumber
+	 * @param accountBalance
+	 * @param customer
+	 * @param checkingTransactionFee
+	 * @param checkingTransactionFeeAmount
+	 */
+	public Checking() {
+		
+	}
 	
 	/** checking constructor non-default
 	 * 
@@ -25,14 +35,32 @@ public class Checking extends Account {
 	 * @param accountBalance double
 	 * @param customer Customer
 	 */
-	public Checking(String accountNumber, double accountBalance,
-			Customer customer) {
+	public Checking(String accountNumber, double accountBalance, Customer customer) {
 		super(accountNumber, accountBalance, customer);
 		this.checkingTransactionFee = 3.00;
 		this.checkingTransactionFeeAmount = 0.0;
 		this.numberOfTransactions = 0;
 	}
 
+	/** all parameter constructor
+	 * 
+	 * @param accountNumber
+	 * @param accountBalance
+	 * @param customer
+	 * @param checkingTransactionFee
+	 * @param checkingTransactionFeeAmount
+	 */
+	public Checking(String accountNumber, double accountBalance, Customer customer, double checkingTransactionFee, double checkingTransactionFeeAmount) {
+		super(accountNumber, accountBalance, customer);
+		this.checkingTransactionFee = checkingTransactionFee;
+		this.checkingTransactionFeeAmount = checkingTransactionFeeAmount;
+		if (checkingTransactionFeeAmount > 0) {
+			this.numberOfTransactions = (int) (checkingTransactionFeeAmount / checkingTransactionFee);
+		} else {
+			this.numberOfTransactions = 0;
+		}
+		
+	}
 	// get
 	
 	/**

@@ -5,24 +5,28 @@ package com.transactions;
  * it tracks all transactions that change the account balance and is<br>
  * used throughout the client code<br>
  * 
- * @mentor Dr. Awny Alnusair<br><br>
+ * @mentor and
+ * @instructor Dr. Awny Alnusair<br><br>
  * @college Professor at Indiana University Kokomo<br><br><br>
  * @course INFO-211 Informatics II<br><br>
  * 
  * 
  * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br><br>
  * Apr 6, 2015<br>
- * Banker.java<br>
+ * Transaction.java<br>
  *
  */
-public class Transaction implements java.io.Serializable {
-	private static final long serialVersionUID = 5511205321959105751L;
+public class Transaction {
 	private java.util.Date createDate;
 	private String customerID;
 	private String accountNumber;
 	private String description;
 	private double amount;
 	private int transactionNumber;
+	
+	Transaction() {
+		
+	}
 	
 	/** transaction constructor<br>
 	 * there is no default constructor for this class<br>

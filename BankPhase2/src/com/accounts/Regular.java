@@ -6,7 +6,7 @@
  * 
  * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br>
  * Apr 6, 2015<br>
- * Banker.java<br>
+ * Regular.java<br>
  *
  */
 package com.accounts;
@@ -14,15 +14,30 @@ package com.accounts;
 import com.customers.Customer;
 
 public class Regular extends Account {
-	private static final long serialVersionUID = 2013194002530097374L;
 	private double regularInterestRate;
 	private double regularInterestAmount;
 	private double regularFixedCharge;
 	
-	/**
-	 * @param accountNumber
-	 * @param accountBalance
-	 * @param customer
+	/** complete constructor to create the regular account with user values<br><br>
+	 * 
+	 * @param accountNumber the account number for the account
+	 * @param accountBalance the opening balance of the account
+	 * @param customer the owner of the account
+	 * @param regularInterestRate the interest rate in percent form
+	 * @param regularInterestAmount the amount of interest calculated so far
+	 * @param regularFixedCharge the amount of the fixed charge when interest is calculated
+	 * 
+	 */
+	public Regular() {
+		
+	}
+	
+	/** basic constructor to create the regular account with default values<br><br>
+	 * 
+	 * @param accountNumber the account number for the account
+	 * @param accountBalance the opening balance of the account
+	 * @param customer the owner of the account
+	 * 
 	 */
 	public Regular(String accountNumber, double accountBalance,	Customer customer) {
 		super(accountNumber, accountBalance, customer);
@@ -30,7 +45,24 @@ public class Regular extends Account {
 		this.regularInterestAmount = 0.0;
 		this.regularFixedCharge = 10.0;
 	}
-
+	
+	/** complete constructor to create the regular account with user values<br><br>
+	 * 
+	 * @param accountNumber the account number for the account
+	 * @param accountBalance the opening balance of the account
+	 * @param customer the owner of the account
+	 * @param regularInterestRate the interest rate in percent form
+	 * @param regularInterestAmount the amount of interest calculated so far
+	 * @param regularFixedCharge the amount of the fixed charge when interest is calculated
+	 * 
+	 */
+	public Regular(String accountNumber, double accountBalance, Customer customer, double regularInterestRate, double regularInterestAmount, double regularFixedCharge) {
+		super(accountNumber, accountBalance, customer);
+		this.regularInterestRate = regularInterestRate;
+		this.regularInterestAmount = regularInterestAmount;
+		this.regularFixedCharge = regularFixedCharge;
+	}
+	
 	// get
 	
 	/**
