@@ -14,6 +14,7 @@ package com.accounts;
 import com.customers.Customer;
 
 public class Gold extends Account {
+	private static final long serialVersionUID = -144957960012585567L;
 	private double goldInterestAmount;
 	private double goldInterestRate;
 	
