@@ -1,5 +1,7 @@
 package com.transactions;
 
+import java.io.Serializable;
+
 /** transaction class<br>
  * this class is only to be used with the client side application<br>
  * it tracks all transactions that change the account balance and is<br>
@@ -16,7 +18,8 @@ package com.transactions;
  * Transaction.java<br>
  *
  */
-public class Transaction {
+public class Transaction implements Serializable{
+	private static final long serialVersionUID = -3071907899278997557L;
 	private java.util.Date createDate;
 	private String customerID;
 	private String accountNumber;

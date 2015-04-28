@@ -29,17 +29,38 @@ import com.transactions.Transaction;
 // http://docs.oracle.com/javase/tutorial/essential/io/index.html
 
 public class BankMethods {
+	public String[] filename = new String[18]; // contains the path and file names of files and backups
+	public String bankName; // bank name that will be stored in the config dat file
+	public int bakup; // a backup token that will keep track of the backup number so backups will never over write each other
+	// the general bank containers
 	public ArrayList<Customer> customers = new ArrayList<Customer>();
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public ArrayList<Account> rejects = new ArrayList<Account>();
 	public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-	//public ArrayList<Configuration> config = new ArrayList<Configuration>();
+	// instance of the BankUtilities class
 	public BankUtilities bu = new BankUtilities();
-	public String[] filename = new String[12];
-	public String bankName;
-	public int bakup;
 	
-	
+	/** load file names
+	 *  0 - config.dat
+	 *  1 - customer.dat
+	 *  2 - checking.dat
+	 *  3 - regular.dat
+	 *  4 - gold.dat
+	 *  5 - transaction.dat
+	 *  6 - backup/config
+	 *  7 - backup/customers
+	 *  8 - backup/checking
+	 *  9 - backup/regular
+	 * 10 - backup/gold
+	 * 11 - backup/transactions
+	 * 12 - object/accounts.dat
+	 * 13 - object/customers.dat
+	 * 14 - object/transactions.dat
+	 * 15 - backup/customers
+	 * 16 - backup/accounts
+	 * 17 - backup/transactions
+	 * 
+	 */
 	public void loadFileName() {
 		filename[0]  = "data/config/config.dat";
 		filename[1]  = "data/customers/customers.dat";
@@ -53,6 +74,12 @@ public class BankMethods {
 		filename[9]  = "backup/accounts/regular";
 		filename[10] = "backup/accounts/gold";
 		filename[11] = "backup/transactions/transactions";
+		filename[12] = "data/objects/accounts.dat";
+		filename[13] = "data/objects/customers.dat";
+		filename[14] = "data/objects/transactions.dat";
+		filename[15] = "backup/objects/accounts";
+		filename[16] = "backup/objects/customers";
+		filename[17] = "backup/objects/transactions";
 	}
 	
   	/** get customer pane<br><br>
@@ -809,11 +836,12 @@ public class BankMethods {
 		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[0], false));) {
 			  output.writeUTF(bankName);
 			  output.writeInt(bakup);
+			  
 		  } catch (IOException e1) {
 			  JOptionPane.showMessageDialog(null, "Config File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
 			  
 		  }
-		  JOptionPane.showMessageDialog(null, "Config Data Saved successfully!", "Config Save Data", JOptionPane.INFORMATION_MESSAGE);
+		  // JOptionPane.showMessageDialog(null, "Config Data Saved successfully!", "Config Save Data", JOptionPane.INFORMATION_MESSAGE);
 	  }
 	  
 	  
@@ -906,4 +934,146 @@ public class BankMethods {
 		  JOptionPane.showMessageDialog(null, counter + " Gold Data Saved successfully!", "Gold Save Data", JOptionPane.INFORMATION_MESSAGE);
 	  }
 	
+	  
+// ***************************************************************************** object file system *****************************************************************************
+	  
+	  // ***************************************************************** load *****************************************************************
+	  
+	  // ************************************** customer **************************************
+	@SuppressWarnings("unchecked")
+	public void loadCustomerObjectData() {
+		File info = new File(filename[13]);
+		if (info.exists()) {
+			  try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename[13]));) {
+				  customers = (ArrayList<Customer>) input.readObject();
+				  
+			  } catch (EOFException e) {
+				  return;
+				  
+			  } catch (FileNotFoundException e) {
+				  JOptionPane.showMessageDialog(null, "File " + filename[13] + " not found!", "Customer Read Error", JOptionPane.ERROR_MESSAGE);
+				  
+			  } catch (IOException e) {
+				  JOptionPane.showMessageDialog(null, "Customer Read Error", "Read Error", JOptionPane.ERROR_MESSAGE);
+				  
+			  } catch (ClassNotFoundException e) {
+				  JOptionPane.showMessageDialog(null, "Unable to create object", "Error Reading Customer", JOptionPane.ERROR);
+				  
+			  }
+		}
+	}
+	  
+	
+	// ************************************** account **************************************
+		
+	  @SuppressWarnings("unchecked")
+	public void loadAccountObjectData() {
+		  File info = new File(filename[12]);
+		  if (info.exists()) {
+			  try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename[12]));) {
+				  accounts = (ArrayList<Account>) input.readObject();
+				  
+			  } catch (FileNotFoundException e) {
+				  JOptionPane.showMessageDialog(null, "File " + filename[13] + " not found!", "Account Read Error", JOptionPane.ERROR_MESSAGE);
+				  
+			  } catch (IOException e) {
+				  JOptionPane.showMessageDialog(null, "Account Read Error", "Read Error", JOptionPane.ERROR_MESSAGE);
+				  
+			  } catch (ClassNotFoundException e) {
+				  JOptionPane.showMessageDialog(null, "Unable to create object", "Error Reading Account", JOptionPane.ERROR);
+				  
+			  }
+		  }
+	  }
+	  
+	// ************************************** transactions **************************************
+	  
+	  @SuppressWarnings("unchecked")
+	  public void loadTransactionObjectData() {
+		  File info = new File(filename[14]);
+		  if (info.exists()) {  
+			  try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename[14]));) {
+				  transactions = (ArrayList<Transaction>) input.readObject();
+				  
+			  } catch (FileNotFoundException e) {
+				  JOptionPane.showMessageDialog(null, "File " + filename[13] + " not found!", "Transaction Read Error", JOptionPane.ERROR_MESSAGE);
+				  
+			  } catch (IOException e) {
+				  JOptionPane.showMessageDialog(null, "Transaction Read Error", "Read Error", JOptionPane.ERROR_MESSAGE);
+				  
+			  } catch (ClassNotFoundException e) {
+				  JOptionPane.showMessageDialog(null, "Unable to create object", "Error Reading Transaction", JOptionPane.ERROR);
+				  
+			  }
+		  } else {
+			  return;
+		  }
+	  }
+	  
+	  // ***************************************************************** save *****************************************************************
+
+		// ************************************** customer **************************************
+
+	  public void saveCustomerObjectData() {
+		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[13], true));) {
+			  output.writeObject(customers);
+			  
+		  } catch (FileNotFoundException e) {
+			  JOptionPane.showMessageDialog(null, "File " + filename[13] + " not found!", "Customer Save Error", JOptionPane.ERROR_MESSAGE);
+			  
+		  } catch (IOException e) {
+			  JOptionPane.showMessageDialog(null, "Customer Read Error", "Save Error", JOptionPane.ERROR_MESSAGE);
+
+		  }
+	  }
+	  
+		// ************************************** customer **************************************
+
+	  public void saveAccountObjectData() {
+		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[12], true));) {
+			  output.writeObject(accounts);
+		  } catch (FileNotFoundException e) {
+			  JOptionPane.showMessageDialog(null, "File " + filename[13] + " not found!", "Account Save Error", JOptionPane.ERROR_MESSAGE);
+			  
+		  } catch (IOException e) {
+			  JOptionPane.showMessageDialog(null, "Account Read Error", "Save Error", JOptionPane.ERROR_MESSAGE);
+
+		  }
+	  }
+	  
+		// ************************************** customer **************************************
+
+	  public void saveTransactionObjectData() {
+		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[14], true));) {
+			  output.writeObject(transactions);
+		  } catch (FileNotFoundException e) {
+			  JOptionPane.showMessageDialog(null, "File " + filename[13] + " not found!", "Transaction Save Error", JOptionPane.ERROR_MESSAGE);
+			  
+		  } catch (IOException e) {
+			  JOptionPane.showMessageDialog(null, "Transaction Read Error", "Save Error", JOptionPane.ERROR_MESSAGE);
+
+		  }
+	  }
+	  
+	  // *********************************** create new System Data *****************************************
+	  // ************* this will delete the files so be careful ****************************
+	  
+	  public void createNewSystemData() {
+		  try {
+			  File startOver;
+			  startOver = new File(filename[0]);
+			  startOver.delete();
+			  for (int x = 12; x < 15; x++) {
+				  startOver = new File(filename[x]);
+				  startOver.delete();
+			  }
+			  JOptionPane.showMessageDialog(null, "New File System Ready For Use!", "New Files", JOptionPane.INFORMATION_MESSAGE);
+			  bankName = "";
+			  loadConfigData();
+		  } catch (NullPointerException e) {
+			  
+		  } catch (SecurityException e) {
+			  
+		  }
+	  }
 }

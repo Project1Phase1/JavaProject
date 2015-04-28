@@ -11,7 +11,10 @@
  */
 package com.customers;
 
-public class Customer {
+import java.io.Serializable;
+
+public class Customer implements Serializable{
+	private static final long serialVersionUID = 6981023203602380035L;
 	private String customerID;
 	private String customerName;
 	private boolean active;

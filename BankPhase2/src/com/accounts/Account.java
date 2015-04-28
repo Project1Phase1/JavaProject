@@ -11,9 +11,12 @@
  */
 package com.accounts;
 
+import java.io.Serializable;
+
 import com.customers.Customer;
 
-public abstract class Account{
+public abstract class Account implements Serializable{
+	private static final long serialVersionUID = 2983907122991279834L;
 	private String accountNumber;
 	private double accountBalance;
 	

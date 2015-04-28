@@ -1,13 +1,7 @@
 package com.banker;
 
-import java.io.File;
-
 import javax.swing.JOptionPane;
 
-import com.accounts.Account;
-import com.accounts.Checking;
-import com.accounts.Gold;
-import com.accounts.Regular;
 import com.utilities.BankMethods;
 
 import javafx.application.Application;
@@ -35,11 +29,6 @@ public class NewFXBanker extends Application {
 	BankMethods banker = new BankMethods();
 	
 	Stage chkAddStage = new Stage();
-	public static int cust = 0; // if customers have been loaded disable load customer
-	public static int checkAcct = 0; // if checking accounts have been loaded disable load checking
-	public static int regAcct = 0; // if regular accounts have been loaded disable load regular
-	public static int goldAcct = 0; // if gold accounts have been loaded disable load gold
-	public static int trans = 0; // if transactions have been loaded disable load transactions
 	
    /**
     * Build menu bar with included menus for this demonstration.
@@ -111,11 +100,13 @@ public class NewFXBanker extends Application {
      menuBar.getMenus().add(quit);
      quit.setOnAction(e -> {
     	 banker.saveConfigData();
-    	 banker.saveCustomerData();
-    	 banker.saveCheckingData();
-    	 banker.saveRegularData();
-    	 banker.saveGoldData();
-    	 // banker.saveTransactionData();
+       	 if (!(banker.customers.isEmpty())) {
+	     	 banker.saveCustomerObjectData(); 
+       	 } else if (!(banker.accounts.isEmpty())) {
+       		 banker.saveAccountObjectData();
+       	 } else if (!(banker.transactions.isEmpty())) {
+       		 banker.saveTransactionObjectData();
+       	 }
     	 System.exit(0);
      });
      
@@ -132,7 +123,7 @@ public class NewFXBanker extends Application {
      
 // *************************** save customer data ***************************
      fileNames[4].setOnAction(e -> {
-    	 checkFileStatus(fileNames);
+    	 banker.saveCustomerData();
      });
      
 // *************************** load customer data ***************************
@@ -158,14 +149,36 @@ public class NewFXBanker extends Application {
     	 
      });
      
+     fileNames[0].setOnAction(e -> {
+    	 banker.createNewSystemData();
+     });
+     
      files.setOnMenuValidation(e -> {
-    	 fileNames[0].setDisable(true);
-    	 fileNames[1].setDisable(true);
-    	 fileNames[2].setDisable(true);
-    	 fileNames[11].setDisable(true);
-    	 fileNames[12].setDisable(true);
-    	 fileNames[6].setDisable(true);
-    	 fileNames[10].setDisable(true);
+    	 if (banker.transactions.isEmpty() || banker.customers.isEmpty() || banker.accounts.isEmpty()) {
+	    	 fileNames[2].setDisable(true);
+	    	 fileNames[4].setDisable(true);
+	    	 fileNames[5].setDisable(true);
+	    	 fileNames[6].setDisable(true);
+    	 } else {
+	    	 fileNames[2].setDisable(false);
+	    	 fileNames[4].setDisable(false);
+	    	 fileNames[5].setDisable(false);
+	    	 fileNames[6].setDisable(false);
+   		 
+    	 }
+//    	 if (banker.filename[])
+    	 fileNames[1].setDisable(false);
+    	 fileNames[7].setDisable(false);
+    	 fileNames[8].setDisable(false);
+    	 fileNames[9].setDisable(false);
+    	 fileNames[10].setDisable(false);
+    	    	 
+	    	 fileNames[1].setDisable(true);
+	    	 fileNames[2].setDisable(true);
+	    	 fileNames[11].setDisable(true);
+	    	 fileNames[12].setDisable(true);
+	    	 fileNames[6].setDisable(true);
+	    	 fileNames[10].setDisable(true);
      });
      
      
@@ -181,7 +194,6 @@ public class NewFXBanker extends Application {
   // *************************** load transaction data ***************************     
      fileNames[10].setOnAction(e -> {
     	 //banker.loadTransactionData();
-    	 checkFileStatus(fileNames);
      });
 // ************************************************************ create new customer ************************************************************
       accountCustomer.setOnAction(e -> {
@@ -240,136 +252,6 @@ public class NewFXBanker extends Application {
    }
 
    
-   public void checkFileStatus(MenuItem[] filesSave ) {
-	   boolean isChecking = false, isRegular = false, isGold = false;
-	   if (!(banker.accounts.isEmpty())) {
-		   for (Account a: banker.accounts) {
-	 			 if (a instanceof Checking) {
-	 				 isChecking = true;
-	 			 }
-	 			 if (a instanceof Regular) {
-	 				 isRegular = true;
-	 			 }
-	 			 if (a instanceof Gold) {
-	 				 isGold = true;
-	 			 }
-	 		}
-	   }
-   	 // set all to disabled
-	 for (int d = 0; d < filesSave.length; d++) {
-		 filesSave[d].setDisable(true);           
-	 }
-	 File file;
-     for (int x = 0; x < banker.filename.length; x++) {
-     	 // System.out.print(x + ") " + banker.filename[x] + "\n");
-         file = new File(banker.filename[x]);
-          // only if the file exists change the settings
-         if (file.exists()) {
-        	 if (x == 0) { // config
-	        	 filesSave[3].setDisable(false);
-	        	 filesSave[9].setDisable(false);
-        	 }
-        	 // customer
-        	 if (x == 1) {
- 	         	 if (banker.customers.isEmpty()) {
-	         		 filesSave[4].setDisable(true);   // save customer data
-	         		 filesSave[10].setDisable(false);  // load customer data
-	         	 } else {
-	         		 filesSave[4].setDisable(false);  // save customer data
-	         		 filesSave[10].setDisable(false); // load customer data
-	          	 }
-        	 }
-        	 // checking
-        	 if (x == 2) {
-	         	 if (isChecking) {
-	         		 filesSave[5].setDisable(false);  // save checking data
-	         		 filesSave[11].setDisable(false); // load checking data
-	         	 } else {
-	         		 filesSave[5].setDisable(true);   // save checking data
-	         		 filesSave[11].setDisable(false);  // load checking data
-	         	 }
-        	 }
-        	 // regular
-        	 if (x == 3) {
-	         	 if (isRegular) {
-	         		 filesSave[6].setDisable(false);  // save regular data
-	         		 filesSave[12].setDisable(false); // load regular data
-	         	 } else {
-	          		filesSave[6].setDisable(true);    // save regular data
-	          		filesSave[12].setDisable(false);   // load regular data
-	          	 }
-        	 }
-        	 // gold
-        	 if (x == 4) {
-	          	 if (isGold) {
-	         		 filesSave[7].setDisable(false);  // save gold data
-	         		 filesSave[13].setDisable(false); // load gold data
-	         	 } else {
-	         		 filesSave[7].setDisable(true);   // save gold data
-	         		 filesSave[13].setDisable(false);  // load gold data
-	         	 }
-        	 }
-        	 // transactions
-        	 if (x == 5) {
-	         	 if (banker.transactions.isEmpty()) {
-	          		 filesSave[8].setDisable(true);   // save transaction data
-	          		 filesSave[14].setDisable(false);  // load transaction data
-	         	 } else {
-	         		 filesSave[8].setDisable(false);  // save transaction data
-	          		 filesSave[14].setDisable(false); // load transaction data
-	         	 }
-          	 }
-         } else {
-        	 if (x == 1) {
-	        	 if (banker.customers.isEmpty()) {
-	         		 filesSave[4].setDisable(true);   // save customer data
-	         		 filesSave[10].setDisable(true);  // load customer data
-	        	 } else {
-	         		 filesSave[4].setDisable(false);   // save customer data
-	         		 filesSave[10].setDisable(true);   // load customer data
-	        	 }
-        	 }
-        	 if (x == 4) {
-        		 if (isGold) {
-	         		 filesSave[7].setDisable(false);  // save gold data
-	         		 filesSave[13].setDisable(true);  // load gold data
-	        	 } else {
-	         		 filesSave[7].setDisable(true);  // save gold data
-	         		 filesSave[13].setDisable(true); // load gold data
-	        	 }
-        	 }
-        	 if (x == 3) {
-	        	 if (isRegular) {
-	         		 filesSave[6].setDisable(false);  // save regular data
-	         		 filesSave[12].setDisable(true);  // load regular data
-	        	 } else {
-	         		 filesSave[6].setDisable(true);  // save regular data
-	         		 filesSave[12].setDisable(true); // load regular data
-	        	 }
-        	 }
-        	 if (x == 2) {
-	        	 if (isChecking) {
-	         		 filesSave[5].setDisable(false);  // save checking data
-	         		 filesSave[11].setDisable(true); // load checking data
-	        	 } else {
-	         		 filesSave[5].setDisable(true);  // save checking data
-	         		 filesSave[11].setDisable(true); // load checking data
-	        	 }
-        	 }
-        	 if (x == 5) {
-	        	 if (banker.accounts.isEmpty()) {
-	          		 filesSave[8].setDisable(true);   // save transaction data
-	          		 filesSave[14].setDisable(true);  // load transaction data
-	        	 } else {
-	          		 filesSave[8].setDisable(false);   // save transaction data
-	          		 filesSave[14].setDisable(true);  // load transaction data
-	        	 }
-        	 }
-         }
-       }
-   }
-   
-   
    /**
     * Start of Bank menu System
     * 
@@ -377,12 +259,18 @@ public class NewFXBanker extends Application {
     */
    @Override
    public void start(Stage stage) {
-	  banker.loadFileName();
-	  banker.loadConfigData();
+	   banker.loadFileName();
+	   banker.loadConfigData();
+	   banker.loadCustomerObjectData();
+	   banker.loadAccountObjectData();
+	   banker.loadTransactionObjectData();
+	   
+	   /*
 	  banker.loadCustomerData();
 	  banker.loadCheckingData();
 	  banker.loadRegularData();
 	  banker.loadGoldData();
+	  */
 	  // banker.loadTransactions();
 	  stage.setTitle(banker.bankName);
       final Group rootGroup = new Group();
