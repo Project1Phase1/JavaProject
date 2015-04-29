@@ -29,7 +29,7 @@ public class Reports extends Application {
 	 
 	public void start(Stage primaryStage) {
 	    // Create a scene by calling the method above and place it in the stage
-	    Scene scene = new Scene(getPane(), 1300, 300);
+	    Scene scene = new Scene(getPane(), 1300, 500);
 	    primaryStage.setTitle("Reports"); // Set the stage title
 	    primaryStage.setScene(scene); // Place the scene in the stage
 	    primaryStage.show(); // Display the stage
@@ -46,16 +46,16 @@ public class Reports extends Application {
 		  
 		  TextField txtDisplayBox = new TextField();
 		  txtDisplayBox.setPrefSize(0,1);
-		  txtDisplayBox.setDisable(true);
+		  txtDisplayBox.setEditable(false);
 		  TextArea taOutput = new TextArea();
 		  taOutput.setPrefRowCount(15);
 		  taOutput.setPrefColumnCount(75);
 		  taOutput.setFont(sansbold12);
-		  taOutput.setDisable(true);
+		  taOutput.setEditable(false);;
 		  
 		  
 		  //FlowPane adds nodes row by row horizontally or col by col vertically
-		  VBox topPane = new VBox(10);
+		  VBox topPane = new VBox(2);
 		  //Sets the top, right, bottom, and left padding around the region's content
 		  topPane.setPadding(new Insets(11,12,13,14));
 		  //Set the amount of horizontal space between each node
@@ -84,7 +84,7 @@ public class Reports extends Application {
 		  btnExit.setOnAction(e -> {
 			  ((Window)(e.getSource())).getScene().getWindow().hide();
 		});
-	  
+	   
 		  return mainPane;
 	  }
 }

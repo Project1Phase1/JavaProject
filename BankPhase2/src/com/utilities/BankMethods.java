@@ -58,30 +58,45 @@ public class BankMethods {
 	public void loadFileName() {
 		loadPaths();
 		loadBackup();
-		filename[0] = paths[0] + "/config.dat";
-		filename[1] = paths[0] + "/customers.dat";
-		filename[2] = paths[0] + "/checking.dat";
-		filename[3] = paths[0] + "/regular.dat";
-		filename[4] = paths[0] + "/gold.dat";
-		filename[5] = paths[0] + "/transactions.dat";
-		filename[6] = paths[0] + "/oaccounts.dat";
-		filename[7] = paths[0] + "/ocustomers.dat";
-		filename[8] = paths[0] + "/otransactions.dat";
+		filename[0] = paths[0] + "/config.dat"; // individually saved
+		filename[1] = paths[0] + "/customers.dat"; // individually saved
+		filename[2] = paths[0] + "/checking.dat"; // individually saved
+		filename[3] = paths[0] + "/regular.dat"; // individually saved
+		filename[4] = paths[0] + "/gold.dat"; // individually saved
+		filename[5] = paths[0] + "/transactions.dat"; // individually saved
+		filename[6] = paths[0] + "/oaccounts.dat"; // saved as an object
+		filename[7] = paths[0] + "/ocustomers.dat"; // saved as an object
+		filename[8] = paths[0] + "/otransactions.dat"; // saved as an object
 	}
 	
+	/** load backup<br><br>
+	 * 
+	 * this loads the filename that will be used to store backup copies of the files<br>
+	 * the extension will be added when the file is initially created<br><br>
+	 * 
+	 * example: config0.dat and if that is used then config1.dat<br>
+	 * 
+	 */
 	public void loadBackup() {
 		loadPaths();
-		filename[0] = paths[1] + "/config";
-		filename[1] = paths[1] + "/customers";
-		filename[2] = paths[1] + "/checking";
-		filename[3] = paths[1] + "/regular";
-		filename[4] = paths[1] + "/gold";
-		filename[5] = paths[1] + "/transactions";
-		filename[6] = paths[1] + "/oaccounts";
-		filename[7] = paths[1] + "/ocustomers";
-		filename[8] = paths[1] + "/otransactions";
+		filename[0] = paths[1] + "/config"; // individually saved
+		filename[1] = paths[1] + "/customers"; // individually saved
+		filename[2] = paths[1] + "/checking"; // individually saved
+		filename[3] = paths[1] + "/regular"; // individually saved
+		filename[4] = paths[1] + "/gold"; // individually saved
+		filename[5] = paths[1] + "/transactions"; // individually saved
+		filename[6] = paths[1] + "/oaccounts"; // saved as an object
+		filename[7] = paths[1] + "/ocustomers"; // saved as an object
+		filename[8] = paths[1] + "/otransactions"; // saved as an object
 	}
 	
+	/** load paths<br><br>
+	 * 
+	 * this loads the paths into an array that will used to create the folders<br>
+	 * for the first time and also this will add to the file names so the text<br>
+	 * files will be stored in sub folders rather in the main folder with the source code<br>
+	 * 
+	 */
 	public void loadPaths() {
 		paths[0] = "data";
 		paths[1] = "backup";
@@ -114,10 +129,13 @@ public class BankMethods {
    	 */
 	  public BorderPane getCustPane(){
 		  
+		  // set up the labels
 		  Label lblID = new Label("Customer ID");
 		  Label lblName = new Label("Customers Name");
 		  Label lblMessage = new Label("");
 		  
+		  // create the text boxes and adjust their font and font size and establish the tool tips that
+		  // will be used for each individual box
 		  TextField txtID = new TextField();
 		  txtID.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
 		  txtID.setPromptText("Customer ID");
@@ -126,8 +144,11 @@ public class BankMethods {
 		  txtName.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
 		  txtName.setPromptText("Customer Name");
 		  txtName.setTooltip(new Tooltip("Enter the Customer's First and Last name"));
+		  
+		  // declare a font that will be used for the buttons
 		  Font times = Font.font("Times New Roman", FontWeight.BOLD, 16);
-
+		  
+		  // generate buttons and tool tips
 		  Button btnAdd = new Button("Add");
 		  Button btnExit = new Button("Exit");
 		  btnAdd.setFont(times);
@@ -138,19 +159,24 @@ public class BankMethods {
 		  // set the color to the buttons
 		  btnAdd.setStyle("-fx-font: 18 arial; -fx-base: blue;");
 		  btnExit.setStyle("-fx-font: 18 arial; -fx-base: red;");
-
+		  
+		  // put the ID label and text box together vertically
 		  VBox idPane = new VBox(2);
 		  idPane.setAlignment(Pos.CENTER);
 		  idPane.getChildren().addAll(lblID, txtID);
 		 
+		  // put the Name label and text box together vertically
 		  VBox namePane = new VBox(2);
 		  namePane.setAlignment(Pos.CENTER);
 		  namePane.getChildren().addAll(lblName, txtName);
 		  
+		  // put in a label that will be used as a message center for the user
 		  HBox messagePane = new HBox(1);
 		  messagePane.setAlignment(Pos.CENTER);
 		  messagePane.getChildren().add(lblMessage);
 		  
+		  // add the ID and Name panes horizontally to the txtPane which
+		  // will be put in the top pane of the window
 		  HBox txtPane = new HBox(2);
 		  txtPane.setPadding(new Insets(30,30,30,30));  
 		  txtPane.getChildren().addAll(idPane, namePane);
@@ -158,17 +184,20 @@ public class BankMethods {
 		  lblID.setFont(times);
 		  lblName.setFont(times);
 		  
+		  // add the buttons horizontally to the bottom pane
 		  HBox bottomPane = new HBox(2);
 		  bottomPane.setPadding(new Insets(15,15,15,15));;
 		  bottomPane.getChildren().addAll(btnAdd, btnExit);
 		  bottomPane.setAlignment(Pos.CENTER);
 		  
+		  // generate the Panes and set the border color to blue
 		  BorderPane custMainPane = new BorderPane();
 		  custMainPane.setTop(txtPane);
 		  custMainPane.setCenter(messagePane);
 		  custMainPane.setBottom(bottomPane);
 		  custMainPane.setStyle("-fx-border-color: blue");
 
+		  // when the user presses any key inside the ID box
 		  txtID.setOnKeyTyped(e -> {
 			  if (txtID.getText().equals("0")) {
 				  txtID.setText(bu.generateUniqueAcctNumber());
@@ -178,11 +207,7 @@ public class BankMethods {
 			  }
 		  });
 		  
-		  txtName.setOnKeyTyped(e -> {
-				  lblMessage.setText(" ");
-				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
-		  });
-		  
+		  // when the user presses the Enter key in the ID box
 		  txtID.setOnAction(e -> {
 			  if (txtID.getText().equals("0")) {
 				  txtID.setText(bu.generateUniqueAcctNumber());
@@ -191,10 +216,18 @@ public class BankMethods {
 			  }
 		  });
 		  
+		  // when the user presses any key in the Name box
+		  txtName.setOnKeyTyped(e -> {
+				  lblMessage.setText(" ");
+				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+		  });
+		  
+		  // when the user presses Enter key in the Name box
 		  txtName.setOnAction(e -> {
 			  btnAdd.requestFocus();
 		  });
 		  
+		  // when the user presses any key on the Add button
 		  btnAdd.setOnKeyPressed(e -> {
 			  boolean cc = false;
 			  Stage myStage = (Stage) txtID.getScene().getWindow();
@@ -210,6 +243,7 @@ public class BankMethods {
 			  }
 		  });
 		  
+		  // when the user clicks the Add button
 		  btnAdd.setOnAction(e -> {
 			  boolean cc = false;
 			  Stage myStage = (Stage) txtID.getScene().getWindow();
@@ -225,9 +259,11 @@ public class BankMethods {
 			  }
 		  });
 		  
+		  // when the user clicks on the Exit button
 		  btnExit.setOnAction(e -> {
 			  btnExit.getScene().getWindow().hide();
 			  });
+		  // this returns the pane to the calling Scene
 	  return custMainPane;
 	  }
 
@@ -243,23 +279,27 @@ public class BankMethods {
 	   * @return whether it was successful (true or false)
 	   */
 	  public boolean createCustomer(TextField txtID, TextField txtName, Label lblMessage) {
+		  // what is the current size of the customer table (array list)
+		  // this will be used to determine if the customer was added successfully
 		  int element = customers.size();
-		  //JOptionPane.showMessageDialog(null, element);
+		  
+		  // did the user enter any information in the ID box
 		  if(txtID.getText().isEmpty()) {
 			  lblMessage.setText("Please Enter Customer ID");
 			  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
-			  //JOptionPane.showMessageDialog(null,  );
-		  } else if (txtName.getText().isEmpty()) {
+		  } else if (txtName.getText().isEmpty()) { // did the user enter any information in the Name box
 			  lblMessage.setText("Please Enter Customer Name");
 			  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
-		  } else {
+		  } else { // since there were no errors that I detected, add the customer to the table
 			  Customer customer = new Customer(txtID.getText(), txtName.getText());
 			  customers.add(customer);
+			  
+			  // check to see if the customer was added to the table and return true if yes and false if not
 			  if (element < customers.size()) {
 				  lblMessage.setText("Customer Created successfully!");
 				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
 				  return true;
-			  } else {
+			  } else { // notify the user that the customer was not added
 				  if (element == customers.size()) {
 					  lblMessage.setText("Customer Creation Unsessful!!");
 					  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
@@ -269,6 +309,14 @@ public class BankMethods {
 		  return false;
 	  }
 	  
+	  /** look up customer and if it was found return it or return null<br><br>
+	   * 
+	   * currently not used but I expect this to be added later
+	   * 
+	   * @param txtID
+	   * @param txtName
+	   * @return
+	   */
 	  public Customer lookupCustomer(TextField txtID, TextField txtName) {
 		  Customer customer = customers.get(0);
 		  boolean isFound = false;
@@ -358,7 +406,7 @@ public class BankMethods {
 		  Label lbltxtDisplayBoxAccounts = new Label(acctType);  // heading
 		  lbltxtDisplayBoxAccounts.setStyle(acctStyleFirst + heading  + acctStyleLast + acctStyleBlue);
 		  // set up the error display message area
-		  Label lbltxtDisplayBoxMessage = new Label(" "); // error reporting
+		  Label lbltxtDisplayBoxMessage = new Label(" "); // clear error reporting
 		  
 		  // declare the heading and labels
 		  Label lblAccountNumber = new Label("Account Number");
@@ -368,7 +416,7 @@ public class BankMethods {
 		  Label lblOpeningBalance = new Label("Opening Balance");
 		  lblOpeningBalance.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
 		  
-		  // declare the text boxes
+		  // declare the text boxes and tool tips
 		  TextField txtAccountNumber = new TextField();
 		  txtAccountNumber.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
 		  txtAccountNumber.setPromptText("Hover for Instructions");
@@ -381,6 +429,7 @@ public class BankMethods {
 		  txtOpeningBalance.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
 		  txtOpeningBalance.setPromptText("Example: 789.74");
 		  txtOpeningBalance.setTooltip(new Tooltip("Opening Balance of this Account, Example: 854.34"));
+		  
 		  // put account number label and text box together in a vertical box
 		  VBox accountPane = new VBox(2);
 		  accountPane.getChildren().addAll(lblAccountNumber, txtAccountNumber);
@@ -679,13 +728,15 @@ public class BankMethods {
 			  }
 		  } catch (EOFException e) {
 			  //JOptionPane.showMessageDialog(null, "Configuration Data Loaded successfully!", "Config Load Data", JOptionPane.INFORMATION_MESSAGE);
+			  e.getStackTrace();
 			  return;
-		  } catch (FileNotFoundException e1) {
+		  } catch (FileNotFoundException e) {
 			  //JOptionPane.showMessageDialog(null, "Configuration file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+			  e.getStackTrace();
 			  return;
-		  } catch (IOException e1) {
+		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Configuration File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-			  
+			  e.getStackTrace();
 		  }
 	  }
 	  
@@ -706,13 +757,15 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				 // JOptionPane.showMessageDialog(null, counter + " Customer(s) Data Loaded successfully!", "Customer Load Data", JOptionPane.INFORMATION_MESSAGE);
+				  e.getStackTrace();
 				 return;
-			  } catch (FileNotFoundException e1) {
+			  } catch (FileNotFoundException e) {
 				  //JOptionPane.showMessageDialog(null, "Customer file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  e.getStackTrace();
 				  return;
-			  } catch (IOException e1) {
+			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Customer File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  }
 		  } else {
 			  JOptionPane.showMessageDialog(null, "Customers have already been loaded!", "Load Customer Error", JOptionPane.INFORMATION_MESSAGE);
@@ -756,13 +809,15 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				  //JOptionPane.showMessageDialog(null, counter + " Checking Account Data Loaded successfully!", "Checking Load Data", JOptionPane.INFORMATION_MESSAGE);
+				  e.getStackTrace();
 				  return;
-			  } catch (FileNotFoundException e1) {
+			  } catch (FileNotFoundException e) {
 				  //JOptionPane.showMessageDialog(null, "Account file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  e.getStackTrace();
 				  return;
-			  } catch (IOException e1) {
+			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Account File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  }
 		  } else {
 			  JOptionPane.showMessageDialog(null, "Checking Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
@@ -806,13 +861,15 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				  //JOptionPane.showMessageDialog(null, counter + " Regular Account Data Loaded successfully!", "Regular Load Data", JOptionPane.INFORMATION_MESSAGE);
+				  e.getStackTrace();
 				  return;
-			  } catch (FileNotFoundException e1) {
+			  } catch (FileNotFoundException e) {
 				  //JOptionPane.showMessageDialog(null, "Regular file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  e.getStackTrace();
 				  return;
-			  } catch (IOException e1) {
+			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Regular File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  }
 		  } else {
 			  JOptionPane.showMessageDialog(null, "Regular Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
@@ -855,13 +912,14 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				  //JOptionPane.showMessageDialog(null, counter + " Gold Account Data Loaded successfully!", "Gold Load Data", JOptionPane.INFORMATION_MESSAGE);
+				  e.getStackTrace();
 				  return;
 			  } catch (FileNotFoundException e1) {
 				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
 				  return;
-			  } catch (IOException e1) {
+			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Gold File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  }
 		  } else {
 			  JOptionPane.showMessageDialog(null, "Gold Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
@@ -889,15 +947,17 @@ public class BankMethods {
 				  }
 			  } catch (EOFException e) {
 				  //JOptionPane.showMessageDialog(null, counter + " Gold Account Data Loaded successfully!", "Gold Load Data", JOptionPane.INFORMATION_MESSAGE);
+				  e.getStackTrace();
 				  return;
-			  } catch (FileNotFoundException e1) {
+			  } catch (FileNotFoundException e) {
 				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  e.getStackTrace();
 				  return;
-			  } catch (IOException e1) {
+			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Transaction File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  } catch (ParseException e) {
-
+				  e.getStackTrace();
 			  }
 		  } else {
 			  JOptionPane.showMessageDialog(null, "Transactions have already been loaded! Terminating Load Transactions!", "Load Transacitons", JOptionPane.INFORMATION_MESSAGE);
@@ -914,9 +974,9 @@ public class BankMethods {
 			  output.writeUTF(bankName);
 			  output.writeInt(bakup);
 			  
-		  } catch (IOException e1) {
+		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Config File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
+			  e.getStackTrace();
 		  }
 		  // JOptionPane.showMessageDialog(null, "Config Data Saved successfully!", "Config Save Data", JOptionPane.INFORMATION_MESSAGE);
 	  }
@@ -933,9 +993,9 @@ public class BankMethods {
 				  output.writeBoolean(c.getActive());
 				  counter++;
 			  }
-		  } catch (IOException e1) {
+		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Customer File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
+			  e.getStackTrace();
 		  }
 		  JOptionPane.showMessageDialog(null, counter + " Customer Data Saved successfully!", "Customer Save Data", JOptionPane.INFORMATION_MESSAGE);
 		  
@@ -957,9 +1017,9 @@ public class BankMethods {
 					  counter++;
 				  }
 			  }
-		  } catch (IOException e1) {
+		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Checking File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
+			  e.getStackTrace();
 		  }
 		  JOptionPane.showMessageDialog(null, counter + " Checking Data Saved successfully!", "Checking Save Data", JOptionPane.INFORMATION_MESSAGE);
 		  
@@ -981,9 +1041,9 @@ public class BankMethods {
 					  counter++;
 				  }
 			  }
-		  } catch (IOException e1) {
+		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Regular File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  
+			  e.getStackTrace();
 		  }
 		  JOptionPane.showMessageDialog(null, counter + " Regular Data Saved successfully!", "Regular Save Data", JOptionPane.INFORMATION_MESSAGE);
 	  }
@@ -1004,8 +1064,9 @@ public class BankMethods {
 					  counter++;
 				  }
 			  }
-		  } catch (IOException e1) {
+		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Gold File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
+			  e.getStackTrace();
 			  
 		  }
 		  JOptionPane.showMessageDialog(null, counter + " Gold Data Saved successfully!", "Gold Save Data", JOptionPane.INFORMATION_MESSAGE);
@@ -1029,12 +1090,13 @@ public class BankMethods {
 					 output.writeLong(t.getTransactionNumber());
 					 output.writeUTF(t.getCreateDate().toString());
 				 }
-			  } catch (FileNotFoundException e1) {
+			  } catch (FileNotFoundException e) {
 				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  e.getStackTrace();
 				  return;
-			  } catch (IOException e1) {
+			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Transaction File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  }
 		  }
 	  }
@@ -1054,17 +1116,18 @@ public class BankMethods {
 				  customers = (ArrayList<Customer>) input.readObject();
 				  
 			  } catch (EOFException e) {
+				  e.getStackTrace();
 				  return;
 				  
 			  } catch (FileNotFoundException e) {
 				  JOptionPane.showMessageDialog(null, "File " + filename[7] + " not found!", "Customer Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Customer Read Error", "Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  } catch (ClassNotFoundException e) {
 				  JOptionPane.showMessageDialog(null, "Unable to create object", "Error Reading Customer", JOptionPane.ERROR);
-				  
+				  e.getStackTrace();
 			  }
 		}
 	}
@@ -1081,13 +1144,13 @@ public class BankMethods {
 				  
 			  } catch (FileNotFoundException e) {
 				  JOptionPane.showMessageDialog(null, "File " + filename[6] + " not found!", "Account Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Account Read Error", "Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  } catch (ClassNotFoundException e) {
 				  JOptionPane.showMessageDialog(null, "Unable to create object", "Error Reading Account", JOptionPane.ERROR);
-				  
+				  e.getStackTrace();
 			  }
 		  }
 	  }
@@ -1103,13 +1166,13 @@ public class BankMethods {
 				  
 			  } catch (FileNotFoundException e) {
 				  JOptionPane.showMessageDialog(null, "File " + filename[8] + " not found!", "Transaction Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Transaction Read Error", "Read Error", JOptionPane.ERROR_MESSAGE);
-				  
+				  e.getStackTrace();
 			  } catch (ClassNotFoundException e) {
 				  JOptionPane.showMessageDialog(null, "Unable to create object", "Error Reading Transaction", JOptionPane.ERROR);
-				  
+				  e.getStackTrace();
 			  }
 		  } else {
 			  return;
@@ -1126,9 +1189,11 @@ public class BankMethods {
 			  
 		  } catch (FileNotFoundException e) {
 			  JOptionPane.showMessageDialog(null, "File " + filename[7] + " not found!", "Customer Save Error", JOptionPane.ERROR_MESSAGE);
+			  e.getStackTrace();
 			  
 		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Customer Read Error", "Save Error", JOptionPane.ERROR_MESSAGE);
+			  e.getStackTrace();
 
 		  }
 	  }
@@ -1140,10 +1205,10 @@ public class BankMethods {
 			  output.writeObject(accounts);
 		  } catch (FileNotFoundException e) {
 			  JOptionPane.showMessageDialog(null, "File " + filename[6] + " not found!", "Account Save Error", JOptionPane.ERROR_MESSAGE);
-			  
+			  e.getStackTrace();
 		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Account Read Error", "Save Error", JOptionPane.ERROR_MESSAGE);
-
+			  e.getStackTrace();
 		  }
 	  }
 	  
@@ -1154,10 +1219,10 @@ public class BankMethods {
 			  output.writeObject(transactions);
 		  } catch (FileNotFoundException e) {
 			  JOptionPane.showMessageDialog(null, "File " + filename[7] + " not found!", "Transaction Save Error", JOptionPane.ERROR_MESSAGE);
-			  
+			  e.getStackTrace();
 		  } catch (IOException e) {
 			  JOptionPane.showMessageDialog(null, "Transaction Read Error", "Save Error", JOptionPane.ERROR_MESSAGE);
-
+			  e.getStackTrace();
 		  }
 	  }
 	  
@@ -1226,7 +1291,7 @@ public class BankMethods {
 			  }
 			  return true;
 		  } catch (IOException e) {
-			  
+			e.getStackTrace();
 		  }
 		  return false;
 	  }
