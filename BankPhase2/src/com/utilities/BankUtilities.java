@@ -19,14 +19,24 @@ public class BankUtilities {
 
 	// generate unique info
 	
-	public int generateUniqueTransNumber() {
-		return Math.abs((int) Calendar.getInstance().getTimeInMillis());
+	public long generateUniqueTransNumber() {
+		return Math.abs( Calendar.getInstance().getTimeInMillis());
 	}
 
+	public long generateUniqueAccountNumber() {
+		return Math.abs( Calendar.getInstance().getTimeInMillis());
+	}
+	
 	public java.util.Date generateDate() {
 		return new java.util.Date();
 	}
 	
+	/** generate unique account number<br><br>
+	 * 
+	 * generates two random letters 
+	 * 
+	 * @return
+	 */
 	public String generateUniqueAcctNumber() {
 		String output = "";
 		output += (char) genRandomNumber(65, 90, 100);

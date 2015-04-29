@@ -16,8 +16,19 @@ import java.io.Serializable;
  * @authors Ian Holtson<br>Jeremiah McKinney<br>Theral Jessop<br><br>
  * Apr 6, 2015<br>
  * Transaction.java<br>
- *
+ * 
+ * 
+ * transaction constructor<br>
+ * there is no default constructor for this class<br>
+ * 
+ * @param createDate java.util.Date
+ * @param customerID from the Customer
+ * @param accountNumber from the Account
+ * @param description a description of the transaction (Deposit, Withdraw, EOM calculations, etc.)
+ * @param amount of the transaction
+ * @param transactionNumber a unique transaction number
  */
+
 public class Transaction implements Serializable{
 	private static final long serialVersionUID = -3071907899278997557L;
 	private java.util.Date createDate;
@@ -25,7 +36,7 @@ public class Transaction implements Serializable{
 	private String accountNumber;
 	private String description;
 	private double amount;
-	private int transactionNumber;
+	private long transactionNumber;
 	
 	Transaction() {
 		
@@ -41,7 +52,7 @@ public class Transaction implements Serializable{
 	 * @param amount of the transaction
 	 * @param transactionNumber a unique transaction number
 	 */
-	public Transaction(java.util.Date createDate, String customerID, String accountNumber, String description, double amount, int transactionNumber) {
+	public Transaction(java.util.Date createDate, String customerID, String accountNumber, String description, double amount, long transactionNumber) {
 		this.createDate = createDate;
 		this.customerID = customerID;
 		this.accountNumber = accountNumber;
@@ -50,7 +61,7 @@ public class Transaction implements Serializable{
 		this.transactionNumber = transactionNumber;
 	}
 	
-	public Transaction(java.util.Date createDate, String customerID, String description, int transactionNumber) {
+	public Transaction(java.util.Date createDate, String customerID, String description, long transactionNumber) {
 		this.createDate = createDate;
 		this.customerID = customerID;
 		this.accountNumber = "No Accounts";
@@ -97,7 +108,7 @@ public class Transaction implements Serializable{
 	/**
 	 * @return the transactionNumber
 	 */
-	public int getTransactionNumber() {
+	public long getTransactionNumber() {
 		return transactionNumber;
 	}
 

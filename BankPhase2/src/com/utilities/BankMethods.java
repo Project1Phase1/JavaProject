@@ -1,9 +1,10 @@
 package com.utilities;
 
 import java.io.*;
+import java.text.*;
 import java.util.*;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -29,10 +31,12 @@ import com.transactions.Transaction;
 // http://docs.oracle.com/javase/tutorial/essential/io/index.html
 
 public class BankMethods {
-	public String[] filename = new String[9]; // contains the path and file names of files and backups
+	public String[] filename = new String[9]; // contains the path and file names of data files
+	public String[] backName = new String[9]; // contains the path and file name of the backup data files
 	public String[] paths = new String[2];
 	public String bankName; // bank name that will be stored in the config dat file
 	public int bakup; // a backup token that will keep track of the backup number so backups will never over write each other
+	public String autoAcctNum;
 	// the general bank containers
 	public ArrayList<Customer> customers = new ArrayList<Customer>();
 	public ArrayList<Account> accounts = new ArrayList<Account>();
@@ -53,6 +57,7 @@ public class BankMethods {
 	 */
 	public void loadFileName() {
 		loadPaths();
+		loadBackup();
 		filename[0] = paths[0] + "/config.dat";
 		filename[1] = paths[0] + "/customers.dat";
 		filename[2] = paths[0] + "/checking.dat";
@@ -72,7 +77,9 @@ public class BankMethods {
 		filename[3] = paths[1] + "/regular";
 		filename[4] = paths[1] + "/gold";
 		filename[5] = paths[1] + "/transactions";
-		filename[6] = paths[1] + "/account";
+		filename[6] = paths[1] + "/oaccounts";
+		filename[7] = paths[1] + "/ocustomers";
+		filename[8] = paths[1] + "/otransactions";
 	}
 	
 	public void loadPaths() {
@@ -113,14 +120,20 @@ public class BankMethods {
 		  
 		  TextField txtID = new TextField();
 		  txtID.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
+		  txtID.setPromptText("Customer ID");
+		  txtID.setTooltip(new Tooltip("Type the number 0 and press Enter to automaticly generate Customer ID"));
 		  TextField txtName = new TextField();
 		  txtName.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
+		  txtName.setPromptText("Customer Name");
+		  txtName.setTooltip(new Tooltip("Enter the Customer's First and Last name"));
 		  Font times = Font.font("Times New Roman", FontWeight.BOLD, 16);
 
 		  Button btnAdd = new Button("Add");
 		  Button btnExit = new Button("Exit");
 		  btnAdd.setFont(times);
+		  btnAdd.setTooltip(new Tooltip("Add entered customer into the bank system"));
 		  btnExit.setFont(times);
+		  btnExit.setTooltip(new Tooltip("Exit!\nPressing this will not save the currently entered information!"));
 		  
 		  // set the color to the buttons
 		  btnAdd.setStyle("-fx-font: 18 arial; -fx-base: blue;");
@@ -128,7 +141,7 @@ public class BankMethods {
 
 		  VBox idPane = new VBox(2);
 		  idPane.setAlignment(Pos.CENTER);
-		 idPane.getChildren().addAll(lblID, txtID);
+		  idPane.getChildren().addAll(lblID, txtID);
 		 
 		  VBox namePane = new VBox(2);
 		  namePane.setAlignment(Pos.CENTER);
@@ -158,10 +171,7 @@ public class BankMethods {
 
 		  txtID.setOnKeyTyped(e -> {
 			  if (txtID.getText().equals("0")) {
-				  // need to work on this and make it either pop up another window showing all the available customerID numbers
-				  // or in a combo box on this form
-				  lblMessage.setText("You entered a 0");
-				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+				  txtID.setText(bu.generateUniqueAcctNumber());
 			  } else {
 				  lblMessage.setText(" ");
 				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
@@ -175,10 +185,7 @@ public class BankMethods {
 		  
 		  txtID.setOnAction(e -> {
 			  if (txtID.getText().equals("0")) {
-				  // need to work on this and make it either pop up another window showing all the available customerID numbers
-				  // or in a combo box on this form
-				  lblMessage.setText("You entered a 0");
- 				 lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+				  txtID.setText(bu.generateUniqueAcctNumber());
 			  } else {
 			  txtName.requestFocus();
 			  }
@@ -311,19 +318,26 @@ public class BankMethods {
 		switch (acctNum) {
 			case 0: // checking
 				acctType = "Checking Account";
+				autoAcctNum = "CA" + bu.generateUniqueAccountNumber();
 				break;
 			case 1:// regular
 				acctType = "Regular Account";
+				autoAcctNum = "RA" + bu.generateUniqueAccountNumber();
 				break;
 			case 2: // gold
 				acctType = "Gold Account";
+				autoAcctNum = "GA" + bu.generateUniqueAccountNumber();
 				break;
+			default:
+				//autoAcctNum = "";
 		}
 		  // declare buttons and set their styles
 		  Button btnAdd = new Button("Add");
 		  btnAdd.setStyle(acctButtonStyle + "blue;");
+		  btnAdd.setTooltip(new Tooltip("Add this Account into the banking system"));
 		  Button btnExit = new Button("Exit");
 		  btnExit.setStyle(acctButtonStyle + "red;");
+		  btnExit.setTooltip(new Tooltip("Exit! \nPressing this will not save the currently entered information!"));
 		  Font sansbold12 = Font.font("arial", FontWeight.BOLD, 13);
 
 		  TextArea listCust = new TextArea();
@@ -331,15 +345,14 @@ public class BankMethods {
 		  listCust.setPrefColumnCount(35);
 		  listCust.setFont(sansbold12);
 		  listCust.setEditable(false);
+		  listCust.setTooltip(new Tooltip("This shows the available customers when the number 0 is entered in Customer ID"));
 		  
-		 Label lblLoadCustomers = new Label("Type 0 in Customer ID to display Customers in display box below!");
-		 lblLoadCustomers.setStyle(acctStyleFirst + "14" + acctStyleLast + "green;");
 		 
 		 FlowPane leftPane = new FlowPane();
 		 leftPane.setAlignment(Pos.CENTER);
 		 leftPane.setHgap(5);
 		 leftPane.setVgap(5);
-		 leftPane.getChildren().addAll(lblLoadCustomers, listCust);
+		 leftPane.getChildren().addAll(listCust);
 		  
 		  // set up the account type heading
 		  Label lbltxtDisplayBoxAccounts = new Label(acctType);  // heading
@@ -358,11 +371,16 @@ public class BankMethods {
 		  // declare the text boxes
 		  TextField txtAccountNumber = new TextField();
 		  txtAccountNumber.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+		  txtAccountNumber.setPromptText("Hover for Instructions");
+		  txtAccountNumber.setTooltip(new Tooltip("Type the number 0 and press Enter to generate automatic Account Number"));
 		  TextField txtCustomerID = new TextField();
 		  txtCustomerID.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+		  txtCustomerID.setPromptText("Customer ID");
+		  txtCustomerID.setTooltip(new Tooltip("Enter Customer ID or type the number 0 to show a list of available customers"));
 		  TextField txtOpeningBalance = new TextField();
 		  txtOpeningBalance.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
-		  
+		  txtOpeningBalance.setPromptText("Example: 789.74");
+		  txtOpeningBalance.setTooltip(new Tooltip("Opening Balance of this Account, Example: 854.34"));
 		  // put account number label and text box together in a vertical box
 		  VBox accountPane = new VBox(2);
 		  accountPane.getChildren().addAll(lblAccountNumber, txtAccountNumber);
@@ -415,8 +433,17 @@ public class BankMethods {
 		  mainPane.setBottom(bottomPane);
 		  mainPane.setStyle("-fx-border-color: blue");
 		  
+		  // if any key is pressed in the account number box, clear the message display label
+		  txtAccountNumber.setOnKeyTyped(e ->{
+			  lbltxtDisplayBoxMessage.setText(" ");
+	     });
+		  
 		  // if the enter key is pressed in the account number move to the next box
 		  txtAccountNumber.setOnAction(e -> {
+			  if (txtAccountNumber.getText().equals("0")) {
+				  txtAccountNumber.setText(autoAcctNum);
+				  //txtAccountNumber.setDisable(true);
+			  }
 			  txtOpeningBalance.requestFocus();
 		  });
 		  
@@ -433,10 +460,6 @@ public class BankMethods {
 			  txtAccountNumber.requestFocus();
 		  });
 		  
-		  // if any key is pressed in the account number box, clear the message display label
-		  txtAccountNumber.setOnKeyTyped(e ->{
-			  lbltxtDisplayBoxMessage.setText(" ");
-	     });
 	     
 		  // if any key is pressed in the customer id box, clear the message display label
 	     txtCustomerID.setOnKeyTyped(e -> {
@@ -489,7 +512,10 @@ public class BankMethods {
 	    	 boolean isAcctOk = false;
 	    	 isAcctOk = createAccount( txtAccountNumber, txtCustomerID, txtOpeningBalance, lbltxtDisplayBoxMessage, acctNum);
 	    	 if (isAcctOk) {
-	    		 
+	    		 txtAccountNumber.setDisable(false);
+	    		 txtCustomerID.setText("");
+	    		 txtAccountNumber.setText("");
+	    		 txtOpeningBalance.setText("");
 	    	 }
 	     });
 
@@ -498,7 +524,10 @@ public class BankMethods {
 	    	 boolean isAcctOk = false;
 	    	 isAcctOk = createAccount( txtAccountNumber, txtCustomerID, txtOpeningBalance, lbltxtDisplayBoxMessage, acctNum);
 	    	 if (isAcctOk) {
-	    		 
+	    		 txtAccountNumber.setDisable(false);
+	    		 txtCustomerID.setText("");
+	    		 txtAccountNumber.setText("");
+	    		 txtOpeningBalance.setText("");
 	    	 }
 	     });
 	     
@@ -637,7 +666,7 @@ public class BankMethods {
 	  // **************************************** load ****************************************
 	  // *************************** config ***************************
 	  public void loadConfigData() {
-		  File file = new File(paths[0] + "/" + filename[0] + ".dat");
+		  File file = new File(filename[0]);
 		  if (!(file.exists())) {
 			  bankName = JOptionPane.showInputDialog("Please Enter the Bank Name");
 			  bakup = 0;
@@ -841,6 +870,40 @@ public class BankMethods {
 
 	  // *************************** transactions ***************************
 
+	  public void loadTransactions() {
+		  if (transactions.isEmpty()) {
+			  String custID = "", acctNum = "", desc = "";
+			  double amount = 0.0;
+			  long tranID = 0;
+			  Date date = new Date();
+			  SimpleDateFormat strDate = new SimpleDateFormat();
+			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[5]));) {
+				  while (true) {
+					  custID = input.readUTF();
+					  acctNum = input.readUTF();
+					  desc = input.readUTF();
+					  amount = input.readDouble();
+					  tranID = input.readLong();
+					  date = strDate.parse(input.readUTF());
+					  transactions.add(new Transaction(date, custID, acctNum, desc, amount, tranID));
+				  }
+			  } catch (EOFException e) {
+				  //JOptionPane.showMessageDialog(null, counter + " Gold Account Data Loaded successfully!", "Gold Load Data", JOptionPane.INFORMATION_MESSAGE);
+				  return;
+			  } catch (FileNotFoundException e1) {
+				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  return;
+			  } catch (IOException e1) {
+				  JOptionPane.showMessageDialog(null, "Transaction File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
+				  
+			  } catch (ParseException e) {
+
+			  }
+		  } else {
+			  JOptionPane.showMessageDialog(null, "Transactions have already been loaded! Terminating Load Transactions!", "Load Transacitons", JOptionPane.INFORMATION_MESSAGE);
+		  }
+	  }
+	  
 	  
 // **************************************** save ****************************************
 	  
@@ -948,8 +1011,35 @@ public class BankMethods {
 		  JOptionPane.showMessageDialog(null, counter + " Gold Data Saved successfully!", "Gold Save Data", JOptionPane.INFORMATION_MESSAGE);
 	  }
 	
+	  
 	  // *************************** transactions ***************************
 
+	  
+	  public void saveTransactions() {
+		  if (transactions.isEmpty()) {
+			  JOptionPane.showMessageDialog(null, "There are no Transacitons to save! Terminating Save Transactions!", "No Transactions", JOptionPane.ERROR_MESSAGE);
+			  return;
+		  } else {
+			 try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[5]));) {
+				 for (Transaction t: transactions) {
+					 output.writeUTF(t.getCustomerID());
+					 output.writeUTF(t.getAccountNumber());
+					 output.writeUTF(t.getDescription());
+					 output.writeDouble(t.getAmount());
+					 output.writeLong(t.getTransactionNumber());
+					 output.writeUTF(t.getCreateDate().toString());
+				 }
+			  } catch (FileNotFoundException e1) {
+				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  return;
+			  } catch (IOException e1) {
+				  JOptionPane.showMessageDialog(null, "Transaction File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
+				  
+			  }
+		  }
+	  }
+
+	  
 	  
 // ***************************************************************************** object file system *****************************************************************************
 	  
@@ -1089,14 +1179,16 @@ public class BankMethods {
 				 JOptionPane.showMessageDialog(null, msg, "Folder Contents", JOptionPane.INFORMATION_MESSAGE);
 			 }
 			 for (int y = 0; y < filename.length; y++) {
-				 copyDatToBakup(paths[x] + "/" + filename[y] + ".dat", paths[x+1] + "/" + filename[y] + bakup + ".dat");
+				 copyDatToBakup(filename[y], backName[y] + bakup + ".dat");
 			 }
+			 bakup++;
 			 for (int y = 0; y < filename.length; y++) {
-				 startOver = new File(paths[x] + "/" + filename[y] + ".dat");
+				 startOver = new File(filename[y]);
 				 startOver.delete();
 			 }
 			  
 			  
+			  saveConfigData();
 			  JOptionPane.showMessageDialog(null, "New File System Ready For Use!", "New Files", JOptionPane.INFORMATION_MESSAGE);
 			  bankName = "";
 			  loadConfigData();

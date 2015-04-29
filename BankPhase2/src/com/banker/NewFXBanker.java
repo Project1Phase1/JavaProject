@@ -100,13 +100,9 @@ public class NewFXBanker extends Application {
      menuBar.getMenus().add(quit);
      quit.setOnAction(e -> {
     	 banker.saveConfigData();
-       	 if (!(banker.customers.isEmpty())) {
-	     	 banker.saveCustomerObjectData(); 
-       	 } else if (!(banker.accounts.isEmpty())) {
-       		 banker.saveAccountObjectData();
-       	 } else if (!(banker.transactions.isEmpty())) {
-       		 banker.saveTransactionObjectData();
-       	 }
+ 	   	 banker.saveCustomerObjectData(); 
+       	 banker.saveAccountObjectData();
+     	 banker.saveTransactionObjectData();
     	 System.exit(0);
      });
      
@@ -155,18 +151,22 @@ public class NewFXBanker extends Application {
      
      files.setOnMenuValidation(e -> {
     	 if (banker.transactions.isEmpty() || banker.customers.isEmpty() || banker.accounts.isEmpty()) {
+	    	 fileNames[0].setDisable(true);
+	    	 fileNames[1].setDisable(true);
 	    	 fileNames[2].setDisable(true);
 	    	 fileNames[4].setDisable(true);
 	    	 fileNames[5].setDisable(true);
 	    	 fileNames[6].setDisable(true);
     	 } else {
+    		 fileNames[0].setDisable(false);
+    		 fileNames[1].setDisable(false);
 	    	 fileNames[2].setDisable(false);
 	    	 fileNames[4].setDisable(false);
 	    	 fileNames[5].setDisable(false);
 	    	 fileNames[6].setDisable(false);
    		 
     	 }
-//    	 if (banker.filename[])
+    	 /*
     	 fileNames[1].setDisable(false);
     	 fileNames[7].setDisable(false);
     	 fileNames[8].setDisable(false);
@@ -179,6 +179,7 @@ public class NewFXBanker extends Application {
 	    	 fileNames[12].setDisable(true);
 	    	 fileNames[6].setDisable(true);
 	    	 fileNames[10].setDisable(true);
+	    	*/
      });
      
      
@@ -270,8 +271,8 @@ public class NewFXBanker extends Application {
 	  banker.loadCheckingData();
 	  banker.loadRegularData();
 	  banker.loadGoldData();
+	  banker.loadTransactions();
 	  */
-	  // banker.loadTransactions();
 	  stage.setTitle(banker.bankName);
       final Group rootGroup = new Group();
       final Scene scene = new Scene(rootGroup, 400, 25, Color.BEIGE);
