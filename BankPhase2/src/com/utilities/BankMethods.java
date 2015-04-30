@@ -346,24 +346,14 @@ public class BankMethods {
 	   * @return the boarder pane that will generate the form
 	   */
 	  public BorderPane addAccountPane(int acctNum) {
-		  // heading font size
-		  String heading = "25";
-		  // message box font size
-		  String txtMessage = "18";
-		  // label font size
-		  String txtLabel = "14";
-		  // the beginning of the style string
-		  String acctStyleFirst = "-fx-font: ";
-		  // the last part of the style string before the color
-		  String acctStyleLast =" arial; -fx-text-fill: ";
-		  // the blue color
-		  String acctStyleBlue = "blue;";
-		  // the red color
-		  String acctStyleRed = "red;";
-		  // all buttons styles not including the color
-		  String acctButtonStyle = "-fx-font: 18 arial; -fx-base: ";
 		  String acctType = "";
-		switch (acctNum) {
+		  
+		  Font arial25 = Font.font("Arial", 25);
+		  Font arial18 = Font.font("Arial", 18);
+		  Font arial14 = Font.font("Arial", 14);
+		  //Font arial13 = Font.font("Arial", FontWeight.BOLD, 13);
+		  
+		  switch (acctNum) {
 			case 0: // checking
 				acctType = "Checking Account";
 				autoAcctNum = "CA" + bu.generateUniqueAccountNumber();
@@ -381,21 +371,21 @@ public class BankMethods {
 		}
 		  // declare buttons and set their styles
 		  Button btnAdd = new Button("Add");
-		  btnAdd.setStyle(acctButtonStyle + "blue;");
+		  btnAdd.setFont(arial18);
+		  btnAdd.setStyle("-fx-base: blue;");
 		  btnAdd.setTooltip(new Tooltip("Add this Account into the banking system"));
 		  Button btnExit = new Button("Exit");
-		  btnExit.setStyle(acctButtonStyle + "red;");
+		  btnExit.setFont(arial18);
+		  btnExit.setStyle("-fx-base: red;");
 		  btnExit.setTooltip(new Tooltip("Exit! \nPressing this will not save the currently entered information!"));
-		  Font sansbold12 = Font.font("arial", FontWeight.BOLD, 13);
 
 		  TextArea listCust = new TextArea();
 		  listCust.setPrefRowCount(5);
 		  listCust.setPrefColumnCount(35);
-		  listCust.setFont(sansbold12);
+		  listCust.setFont(arial18);
 		  listCust.setEditable(false);
 		  listCust.setTooltip(new Tooltip("This shows the available customers when the number 0 is entered in Customer ID"));
 		  
-		 
 		 FlowPane leftPane = new FlowPane();
 		 leftPane.setAlignment(Pos.CENTER);
 		 leftPane.setHgap(5);
@@ -404,29 +394,36 @@ public class BankMethods {
 		  
 		  // set up the account type heading
 		  Label lbltxtDisplayBoxAccounts = new Label(acctType);  // heading
-		  lbltxtDisplayBoxAccounts.setStyle(acctStyleFirst + heading  + acctStyleLast + acctStyleBlue);
+		  lbltxtDisplayBoxAccounts.setFont(arial25);
+		  lbltxtDisplayBoxAccounts.setStyle("-fx-text-fill: blue");
 		  // set up the error display message area
 		  Label lbltxtDisplayBoxMessage = new Label(" "); // clear error reporting
 		  
 		  // declare the heading and labels
 		  Label lblAccountNumber = new Label("Account Number");
-		  lblAccountNumber.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
+		  lblAccountNumber.setFont(arial14);
+		  lblAccountNumber.setStyle("-fx-text-fill: blue");
 		  Label lblCustomerID = new Label("Customer ID");
-		  lblCustomerID.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
+		  lblCustomerID.setFont(arial14);
+		  lblCustomerID.setStyle("-fx-text-fill: blue");
 		  Label lblOpeningBalance = new Label("Opening Balance");
-		  lblOpeningBalance.setStyle(acctStyleFirst + txtLabel + acctStyleLast + acctStyleBlue);
+		  lblOpeningBalance.setFont(arial14);
+		  lblOpeningBalance.setStyle("-fx-text-fill: blue");
 		  
 		  // declare the text boxes and tool tips
 		  TextField txtAccountNumber = new TextField();
-		  txtAccountNumber.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+		  txtAccountNumber.setFont(arial18);
+		  txtAccountNumber.setStyle("-fx-text-fill: blue");
 		  txtAccountNumber.setPromptText("Hover for Instructions");
 		  txtAccountNumber.setTooltip(new Tooltip("Type the number 0 and press Enter to generate automatic Account Number"));
 		  TextField txtCustomerID = new TextField();
-		  txtCustomerID.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+		  txtCustomerID.setFont(arial18);
+		  txtCustomerID.setStyle("-fx-text-fill: blue");
 		  txtCustomerID.setPromptText("Customer ID");
 		  txtCustomerID.setTooltip(new Tooltip("Enter Customer ID or type the number 0 to show a list of available customers"));
 		  TextField txtOpeningBalance = new TextField();
-		  txtOpeningBalance.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+		  txtOpeningBalance.setFont(arial18);
+		  txtOpeningBalance.setStyle("-fx-text-fill: blue");
 		  txtOpeningBalance.setPromptText("Example: 789.74");
 		  txtOpeningBalance.setTooltip(new Tooltip("Opening Balance of this Account, Example: 854.34"));
 		  
@@ -505,7 +502,8 @@ public class BankMethods {
 						  listCust.appendText(c.toString() + "\n");
 					  }
 				  }
-				 listCust.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+				 listCust.setFont(arial18);
+				 listCust.setStyle("-fx-text-fill: blue");
 			  txtAccountNumber.requestFocus();
 		  });
 		  
@@ -515,7 +513,8 @@ public class BankMethods {
 			  if (txtCustomerID.getText().equals("0")) {
 				  listCust.clear();
 				  listCust.setText("");
-				  listCust.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+				  listCust.setFont(arial18);
+				  listCust.setStyle("-fx-text-fill: blue");
 				  for (Customer c: customers) {
 					  listCust.appendText(c.toString() + "\n");
 				  }
@@ -535,22 +534,26 @@ public class BankMethods {
 		    	amount = Double.parseDouble(txtOpeningBalance.getText());
 		    	if (amount < 0.0) {
     				 lbltxtDisplayBoxMessage.setText("Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
-    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    				 lbltxtDisplayBoxMessage.setFont(arial18);
+    				 lbltxtDisplayBoxMessage.setStyle("-fx-text-fill: red");
     				 Stage myStage = (Stage) txtOpeningBalance.getScene().getWindow();
     				 myStage.requestFocus();
 	    			 txtOpeningBalance.requestFocus();
 		    	}
     		 } catch (NumberFormatException h) {
     			 lbltxtDisplayBoxMessage.setText("I was expecting a Account Opening Balance, Please re-enter");
-				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    			 lbltxtDisplayBoxMessage.setFont(arial18);
+				 lbltxtDisplayBoxMessage.setStyle("-fx-text-fill: red");
     			 txtOpeningBalance.requestFocus();
     		 } catch (InputMismatchException  g) {
     			 lbltxtDisplayBoxMessage.setText("You must enter the Opening Balance to the Account");
-				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    			 lbltxtDisplayBoxMessage.setFont(arial18);
+				 lbltxtDisplayBoxMessage.setStyle("-fx-text-fill: red");
     			 txtOpeningBalance.requestFocus();
     		 } catch (NoSuchElementException f) {
     			 lbltxtDisplayBoxMessage.setText("Out of Range, Please re-enter the Opening Balance Ammount!");
-				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    			 lbltxtDisplayBoxMessage.setFont(arial18);
+				 lbltxtDisplayBoxMessage.setStyle("-fx-text-fill: red");
     			 txtOpeningBalance.requestFocus();
     		 }
 	     });
@@ -928,7 +931,7 @@ public class BankMethods {
 
 	  // *************************** transactions ***************************
 
-	  public void loadTransactions() {
+	  public void loadTransactionData() {
 		  if (transactions.isEmpty()) {
 			  String custID = "", acctNum = "", desc = "";
 			  double amount = 0.0;
@@ -1076,7 +1079,7 @@ public class BankMethods {
 	  // *************************** transactions ***************************
 
 	  
-	  public void saveTransactions() {
+	  public void saveTransactionData() {
 		  if (transactions.isEmpty()) {
 			  JOptionPane.showMessageDialog(null, "There are no Transacitons to save! Terminating Save Transactions!", "No Transactions", JOptionPane.ERROR_MESSAGE);
 			  return;
@@ -1215,7 +1218,7 @@ public class BankMethods {
 		// ************************************** transactions **************************************
 
 	  public void saveTransactionObjectData() {
-		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[7], true));) {
+		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[8], true));) {
 			  output.writeObject(transactions);
 		  } catch (FileNotFoundException e) {
 			  JOptionPane.showMessageDialog(null, "File " + filename[7] + " not found!", "Transaction Save Error", JOptionPane.ERROR_MESSAGE);
@@ -1295,4 +1298,268 @@ public class BankMethods {
 		  }
 		  return false;
 	  }
+	  
+	  public BorderPane generateReport(int acctNum) {
+		  Label lblReports = new Label();
+		  switch (acctNum) {
+		  case 0:
+			  lblReports.setText("Customer Reports");
+			  break;
+		  case 1:
+			  lblReports.setText("Account Reports");
+			  break;
+		  case 2:
+			  lblReports.setText("Transaction Reports");
+			  break;
+		  case 3:
+			  lblReports.setText("Statistics Report");
+			  break;
+		  }
+		 		  
+		  Font arial12 = Font.font("arial", 12);
+		  Font arial18Bold = Font.font("Arial", FontWeight.BOLD, 18);
+		  Font arial18 = Font.font("Arial", 18);
+		  @SuppressWarnings("unused")
+		  Font times12 = Font.font("rimes rew roman", 12);
+		  //Font arial25 = Font.font("Arial", 25);
+		  
+		  lblReports.setFont(arial18);
+		  lblReports.setStyle("-fx-text-fill: blue");
+		  
+		  
+		  Button btnExit = new Button("Exit");
+		  btnExit.setFont(arial18Bold);
+		  btnExit.setStyle("-fx-base: red;");
+		  
+		  TextArea taOutput = new TextArea();
+		  taOutput.setPrefRowCount(15);
+		  switch (acctNum) {
+		  case 0:
+			  if (customers.isEmpty()) {
+				  JOptionPane.showMessageDialog(null, "There are no Customers to display! Terminating  view Customers!", "No Customers", JOptionPane.INFORMATION_MESSAGE);
+				  break;
+			  }
+			  for (Customer c: customers) {
+				  taOutput.appendText(c.toString() + "\n");
+			  }
+			  break;
+		  case 1:
+			  if (accounts.isEmpty()) {
+				  JOptionPane.showMessageDialog(null, "There are no Accounts to display! Terminating  view Accounts!", "No Accounts", JOptionPane.INFORMATION_MESSAGE);
+				  break;
+			  }
+			  int counter = 0;
+			  for (Account a: accounts) {
+				  if (a instanceof Checking) {
+					  if (counter == 0) {
+						  taOutput.appendText(String.format("\n\t\t\t\t %s \t\t\t\t\t %s %s %s %s %s \n", "Customer Information","Account Number", "Balance", "# of Transactions", "Transaction Fee", "Total Fee"));
+						  counter++;
+					  }
+					  taOutput.appendText(a.toString() + "\n");
+				  }
+			  }
+			  counter = 0;
+			  for (Account a: accounts) {
+				  if (a instanceof Regular) {
+					  if (counter == 0) {
+						  taOutput.appendText(String.format("\n\t\t\t\t %s \t\t\t\t %s %s %s %s %s \n", "Customer Information", "Account Number", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest"));
+						  counter++;
+					  }
+					  taOutput.appendText(a.toString() + "\n");
+				  }
+			  }
+			  counter = 0;
+			  for (Account a: accounts) {
+				  if (a instanceof Gold) {
+					  if (counter == 0) {
+						  taOutput.appendText(String.format("\n\t\t\t\t  %s \t\t\t\t %s %s %s %s\n", "Customer Information", "Account Number", "Balance", "     Interest Rate", "Interest Amount"));
+						  counter++;
+					  }
+					  taOutput.appendText(a.toString() + "\n");
+				  }
+			  }
+			  break;
+		  case 2:
+			  if (transactions.isEmpty()) {
+				  JOptionPane.showMessageDialog(null, "There are no Transactions to display! Terminating  view Transactions!", "No Customers", JOptionPane.INFORMATION_MESSAGE);
+				  break;
+			  }
+			  for (Transaction t: transactions) {
+				  taOutput.appendText(t.toString() + "\n");
+			  }
+			  break;
+		  case 3:
+			  if (accounts.isEmpty()) {
+				  JOptionPane.showMessageDialog(null, "There are no Accounts to display! Terminating  view Statistics!", "No Accounts", JOptionPane.INFORMATION_MESSAGE);
+				  break;
+			  }
+			  taOutput.setFont(arial12);
+			  generateStatistics(taOutput);
+			  break;
+		  }
+		  if (acctNum == 0) {
+			  taOutput.setPrefColumnCount(30);
+		  } else if (acctNum == 1 || acctNum == 2) {
+			  taOutput.setPrefColumnCount(75);
+		  } else if (acctNum == 3) {
+			  taOutput.setPrefColumnCount(75);
+		  }
+		  //taOutput.setFont(arial18);
+		  taOutput.setEditable(false);
+		  
+		  HBox displayPane = new HBox();
+		  displayPane.setPadding(new Insets(25,12,12,12));
+		  displayPane.getChildren().addAll(lblReports);
+		  displayPane.setAlignment(Pos.CENTER);
+		  
+		  FlowPane centerPane = new FlowPane();
+		  centerPane.setHgap(5);
+		  centerPane.setVgap(5);
+		  centerPane.getChildren().addAll(taOutput);
+		  centerPane.setAlignment(Pos.CENTER);
+		  
+		  HBox bottomPane = new HBox(1);
+		  bottomPane.setPadding(new Insets(0,0,25,0));
+		  bottomPane.getChildren().addAll(btnExit);
+		  bottomPane.setAlignment(Pos.CENTER);
+		  
+		  BorderPane mainPane = new BorderPane();
+		  mainPane.setTop(displayPane);
+		  mainPane.setCenter(centerPane);
+		  mainPane.setBottom(bottomPane);
+		  mainPane.setStyle("-fx-border-color: blue");
+		  
+		  btnExit.setOnAction(e -> {
+			 btnExit.getScene().getWindow().hide();
+		});
+	   
+		  return mainPane;
+	  }
+	  
+	  public void generateStatistics(TextArea taOutput) {
+			// number of accounts
+			int numAccounts = 0, numRegularAccounts = 0, numCheckingAccounts = 0, numGoldAccounts = 0;
+			// sum accounts
+			double sumAccounts = 0.0, sumRegularAccounts = 0.0, sumCheckingAccounts = 0.0, sumGoldAccounts = 0.0;
+			// number of zero balances
+			int numZeroAccounts = 0, numRegularZeroAccounts = 0, numCheckingZeroAccounts = 0, numGoldZeroAccounts = 0;
+			// average balance
+			double avgAccounts = 0.0, avgRegularAccounts = 0.0, avgCheckingAccounts = 0.0, avgGoldAccounts = 0.0;
+			// largest account balance
+			double largestAccount = 0.0, largestRegularAccount = 0.0, largestCheckingAccount = 0.0, largestGoldAccount = 0.0;
+			// largest account balance account number
+			String largestAccountNumber = "not available                ", largestRegularAccountNumber = "not available                ", largestCheckingAccountNumber = "not available                ", largestGoldAccountNumber = "not available                ";
+			numAccounts = accounts.size();
+			for (int x = 0; x < accounts.size(); x++) {
+	//------------------------------------Total---------------------------			
+				sumAccounts += accounts.get(x).getAccountBalance();
+				if (accounts.get(x).getAccountBalance() == 0.0) {
+					numZeroAccounts++;
+				}
+				if (accounts.get(x).getAccountBalance() > largestAccount) {
+					largestAccount = accounts.get(x).getAccountBalance();
+					largestAccountNumber = accounts.get(x).getAccountNumber();
+				}
+	//-----------------------------------Gold-----------------------------
+				if(accounts.get(x) instanceof Gold) {
+					numGoldAccounts++;
+					sumGoldAccounts += accounts.get(x).getAccountBalance();
+					if (accounts.get(x).getAccountBalance() == 0.0) {
+						numGoldZeroAccounts++;
+					}
+					if (accounts.get(x).getAccountBalance() > largestGoldAccount) {
+						largestGoldAccount = accounts.get(x).getAccountBalance();
+						largestGoldAccountNumber = accounts.get(x).getAccountNumber();
+					}
+				}
+	//----------------------------------Regular-----------------------------
+				if (accounts.get(x) instanceof Regular) {
+					numRegularAccounts++;
+					sumRegularAccounts += accounts.get(x).getAccountBalance();
+					if (accounts.get(x).getAccountBalance() == 0.0) {
+						numRegularZeroAccounts++;
+					}
+					if (accounts.get(x).getAccountBalance() > largestRegularAccount) {
+						largestRegularAccount = accounts.get(x).getAccountBalance();
+						largestRegularAccountNumber = accounts.get(x).getAccountNumber();
+					}
+				}
+	//--------------------------------Checking-----------------------------
+				if (accounts.get(x) instanceof Checking) {
+					numCheckingAccounts++;
+					sumCheckingAccounts += accounts.get(x).getAccountBalance();
+					if (accounts.get(x).getAccountBalance() == 0.0) {
+						numCheckingZeroAccounts++;
+					}
+					if (accounts.get(x).getAccountBalance() > largestCheckingAccount) {
+						largestCheckingAccount = accounts.get(x).getAccountBalance();
+						largestCheckingAccountNumber = accounts.get(x).getAccountNumber();
+					}
+				}
+				
+			}
+	//-------------------------------calculate averages----------------------------		
+			if (numAccounts == 0) {
+				avgAccounts = 0.00;
+			} else {
+				avgAccounts = calcAverages(sumAccounts, numAccounts);
+			}
+			if (numGoldAccounts == 0) {
+				avgGoldAccounts = 0.00;
+			} else {
+				avgGoldAccounts = calcAverages(sumGoldAccounts, numGoldAccounts);
+			}
+			if (numRegularAccounts == 0) {
+				avgRegularAccounts = 0.00;
+			} else {
+				avgRegularAccounts = calcAverages(sumRegularAccounts, numRegularAccounts);
+			}
+			if (numCheckingAccounts == 0) {
+				avgCheckingAccounts = 0.00;
+			} else {
+				avgCheckingAccounts = calcAverages(sumCheckingAccounts, numCheckingAccounts);
+			}
+	//------------------------------------display results-----------------------------------
+			// (char) 68 < Statistics > 68 (char)
+			taOutput.appendText(String.format("\n %s \t %s \t %s \t %s \t %s \t %s \t %s \n", "Type Account","Number of Accounts", "Total Balance", "w/Zero Balance", "Average Balance", "Account Number of", "Largest Balance"));
+			taOutput.appendText("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			taOutput.appendText(displayStatistics("Gold        ", numGoldAccounts, sumGoldAccounts, numGoldZeroAccounts, avgGoldAccounts, largestGoldAccountNumber, largestGoldAccount));
+			taOutput.appendText("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			taOutput.appendText(displayStatistics("Regular     ", numRegularAccounts, sumRegularAccounts, numRegularZeroAccounts, avgRegularAccounts, largestRegularAccountNumber, largestRegularAccount));
+			taOutput.appendText("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			taOutput.appendText(displayStatistics("Checking    ", numCheckingAccounts, sumCheckingAccounts, numCheckingZeroAccounts, avgCheckingAccounts, largestCheckingAccountNumber, largestCheckingAccount));
+			taOutput.appendText("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			taOutput.appendText(displayStatistics("All Accounts", numAccounts, sumAccounts, numZeroAccounts, avgAccounts, largestAccountNumber, largestAccount));
+			taOutput.appendText("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			//taOutput.setFont(new Font("Arial", 8));
+			
+		}
+		
+		/** display statistics
+		 * this makes changing the printed listing a lot easier than
+		 * having to change 4 different version of the same thing
+		 * 
+		 * @param acctType the account type (Checking, Gold, Regular, All)
+		 * @param numAccts the total number of accounts per account type
+		 * @param sumAccts the sum of the balance of the accounts per account type
+		 * @param numZero the number of accounts with a balance of zero balance per account type
+		 * @param avgAccts the average balance of all the accounts per account type
+		 * @param acctNumber the account number of the account with the largest balance per account type
+		 * @param largeBal the largest balance of the accounts per account type
+		 * 
+		 */
+		public String displayStatistics(String acctType, int numAccts, double sumAccts, int numZero, double avgAccts, String acctNumber, double largeBal) {
+			return String.format("%s \t\t\t\t %-4d \t\t\t $%12.2f \t\t\t %3d \t\t\t $%12.2f \t\t %-20s  $%12.2f \n", acctType, numAccts, sumAccts, numZero, avgAccts, acctNumber, largeBal);
+		}
+
+		public double calcAverages(double num1, double num2) {
+			double avgNum = 0.0;
+			try {
+				avgNum = num1 / num2;
+			} catch (ArithmeticException e) {
+				JOptionPane.showMessageDialog(null, "Invalid Arithimatic Operation", "Math Error", JOptionPane.ERROR);
+				e.getStackTrace();
+			}
+			return avgNum;
+		}
 }

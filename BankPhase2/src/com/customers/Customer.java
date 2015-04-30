@@ -22,10 +22,14 @@ public class Customer implements Serializable{
 	public Customer() {
 		
 	}
-	/** customer constructor non-default
+	/** customer constructor non-default<br><br>
 	 * 
-	 * @param id
-	 * @param name
+	 * 
+	 * 
+	 * @param id the customer ID
+	 * @param name the customer name
+	 * 
+	 * and set the active status to false<br>
 	 */
 	public Customer(String id, String name) {
 		this.customerID = id;
@@ -33,6 +37,14 @@ public class Customer implements Serializable{
 		this.active = false;
 	}
 	
+	/** customer constructor for loading the individual data from the files<br><br>
+	 * 
+	 * if the customers are saved as an object this constructor is not needed<br>
+	 * 
+	 * @param id the customer ID
+	 * @param name the customer name
+	 * @param active this sets the status of the customer
+	 */
 	public Customer(String id, String name, boolean active) {
 		this.customerID = id;
 		this.customerName = name;
@@ -84,8 +96,8 @@ public class Customer implements Serializable{
 	}
 
 	public String toString() {
-		return this.customerID + "  "
-				+ this.customerName + "  " + ((this.active)? "Active" : "Inactive");
+		return this.customerID + "\t\t"
+				+ this.customerName + "\t\t" + ((this.active)? "Active" : "Inactive");
 	}
 	
 	

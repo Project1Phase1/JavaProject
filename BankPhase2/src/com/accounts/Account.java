@@ -22,10 +22,23 @@ public abstract class Account implements Serializable{
 	
 	private Customer customer;
 	
+	/** default constructor <br><br>
+	 * 
+	 * 
+	 */
 	public Account() {
-		
 	}
 	
+	/** account constructor<br><br>
+	 * 
+	 * this will add the account and customer to the account table<br>
+	 * and set the active status of the customer to true<br><br>
+	 * 
+	 * @param accountNumber the account number of the account
+	 * @param accountBalance the opening balance of the account
+	 * @param customer the owner of the account
+	 * 
+	 */
 	public Account(String accountNumber, double accountBalance, Customer customer){
 		this.accountNumber = accountNumber;
 		this.accountBalance = accountBalance;

@@ -76,9 +76,10 @@ public class NewFXBanker extends Application {
       Menu reports = new Menu("Reports");
       MenuItem rptCustomer = new MenuItem("Customers");
       MenuItem rptAccounts = new MenuItem("Accounts");
+      MenuItem rptTransaction = new MenuItem("Transactions");
       MenuItem rptStatistics = new MenuItem("Statistics");
       
-      reports.getItems().addAll(rptCustomer, rptAccounts, rptStatistics);
+      reports.getItems().addAll(rptCustomer, rptAccounts, rptTransaction, rptStatistics);
       menuBar.getMenus().add(reports);
 
       // Prepare 'Help' drop-down menu
@@ -98,13 +99,6 @@ public class NewFXBanker extends Application {
      Menu quit = new Menu("Quit");
      quit.getItems().add(new MenuItem("Exit and Save"));
      menuBar.getMenus().add(quit);
-     quit.setOnAction(e -> {
-    	 banker.saveConfigData();
- 	   	 banker.saveCustomerObjectData(); 
-       	 banker.saveAccountObjectData();
-     	 banker.saveTransactionObjectData();
-    	 System.exit(0);
-     });
      
 // ************************************************************ File System ************************************************************
 // *************************** save config data ***************************
@@ -119,34 +113,42 @@ public class NewFXBanker extends Application {
      
 // *************************** save customer data ***************************
      fileNames[4].setOnAction(e -> {
-    	 banker.saveCustomerData();
+    	 banker.saveCustomerObjectData();
      });
      
 // *************************** load customer data ***************************
      fileNames[8].setOnAction(e -> {
-    	 banker.loadCustomerData();
+    	 banker.loadCustomerObjectData();
     	 fileNames[8].setDisable(true);
       });
     
 // *************************** save account data ***************************
      
      fileNames[5].setOnAction(e -> {
-    	 banker.saveCheckingData();
-    	 banker.saveRegularData();
-    	 banker.saveGoldData();
+    	 banker.saveAccountObjectData();
      });
   
 // *************************** load account data ***************************
      fileNames[9].setOnAction(e -> {
-    	 banker.loadCheckingData();
-    	 banker.loadRegularData();
-    	 banker.loadGoldData();
+    	 banker.loadAccountObjectData();
     	 fileNames[9].setDisable(true);
     	 
      });
      
+ // ************************** create new system **************************
      fileNames[0].setOnAction(e -> {
     	 banker.createNewSystemData();
+     });
+     
+// ************************** save transaction data **************************
+     fileNames[6].setOnAction(e -> {
+    	 banker.saveTransactionObjectData();
+     });
+     
+// ************************** load transaction data **************************
+     fileNames[10].setOnAction(e -> {
+    	 banker.loadTransactionObjectData();
+    	 fileNames[10].setDisable(true);
      });
      
      files.setOnMenuValidation(e -> {
@@ -182,20 +184,52 @@ public class NewFXBanker extends Application {
 	    	*/
      });
      
-     
-// *************************** save transaction data ***************************     
-     fileNames[6].setOnAction(e -> {
-    	 for (int x = 0; x < banker.transactions.size(); x++) {
-    		// banker.saveTransactionData(banker.transactions.get(x), ((x==0)?false:true));
-    	 }
-    	 JOptionPane.showMessageDialog(null, "Saved " + banker.transactions.size() + " Transactions!", "Transaction Save Data", JOptionPane.INFORMATION_MESSAGE);
-    	// checkFileStatus(fileNames);
+  // ************************************* quit and save *************************************
+     quit.setOnAction(e -> {
+    	 banker.saveConfigData();
+ 	   	 banker.saveCustomerObjectData(); 
+       	 banker.saveAccountObjectData();
+     	 banker.saveTransactionObjectData();
+    	 System.exit(0);
+     });
+
+// ************************************************************ report customers ************************************************************
+     rptCustomer.setOnAction(e -> {
+    	 chkAddStage.hide();
+    	 Scene myScene = new Scene(banker.generateReport(0), 500, 500);
+    	 chkAddStage.setTitle("Generate Reports");
+    	 chkAddStage.setScene(myScene);
+    	 chkAddStage.show();
      });
      
-  // *************************** load transaction data ***************************     
-     fileNames[10].setOnAction(e -> {
-    	 //banker.loadTransactionData();
+// ************************************************************ report accounts ************************************************************
+     
+     rptAccounts.setOnAction(e -> {
+    	 chkAddStage.hide();
+    	 Scene myScene = new Scene(banker.generateReport(1), 1300, 500);
+    	 chkAddStage.setTitle("Generate Reports");
+    	 chkAddStage.setScene(myScene);
+    	 chkAddStage.show();
      });
+     
+// ************************************************************ report transaction ************************************************************
+     rptTransaction.setOnAction(e -> {
+    	chkAddStage.hide();
+    	Scene myScene = new Scene(banker.generateReport(2), 1000, 500);
+    	chkAddStage.setTitle("Generate Reports");
+    	chkAddStage.setScene(myScene);
+    	chkAddStage.show();
+     });
+     
+  // ************************************************************ report statistics ************************************************************
+     rptStatistics.setOnAction(e -> {
+    	chkAddStage.hide();
+    	Scene myScene = new Scene(banker.generateReport(3), 1300, 500);
+    	chkAddStage.setTitle("Generate Reports");
+    	chkAddStage.setScene(myScene);
+    	chkAddStage.show();
+     });
+     
 // ************************************************************ create new customer ************************************************************
       accountCustomer.setOnAction(e -> {
     	  chkAddStage.hide();
@@ -205,43 +239,43 @@ public class NewFXBanker extends Application {
     	  chkAddStage.show();
      	// checkFileStatus(fileNames);   	  
      });
-     
+
+// ************************************************************ create checking account ************************************************************
      accountChecking.setOnAction(e -> {
     	 chkAddStage.hide();
     	 if (banker.customers.isEmpty()) {
     		 JOptionPane.showMessageDialog(null, "There are no customers available to select!\n\nUnable to add Checking Account!!");
     	 } else {
- 		    Scene scene = new Scene(banker.addAccountPane(0), 800, 525);
+ 		    Scene myScene = new Scene(banker.addAccountPane(0), 800, 525);
 		    chkAddStage.setTitle("Add Account"); // Set the stage title
-		    chkAddStage.setScene(scene); // Place the scene in the stage
+		    chkAddStage.setScene(myScene); // Place the scene in the stage
    		    chkAddStage.show(); // Display the stage
-   		    //checkFileStatus(fileNames);
     	 }
       });
      
+// ************************************************************ create regular account ************************************************************
      accountRegular.setOnAction(e -> {
     	 chkAddStage.hide();
     	 if (banker.customers.isEmpty()) {
     		 JOptionPane.showMessageDialog(null, "There are no customers available to select!\n\nUnable to add Regular Account!!");
     	 } else {
-  		    //Stage chkAddStage = new Stage();
-		    Scene scene = new Scene(banker.addAccountPane(1), 800, 525);
+ 		    Scene myScene = new Scene(banker.addAccountPane(1), 800, 525);
 		    chkAddStage.setTitle("Add Account"); // Set the stage title
-		    chkAddStage.setScene(scene); // Place the scene in the stage
+		    chkAddStage.setScene(myScene); // Place the scene in the stage
    		    chkAddStage.show(); // Display the stage
-   		    //checkFileStatus(fileNames);
   	 }
      });
      
+// ************************************************************ create gold account ************************************************************
      accountGold.setOnAction(e -> {
     	 chkAddStage.hide();
     	 if (banker.customers.isEmpty()) {
     		 JOptionPane.showMessageDialog(null, "There are no customers available to select!\n\nUnable to add Gold Account!!");
     	 } else {
   		    //Stage chkAddStage = new Stage();
-		    Scene scene = new Scene(banker.addAccountPane(2), 800, 525);
+		    Scene myScene = new Scene(banker.addAccountPane(2), 800, 525);
 		    chkAddStage.setTitle("Add Account"); // Set the stage title
-		    chkAddStage.setScene(scene); // Place the scene in the stage
+		    chkAddStage.setScene(myScene); // Place the scene in the stage
    		    chkAddStage.show(); // Display the stage
    		    //checkFileStatus(fileNames);
     	 }
