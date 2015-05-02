@@ -32,8 +32,10 @@ import com.transactions.Transaction;
 
 public class BankMethods {
 	public String[] filename = new String[9]; // contains the path and file names of data files
-	public String[] backName = new String[9]; // contains the path and file name of the backup data files
+	public String[] backname = new String[9]; // contains the path and file name of the backup data files
 	public String[] paths = new String[2];
+	public String[] txtFillColor = new String[7];
+	public Font[] arialFont = new Font[4];
 	public String bankName; // bank name that will be stored in the config dat file
 	public int bakup; // a backup token that will keep track of the backup number so backups will never over write each other
 	public String autoAcctNum;
@@ -45,19 +47,44 @@ public class BankMethods {
 	// instance of the BankUtilities class
 	public BankUtilities bu = new BankUtilities();
 	
-	/** load file names
-	 *  0 - config
-	 *  1 - customer
-	 *  2 - checking
-	 *  3 - regular
-	 *  4 - gold
-	 *  5 - transactions
-	 *  8 - accounts
+
+	public void loadFont() {
+		arialFont[0] = Font.font("Arial", 14);
+		arialFont[1] = Font.font("Arial", 18);
+		arialFont[2] = Font.font("Arial", FontWeight.BOLD, 18);
+		arialFont[3] = Font.font("Arial", 25);
+	}
+	
+	public void loadColors() {
+		txtFillColor[0] = "-fx-text-fill: blue;";
+		txtFillColor[1] = "-fx-text-fill: red;";
+		txtFillColor[2] = "-fx-text-fill: black;";
+		txtFillColor[3] = "-fx-text-fill: white;";
+		txtFillColor[4] = "-fx-text-fill: green;";
+		txtFillColor[5] = "-fx-base: blue;";
+		txtFillColor[6] = "-fx-base: red;";
+	}
+	/** load file names<br><br>
+	 * this also loads:<br>
+	 * the backup<br>
+	 * the paths<br>
+	 * the fonts<br>
+	 * and the colors<br>
+	 * 
+	 *  0 - config<br>
+	 *  1 - customer<br>
+	 *  2 - checking<br>
+	 *  3 - regular<br>
+	 *  4 - gold<br>
+	 *  5 - transactions<br>
+	 *  8 - accounts<br>
 	 * 
 	 */
 	public void loadFileName() {
 		loadPaths();
 		loadBackup();
+		loadFont();
+		loadColors();
 		filename[0] = paths[0] + "/config.dat"; // individually saved
 		filename[1] = paths[0] + "/customers.dat"; // individually saved
 		filename[2] = paths[0] + "/checking.dat"; // individually saved
@@ -79,15 +106,15 @@ public class BankMethods {
 	 */
 	public void loadBackup() {
 		loadPaths();
-		filename[0] = paths[1] + "/config"; // individually saved
-		filename[1] = paths[1] + "/customers"; // individually saved
-		filename[2] = paths[1] + "/checking"; // individually saved
-		filename[3] = paths[1] + "/regular"; // individually saved
-		filename[4] = paths[1] + "/gold"; // individually saved
-		filename[5] = paths[1] + "/transactions"; // individually saved
-		filename[6] = paths[1] + "/oaccounts"; // saved as an object
-		filename[7] = paths[1] + "/ocustomers"; // saved as an object
-		filename[8] = paths[1] + "/otransactions"; // saved as an object
+		backname[0] = paths[1] + "/config"; // individually saved
+		backname[1] = paths[1] + "/customers"; // individually saved
+		backname[2] = paths[1] + "/checking"; // individually saved
+		backname[3] = paths[1] + "/regular"; // individually saved
+		backname[4] = paths[1] + "/gold"; // individually saved
+		backname[5] = paths[1] + "/transactions"; // individually saved
+		backname[6] = paths[1] + "/oaccounts"; // saved as an object
+		backname[7] = paths[1] + "/ocustomers"; // saved as an object
+		backname[8] = paths[1] + "/otransactions"; // saved as an object
 	}
 	
 	/** load paths<br><br>
@@ -131,34 +158,40 @@ public class BankMethods {
 		  
 		  // set up the labels
 		  Label lblID = new Label("Customer ID");
+		  lblID.setFont(arialFont[1]);
+		  
 		  Label lblName = new Label("Customers Name");
+		  lblName.setFont(arialFont[1]);
+		  
 		  Label lblMessage = new Label("");
+		  lblMessage.setFont(arialFont[1]);
 		  
 		  // create the text boxes and adjust their font and font size and establish the tool tips that
 		  // will be used for each individual box
 		  TextField txtID = new TextField();
-		  txtID.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
+		  txtID.setFont(arialFont[1]);
+		  txtID.setStyle(txtFillColor[0]);
 		  txtID.setPromptText("Customer ID");
 		  txtID.setTooltip(new Tooltip("Type the number 0 and press Enter to automaticly generate Customer ID"));
+		  
 		  TextField txtName = new TextField();
-		  txtName.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
+		  txtName.setFont(arialFont[1]);
+		  txtName.setStyle(txtFillColor[0]);
 		  txtName.setPromptText("Customer Name");
 		  txtName.setTooltip(new Tooltip("Enter the Customer's First and Last name"));
 		  
 		  // declare a font that will be used for the buttons
-		  Font times = Font.font("Times New Roman", FontWeight.BOLD, 16);
 		  
 		  // generate buttons and tool tips
 		  Button btnAdd = new Button("Add");
-		  Button btnExit = new Button("Exit");
-		  btnAdd.setFont(times);
+		  btnAdd.setFont(arialFont[2]);
+		  btnAdd.setStyle(txtFillColor[5]);
 		  btnAdd.setTooltip(new Tooltip("Add entered customer into the bank system"));
-		  btnExit.setFont(times);
-		  btnExit.setTooltip(new Tooltip("Exit!\nPressing this will not save the currently entered information!"));
 		  
-		  // set the color to the buttons
-		  btnAdd.setStyle("-fx-font: 18 arial; -fx-base: blue;");
-		  btnExit.setStyle("-fx-font: 18 arial; -fx-base: red;");
+		  Button btnExit = new Button("Exit");
+		  btnExit.setFont(arialFont[2]);
+		  btnExit.setStyle(txtFillColor[6]);
+		  btnExit.setTooltip(new Tooltip("Exit!\nPressing this will not save the currently entered information!"));
 		  
 		  // put the ID label and text box together vertically
 		  VBox idPane = new VBox(2);
@@ -172,8 +205,8 @@ public class BankMethods {
 		  
 		  // put in a label that will be used as a message center for the user
 		  HBox messagePane = new HBox(1);
-		  messagePane.setAlignment(Pos.CENTER);
 		  messagePane.getChildren().add(lblMessage);
+		  messagePane.setAlignment(Pos.CENTER);
 		  
 		  // add the ID and Name panes horizontally to the txtPane which
 		  // will be put in the top pane of the window
@@ -181,8 +214,6 @@ public class BankMethods {
 		  txtPane.setPadding(new Insets(30,30,30,30));  
 		  txtPane.getChildren().addAll(idPane, namePane);
 		  txtPane.setAlignment(Pos.TOP_CENTER);
-		  lblID.setFont(times);
-		  lblName.setFont(times);
 		  
 		  // add the buttons horizontally to the bottom pane
 		  HBox bottomPane = new HBox(2);
@@ -198,13 +229,8 @@ public class BankMethods {
 		  custMainPane.setStyle("-fx-border-color: blue");
 
 		  // when the user presses any key inside the ID box
-		  txtID.setOnKeyTyped(e -> {
-			  if (txtID.getText().equals("0")) {
-				  txtID.setText(bu.generateUniqueAcctNumber());
-			  } else {
-				  lblMessage.setText(" ");
-				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
-			  }
+		  txtID.setOnKeyPressed(e -> {
+			  lblMessage.setText("");
 		  });
 		  
 		  // when the user presses the Enter key in the ID box
@@ -212,14 +238,25 @@ public class BankMethods {
 			  if (txtID.getText().equals("0")) {
 				  txtID.setText(bu.generateUniqueAcctNumber());
 			  } else {
-			  txtName.requestFocus();
+				  boolean isOk = true;
+				  for (Customer c: customers) {
+					  if (c.getCustomerID().equals(txtID.getText())) {
+						  isOk = false;
+					  }
+				  }
+				  if (isOk) {
+					  txtName.requestFocus();
+				  } else {
+					  lblMessage.setText("Customer ID already Exists!\nPlease choose a different Customer ID");
+					  lblMessage.setStyle(txtFillColor[1]);
+				  }
 			  }
 		  });
 		  
 		  // when the user presses any key in the Name box
 		  txtName.setOnKeyTyped(e -> {
 				  lblMessage.setText(" ");
-				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: black;");
+				  lblMessage.setStyle(txtFillColor[2]);
 		  });
 		  
 		  // when the user presses Enter key in the Name box
@@ -286,10 +323,12 @@ public class BankMethods {
 		  // did the user enter any information in the ID box
 		  if(txtID.getText().isEmpty()) {
 			  lblMessage.setText("Please Enter Customer ID");
-			  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
+			  lblMessage.setFont(arialFont[1]);
+			  lblMessage.setStyle(txtFillColor[1]);
 		  } else if (txtName.getText().isEmpty()) { // did the user enter any information in the Name box
 			  lblMessage.setText("Please Enter Customer Name");
-			  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
+			  lblMessage.setFont(arialFont[1]);
+			  lblMessage.setStyle(txtFillColor[1]);
 		  } else { // since there were no errors that I detected, add the customer to the table
 			  Customer customer = new Customer(txtID.getText(), txtName.getText());
 			  customers.add(customer);
@@ -297,12 +336,14 @@ public class BankMethods {
 			  // check to see if the customer was added to the table and return true if yes and false if not
 			  if (element < customers.size()) {
 				  lblMessage.setText("Customer Created successfully!");
-				  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: blue;");
+				  lblMessage.setFont(arialFont[1]);
+				  lblMessage.setStyle(txtFillColor[0]);
 				  return true;
 			  } else { // notify the user that the customer was not added
 				  if (element == customers.size()) {
 					  lblMessage.setText("Customer Creation Unsessful!!");
-					  lblMessage.setStyle("-fx-font: 18 arial; -fx-text-fill: red;");
+					  lblMessage.setFont(arialFont[1]);
+					  lblMessage.setStyle(txtFillColor[1]);
 				  }
 			  }
 		  }
@@ -345,13 +386,8 @@ public class BankMethods {
 	   * @param acctNum this determines which account to create: Checking, Regular, or Gold
 	   * @return the boarder pane that will generate the form
 	   */
-	  public BorderPane addAccountPane(int acctNum) {
+	public BorderPane addAccountPane(int acctNum) {
 		  String acctType = "";
-		  
-		  Font arial25 = Font.font("Arial", 25);
-		  Font arial18 = Font.font("Arial", 18);
-		  Font arial14 = Font.font("Arial", 14);
-		  //Font arial13 = Font.font("Arial", FontWeight.BOLD, 13);
 		  
 		  switch (acctNum) {
 			case 0: // checking
@@ -368,23 +404,24 @@ public class BankMethods {
 				break;
 			default:
 				//autoAcctNum = "";
-		}
+		  }
 		  // declare buttons and set their styles
 		  Button btnAdd = new Button("Add");
-		  btnAdd.setFont(arial18);
-		  btnAdd.setStyle("-fx-base: blue;");
+		  btnAdd.setFont(arialFont[1]);
+		  btnAdd.setStyle(txtFillColor[5]);
 		  btnAdd.setTooltip(new Tooltip("Add this Account into the banking system"));
+		  
 		  Button btnExit = new Button("Exit");
-		  btnExit.setFont(arial18);
-		  btnExit.setStyle("-fx-base: red;");
+		  btnExit.setFont(arialFont[1]);
+		  btnExit.setStyle(txtFillColor[6]);
 		  btnExit.setTooltip(new Tooltip("Exit! \nPressing this will not save the currently entered information!"));
 
 		  TextArea listCust = new TextArea();
 		  listCust.setPrefRowCount(5);
 		  listCust.setPrefColumnCount(35);
-		  listCust.setFont(arial18);
 		  listCust.setEditable(false);
-		  listCust.setTooltip(new Tooltip("This shows the available customers when the number 0 is entered in Customer ID"));
+		  listCust.setTooltip(new Tooltip("Highlight the Customer ID you want and it will be put in the Customer ID box!"));
+		  listCust.setFont(arialFont[1]);
 		  
 		 FlowPane leftPane = new FlowPane();
 		 leftPane.setAlignment(Pos.CENTER);
@@ -394,36 +431,40 @@ public class BankMethods {
 		  
 		  // set up the account type heading
 		  Label lbltxtDisplayBoxAccounts = new Label(acctType);  // heading
-		  lbltxtDisplayBoxAccounts.setFont(arial25);
-		  lbltxtDisplayBoxAccounts.setStyle("-fx-text-fill: blue");
+		  lbltxtDisplayBoxAccounts.setFont(arialFont[3]);
+		  lbltxtDisplayBoxAccounts.setStyle(txtFillColor[0]);
 		  // set up the error display message area
 		  Label lbltxtDisplayBoxMessage = new Label(" "); // clear error reporting
 		  
 		  // declare the heading and labels
 		  Label lblAccountNumber = new Label("Account Number");
-		  lblAccountNumber.setFont(arial14);
-		  lblAccountNumber.setStyle("-fx-text-fill: blue");
+		  lblAccountNumber.setFont(arialFont[1]);
+		  lblAccountNumber.setStyle(txtFillColor[0]);
+		  
 		  Label lblCustomerID = new Label("Customer ID");
-		  lblCustomerID.setFont(arial14);
-		  lblCustomerID.setStyle("-fx-text-fill: blue");
+		  lblCustomerID.setFont(arialFont[1]);
+		  lblCustomerID.setStyle(txtFillColor[0]);
+		  
 		  Label lblOpeningBalance = new Label("Opening Balance");
-		  lblOpeningBalance.setFont(arial14);
-		  lblOpeningBalance.setStyle("-fx-text-fill: blue");
+		  lblOpeningBalance.setFont(arialFont[1]);
+		  lblOpeningBalance.setStyle(txtFillColor[0]);
 		  
 		  // declare the text boxes and tool tips
 		  TextField txtAccountNumber = new TextField();
-		  txtAccountNumber.setFont(arial18);
-		  txtAccountNumber.setStyle("-fx-text-fill: blue");
+		  txtAccountNumber.setFont(arialFont[1]);
+		  txtAccountNumber.setStyle(txtFillColor[0]);
 		  txtAccountNumber.setPromptText("Hover for Instructions");
 		  txtAccountNumber.setTooltip(new Tooltip("Type the number 0 and press Enter to generate automatic Account Number"));
+		  
 		  TextField txtCustomerID = new TextField();
-		  txtCustomerID.setFont(arial18);
-		  txtCustomerID.setStyle("-fx-text-fill: blue");
+		  txtCustomerID.setFont(arialFont[1]);
+		  txtCustomerID.setStyle(txtFillColor[0]);
 		  txtCustomerID.setPromptText("Customer ID");
 		  txtCustomerID.setTooltip(new Tooltip("Enter Customer ID or type the number 0 to show a list of available customers"));
+		  
 		  TextField txtOpeningBalance = new TextField();
-		  txtOpeningBalance.setFont(arial18);
-		  txtOpeningBalance.setStyle("-fx-text-fill: blue");
+		  txtOpeningBalance.setFont(arialFont[1]);
+		  txtOpeningBalance.setStyle(txtFillColor[0]);
 		  txtOpeningBalance.setPromptText("Example: 789.74");
 		  txtOpeningBalance.setTooltip(new Tooltip("Opening Balance of this Account, Example: 854.34"));
 		  
@@ -489,8 +530,25 @@ public class BankMethods {
 			  if (txtAccountNumber.getText().equals("0")) {
 				  txtAccountNumber.setText(autoAcctNum);
 				  //txtAccountNumber.setDisable(true);
+			  } else {
+				  boolean isOk = true;
+				  for (Account a: accounts) {
+					  if (a.getAccountNumber().equals(txtAccountNumber.getText())) {
+						  isOk = false;
+					  }
+				  }
+				  if (isOk) {
+					  txtOpeningBalance.requestFocus();
+				  } else {
+					  lbltxtDisplayBoxMessage.setText("Account Number already used! Please choose a differeent Account Number!");
+					  lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
+				  }
 			  }
-			  txtOpeningBalance.requestFocus();
+		  });
+		  
+		  listCust.setOnMouseClicked(e -> {
+			  txtCustomerID.setText(listCust.getSelectedText().trim());
+			  txtCustomerID.requestFocus();
 		  });
 		  
 		  // if the enter key is pressed in the customerID move to the next box
@@ -501,29 +559,32 @@ public class BankMethods {
 					 for (Customer c: customers) {
 						  listCust.appendText(c.toString() + "\n");
 					  }
+					 listCust.setFont(arialFont[1]);
+					 listCust.setStyle(txtFillColor[0]);
+				  } else {
+					  boolean isOk = false;
+					  for (Customer c: customers) {
+						  if (c.getCustomerID().equals(txtCustomerID.getText())) {
+							  isOk = true;
+						  }
+					  }
+					 if (isOk) {
+						 txtAccountNumber.requestFocus();
+					 } else {
+						 lbltxtDisplayBoxMessage.setText("Account Number was NOT found! Please re-enter Account Number!");
+						 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
+					 }
 				  }
-				 listCust.setFont(arial18);
-				 listCust.setStyle("-fx-text-fill: blue");
-			  txtAccountNumber.requestFocus();
 		  });
 		  
 	     
 		  // if any key is pressed in the customer id box, clear the message display label
 	     txtCustomerID.setOnKeyTyped(e -> {
-			  if (txtCustomerID.getText().equals("0")) {
-				  listCust.clear();
-				  listCust.setText("");
-				  listCust.setFont(arial18);
-				  listCust.setStyle("-fx-text-fill: blue");
-				  for (Customer c: customers) {
-					  listCust.appendText(c.toString() + "\n");
-				  }
-			  }
 	    	 lbltxtDisplayBoxMessage.setText(" ");
 	     });
 	     
 	     // if any key is pressed in the opening balance box, clear the message display label
-	     txtOpeningBalance.setOnKeyTyped(e -> {
+	     txtOpeningBalance.setOnKeyPressed(e -> {
 	    	 lbltxtDisplayBoxMessage.setText(" ");
 	     });
 	     
@@ -532,34 +593,35 @@ public class BankMethods {
 	    	double amount = -1;
 	    	try {
 		    	amount = Double.parseDouble(txtOpeningBalance.getText());
+		    	btnAdd.requestFocus();
 		    	if (amount < 0.0) {
-    				 lbltxtDisplayBoxMessage.setText("Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
-    				 lbltxtDisplayBoxMessage.setFont(arial18);
-    				 lbltxtDisplayBoxMessage.setStyle("-fx-text-fill: red");
+    				 lbltxtDisplayBoxMessage.setText("Negative Opening Balances are not allow!\nPlease enter a positive Opening Balance!");
+    				 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
     				 Stage myStage = (Stage) txtOpeningBalance.getScene().getWindow();
     				 myStage.requestFocus();
 	    			 txtOpeningBalance.requestFocus();
 		    	}
     		 } catch (NumberFormatException h) {
     			 lbltxtDisplayBoxMessage.setText("I was expecting a Account Opening Balance, Please re-enter");
-    			 lbltxtDisplayBoxMessage.setFont(arial18);
-				 lbltxtDisplayBoxMessage.setStyle("-fx-text-fill: red");
+    			 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
     			 txtOpeningBalance.requestFocus();
     		 } catch (InputMismatchException  g) {
     			 lbltxtDisplayBoxMessage.setText("You must enter the Opening Balance to the Account");
-    			 lbltxtDisplayBoxMessage.setFont(arial18);
-				 lbltxtDisplayBoxMessage.setStyle("-fx-text-fill: red");
+    			 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
     			 txtOpeningBalance.requestFocus();
     		 } catch (NoSuchElementException f) {
     			 lbltxtDisplayBoxMessage.setText("Out of Range, Please re-enter the Opening Balance Ammount!");
-    			 lbltxtDisplayBoxMessage.setFont(arial18);
-				 lbltxtDisplayBoxMessage.setStyle("-fx-text-fill: red");
+    			 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
     			 txtOpeningBalance.requestFocus();
     		 }
 	     });
 	     
 	     // if the user pressed enter on the add button, call the create account method
-	     btnAdd.setOnKeyTyped(e -> {
+	     btnAdd.setOnKeyPressed(e -> {
 	    	 btnAdd.getOnKeyTyped();
 	    	 boolean isAcctOk = false;
 	    	 isAcctOk = createAccount( txtAccountNumber, txtCustomerID, txtOpeningBalance, lbltxtDisplayBoxMessage, acctNum);
@@ -580,6 +642,7 @@ public class BankMethods {
 	    		 txtCustomerID.setText("");
 	    		 txtAccountNumber.setText("");
 	    		 txtOpeningBalance.setText("");
+	    		 listCust.clear();
 	    	 }
 	     });
 	     
@@ -595,6 +658,435 @@ public class BankMethods {
 		return mainPane;
 	  }
 	  
+// ********************************************************************** processTransaction pane **********************************************************************
+	  
+	  	/** process transaction pane<br><br>
+	  	 * 
+	  	 * this will paint the window for making deposits and withdrawals<br>
+	  	 * the following types are allowed<br><br>
+	  	 * 
+	  	 * 0 - deposit<br>
+	  	 * 1 - withdrawal<br>
+	  	 * 
+	  	 * @param tranType this will tell the window which type is calling
+	  	 * @return it will return the format to the stage that is calling
+	  	 */
+		public BorderPane processTransactionsPane(int tranType){
+			String strTitle = "";
+
+			switch (tranType) {
+			case 0:
+				strTitle = "Make Deposit";
+				break;
+			case 1:
+				strTitle = "Make Withdrawal";
+				break;
+			}
+			Label lblPageTitle = new Label(strTitle);
+			lblPageTitle.setFont(arialFont[3]);
+			lblPageTitle.setStyle(txtFillColor[0]);
+			
+			Label lblAccountNum = new Label("Account #");
+			lblAccountNum.setFont(arialFont[1]);
+			lblAccountNum.setStyle(txtFillColor[0]);
+			
+			Label lblAmount = new Label("Amount");
+			lblAmount.setFont(arialFont[1]);
+			lblAmount.setStyle(txtFillColor[0]);
+			
+			Label lblSuccess = new Label("");
+			lblSuccess.setFont(arialFont[1]);
+			lblSuccess.setStyle(txtFillColor[1]);
+			
+			TextField txtAccountNum = new TextField();
+			txtAccountNum.setFont(arialFont[1]);
+			txtAccountNum.setStyle(txtFillColor[0]);
+			txtAccountNum.setTooltip(new Tooltip("Type 0 and press Enter to look up Account Numbers"));
+			txtAccountNum.setPromptText("Bank Account Number");
+			
+			TextField txtAmount = new TextField();
+			txtAmount.setFont(arialFont[1]);
+			txtAmount.setStyle(txtFillColor[0]);
+			txtAmount.setTooltip(new Tooltip("Enter the Opening Balance"));
+			txtAmount.setPromptText("Example: 853.46");
+			
+			TextArea lstAccount = new TextArea();
+			lstAccount.setPrefRowCount(5);
+			lstAccount.setEditable(false);
+			lstAccount.setFont(arialFont[1]);
+			lstAccount.setStyle(txtFillColor[0]);
+			
+			Button btnAdd = new Button("Add");
+			btnAdd.setFont(arialFont[2]);
+			btnAdd.setStyle(txtFillColor[5] + txtFillColor[3]);
+			btnAdd.setDisable(true);
+			
+			Button btnExit = new Button("Exit");
+			btnExit.setFont(arialFont[2]);
+			btnExit.setStyle(txtFillColor[6] + txtFillColor[3]);
+			
+			HBox topPane = new HBox(4);
+			topPane.setPadding(new Insets(35, 5, 35,5));
+			topPane.getChildren().add(lblPageTitle);
+			topPane.setAlignment(Pos.TOP_CENTER);
+			
+			VBox accountPane = new VBox(5);
+			accountPane.getChildren().addAll(lblAccountNum, txtAccountNum);
+			accountPane.setAlignment(Pos.CENTER);
+			
+			VBox amountPane = new VBox(5);
+			amountPane.getChildren().addAll(lblAmount, txtAmount);
+			amountPane.setAlignment(Pos.CENTER);
+			
+			HBox groupPane = new HBox(5);
+			groupPane.getChildren().addAll(accountPane, amountPane);
+			groupPane.setAlignment(Pos.CENTER);
+			
+			VBox listPane = new VBox(5);
+			listPane.getChildren().add(lstAccount);
+			listPane.setMaxWidth(325);
+			listPane.setAlignment(Pos.CENTER);
+			
+			VBox successPane = new VBox(5);
+			successPane.setPadding(new Insets(35,5,35,5));
+			successPane.getChildren().add(lblSuccess);
+			successPane.setAlignment(Pos.CENTER);
+			
+			
+			VBox centerPane = new VBox(5);
+			centerPane.getChildren().addAll(groupPane, successPane, listPane);
+			centerPane.setAlignment(Pos.CENTER);
+			
+			HBox bottomPane = new HBox(5);
+			bottomPane.setPadding(new Insets(15,5,15,5));
+			bottomPane.getChildren().addAll(btnAdd, btnExit);
+			bottomPane.setAlignment(Pos.BOTTOM_CENTER);
+			
+		 
+			 BorderPane mainPane = new BorderPane();
+			 mainPane.setTop(topPane);
+			 mainPane.setCenter(centerPane);
+			 mainPane.setBottom(bottomPane);
+		     mainPane.setStyle("-fx-border-color: blue");
+		
+		     txtAccountNum.setOnAction(e -> {
+		    	 if (txtAccountNum.getText().equals("0")) {
+		    		 for (Account a: accounts) {
+		    			 lstAccount.appendText(a.getAccountNumber() + "\n");
+		    		 }
+		    	 } else if (txtAccountNum.getText().isEmpty()) {
+		    		 lblSuccess.setText("You must enter an Account Number!");
+		    		 lblSuccess.setStyle(txtFillColor[1]);
+		    		 txtAccountNum.requestFocus();
+		    	 } else {
+			    	 boolean isFound = false;
+			    	 for (Account a: accounts) {
+			    		 if (a.getAccountNumber().equals(txtAccountNum.getText())) {
+					    	 isFound = true;
+			    			 break;
+			    		 }
+			    	 }
+			    	 if (isFound) {
+			    		 lblSuccess.setText("Account Number Found!");
+			    		 btnAdd.setDisable(false);
+			    		 lblSuccess.setStyle(txtFillColor[0]);
+					     txtAmount.requestFocus();
+			    	 } else {
+		    			 lblSuccess.setText("Account Number was not found! Please try again!");
+		    			 lblSuccess.setStyle(txtFillColor[1]);
+		    			 txtAccountNum.requestFocus();
+			    	}
+		    	 }
+		     });
+		     
+		     txtAccountNum.setOnKeyPressed(e -> {
+		    	 lblSuccess.setText(" ");
+		     });
+		     
+		     txtAmount.setOnAction(e -> {
+		    	 if (txtAmount.getText().isEmpty()) {
+		    		 lblSuccess.setText("You must enter an Amount!");
+		    		 lblSuccess.setStyle(txtFillColor[1]);
+		    		 txtAmount.requestFocus();
+		    		 btnAdd.setDisable(true);
+		    	 } else {
+		    		 btnAdd.setDisable(false);
+		    		 btnAdd.requestFocus();
+		    	 }
+		     });
+		     
+		     txtAmount.setOnKeyPressed(e -> {
+		    	 lblSuccess.setText("");
+		     });
+		     
+		     btnAdd.setOnAction(e -> {
+		    	 Account account = accounts.get(0);
+		    	 String desc = "";
+		    	 double amount = getAmount(txtAmount), oldAmount = 0.0;
+		    	 if (txtAccountNum.getText().isEmpty()) {
+		    		 lblSuccess.setText("You must enter an Account Number!");
+		    		 lblSuccess.setFont(arialFont[1]);
+		    		 lblSuccess.setStyle(txtFillColor[1]);
+		    		 txtAccountNum.requestFocus();
+		    		 
+		    	 } else if (txtAmount.getText().isEmpty()) {
+		    		 txtAmount.setText("0.00");
+		    		 
+		    	 } else if (getAmount(txtAmount) < 0.0) {
+		    		 lblSuccess.setText("Amount cannot be a negative number! Please re-enter!");
+		    		 lblSuccess.setFont(arialFont[1]);
+		    		 lblSuccess.setStyle(txtFillColor[1]);
+		    		 txtAmount.requestFocus();
+		    	 } else {
+		    		 if (tranType == 0) { // deposit
+			    		 boolean isOk = false;
+				    	 for (Account a: accounts) {
+				    		 if (a.getAccountNumber().equals(txtAccountNum.getText())) {
+				    			 account = a;
+				    			 isOk = a.makeDeposit(amount);
+				    			 break;
+				    		 }
+				    	 }
+				    	 if (account instanceof Checking) {
+			    			 desc = "Checking Account Deposit";
+			    		 } else if (account instanceof Regular) {
+			    			 desc = "Regular Account Deposit";
+			    		 } else if (account instanceof Gold) {
+			    			 desc = "Gold Account Deposit";
+			    		 }
+				    	 
+				    	 if (isOk) {
+				    		 createTransaction(account.getCustomer().getCustomerID(), txtAccountNum.getText(), desc, amount);
+				    		 lblSuccess.setText("Successfully Deposited the funds!");
+				    		 lblSuccess.setStyle(txtFillColor[0]);
+				    		 txtAccountNum.setText("");
+				    		 txtAmount.setText("");
+				    		 txtAccountNum.requestFocus();
+				    	 } else {
+				    		 lblSuccess.setText("Deposit was NOT successFul!");
+				    		 lblSuccess.setStyle(txtFillColor[1]);
+				    		 txtAccountNum.requestFocus();
+				    	 }
+			    	 } else if (tranType == 1) { // withdrawal
+			    		 JOptionPane.showMessageDialog(null, "This is a Withdrawal");
+			    		 oldAmount = amount;
+			    		 for (Account a: accounts) {
+			    			 if (a.getAccountNumber().equals(txtAccountNum.getText())) {
+			    				 account = a;
+			    				 amount = account.makeWithdrawal(amount);
+			    			 }
+			    		 }
+			    		 if (account instanceof Checking) {
+			    			 desc = "Checking Account Withdrawal";
+			    		 } else if (account instanceof Regular) {
+			    			 desc = "Regular Account Withdrawal";
+			    		 } else if (account instanceof Gold) {
+			    			 desc = "Gold Account Withdrawal";
+			    		 }
+	    				 if ((oldAmount != amount) || amount != -1.0) {
+	    					 desc += " - Available Balance";
+	    				 }
+	    				 if (amount == -1.0) {
+	    					 lblSuccess.setText("*********** Withdrawal was UNSUCCESSFUL! ***********");
+	    					 lblSuccess.setStyle(txtFillColor[1]);
+	    				 } else {
+	    					 createTransaction(account.getCustomer().getCustomerID(), txtAccountNum.getText(), desc, (amount * -1.0));
+	    					 lblSuccess.setText(desc + " - SUCCESSFUL!");
+	    					 lblSuccess.setStyle(txtFillColor[0]);
+	    				 }
+			    	 }
+		    	 }
+		     });
+		     btnExit.setOnAction(e -> {
+		    	 btnExit.getParent().getScene().getWindow().hide();
+		     });
+		     
+			  lstAccount.setOnMouseClicked(e -> {
+				  txtAccountNum.setText(lstAccount.getSelectedText().trim());
+				  txtAccountNum.requestFocus();
+			  });
+		     return mainPane;
+		}
+		
+		
+		public BorderPane removeScreen(int remNum){
+			String txtTitle = "", txtLabel = "";
+			switch (remNum) {
+			case 0:
+				txtTitle = "Remove Customer";
+				txtLabel = "Customer #";
+				break;
+			case 1:
+				txtTitle = "Remove Account";
+				txtLabel = "Account #";
+				break;
+			}
+			Label lblTitle = new Label(txtTitle);
+			lblTitle.setFont(arialFont[3]);
+			lblTitle.setStyle(txtFillColor[0]);
+			
+			Label lblCustomerNum = new Label(txtLabel);
+			lblCustomerNum.setFont(arialFont[1]);
+			lblCustomerNum.setStyle(txtFillColor[0]);
+			
+			Label lblMessage = new Label(" ");
+			lblMessage.setFont(arialFont[1]);
+			lblMessage.setStyle(txtFillColor[1]);
+			
+			TextField txtCustomerNum = new TextField();
+			txtCustomerNum.setFont(arialFont[1]);
+			txtCustomerNum.setStyle(txtFillColor[0]);
+			txtCustomerNum.setMaxWidth(200);
+			
+			TextArea txtOutput = new TextArea();
+			txtOutput.setPrefRowCount(1);
+			txtOutput.setPrefColumnCount(35);
+			txtOutput.setFont(arialFont[1]);
+			txtOutput.setStyle(txtFillColor[1]);
+			txtOutput.setMaxWidth(600);
+			
+			Button btnRemove = new Button("Remove");
+			btnRemove.setFont(arialFont[2]);
+			btnRemove.setStyle(txtFillColor[5]);
+			
+			Button btnExit = new Button("Exit");
+			btnExit.setPadding(new Insets(5, 35, 5, 35));
+			btnExit.setFont(arialFont[2]);
+			btnExit.setStyle(txtFillColor[6]);
+			
+			VBox errorPane = new VBox(8);
+			errorPane.getChildren().add(lblMessage);
+			errorPane.setAlignment(Pos.CENTER);
+			
+			
+			VBox titlePane = new VBox(8);
+			titlePane.setPadding(new Insets(15, 15, 25, 15));
+			titlePane.getChildren().add(lblTitle);
+			titlePane.setAlignment(Pos.CENTER);
+			
+			VBox custNumPane = new VBox(8);
+			custNumPane.getChildren().addAll(lblCustomerNum, txtCustomerNum);
+			custNumPane.setPadding(new Insets(25, 15, 25, 15));
+			custNumPane.setAlignment(Pos.CENTER);
+			
+			VBox outputPane = new VBox(8);
+			outputPane.getChildren().add(txtOutput);
+			outputPane.setAlignment(Pos.CENTER);
+			
+			VBox topPane = new VBox(8);
+			topPane.getChildren().addAll(titlePane, custNumPane);
+			topPane.setAlignment(Pos.CENTER);
+			
+			HBox buttonPane = new HBox(8);
+			buttonPane.setPadding(new Insets(25, 15, 25, 15));
+			buttonPane.getChildren().addAll(btnRemove, btnExit);
+			buttonPane.setAlignment(Pos.CENTER);
+			
+			VBox bottomPane = new VBox(8);
+			bottomPane.getChildren().addAll(errorPane, buttonPane);
+			bottomPane.setAlignment(Pos.CENTER);
+			
+			BorderPane mainPane = new BorderPane();
+			mainPane.setTop(topPane);
+			mainPane.setCenter(outputPane);
+			mainPane.setBottom(bottomPane);
+			
+			txtCustomerNum.setOnAction(e -> {
+				if (txtCustomerNum.getText().isEmpty()) {
+					lblMessage.setText(((remNum == 0)? "You must enter a Customer Number" : "You must enter an Account Number"));
+					lblMessage.setFont(arialFont[1]);
+					lblMessage.setStyle(txtFillColor[1]);
+				} else if (remNum == 0) { // remove customer
+					boolean isFound = false;
+					Customer customer = customers.get(0);
+					for (Customer c: customers) {
+						if (c.getCustomerID().equals(txtCustomerNum.getText())) {
+							if (!c.getActive()) {
+								customer = c;
+								isFound = true;
+							}
+							break;
+						}
+					}
+					if (isFound) {
+						txtOutput.clear();
+						txtOutput.appendText(customer.getCustomerID() + " " + customer.getCustomerName() + ((customer.getActive())? " Active":" Inactive"));
+						btnRemove.requestFocus();
+					} else {
+						lblMessage.setText("Customer Number was either not found or was not able to remove it!");
+						lblMessage.setStyle(txtFillColor[1]);
+						txtCustomerNum.requestFocus();
+					}
+				} else if (remNum == 1) { // remove account
+					boolean isFound = false;
+					Account account = accounts.get(0);
+					for (Account a: accounts) {
+						if (a.getAccountNumber().equals(txtCustomerNum.getText())) {
+							isFound = true;
+							account = a;
+							break;
+						}
+					}
+					if (isFound) {
+						txtOutput.clear();
+						txtOutput.setText(account.getAccountNumber() + " " + account.getCustomer().toString());
+					} else {
+						lblMessage.setText("Account Number was not Found");
+						lblMessage.setStyle(txtFillColor[1]);
+						txtCustomerNum.requestFocus();
+					}
+				}
+			});
+			
+			txtCustomerNum.setOnKeyPressed(e -> {
+				lblMessage.setText("");
+			});
+			
+			btnRemove.setOnAction(e -> {
+				
+			});
+			btnExit.setOnAction(e -> {
+				btnExit.getParent().getScene().getWindow().hide();
+			});
+			
+			return mainPane;
+		}
+		
+		/** get amount<br><br>
+		 * 
+		 * this will parse the text field amount and return the number<br>
+		 * 
+		 * @param txtAmount the TextField of the amount
+		 * @return the amount
+		 */
+		public double getAmount(TextField txtAmount) {
+			double amount = 0.0;
+			try {
+				amount = Double.parseDouble(txtAmount.getText());
+				if (amount < 0.0) {
+					amount = Math.abs(amount);
+				}
+			} catch (NumberFormatException e) {
+				amount = -1.0;
+			} catch (NullPointerException e) {
+				amount = -1.0;
+			} catch (Exception e) {
+				amount = -1.0;
+			}
+			return amount;
+		}
+		/** create transactions
+		 * 
+		 * @param customerID String
+		 * @param accountNumber String
+		 * @param description String
+		 * @param amount double
+		 */
+		public void createTransaction(String customerID, String accountNumber, String description, double amount) {
+			transactions.add(new Transaction(new java.util.Date(), customerID, accountNumber, description, amount, bu.generateUniqueTransNumber()));
+		}
+		
+
 	  /** create Account<br><br>
 	   * 
 	   * using the acctNum will determine whether it is for Checking, Regular or Gold<br><br>
@@ -614,30 +1106,33 @@ public class BankMethods {
 	   */
 	  public boolean createAccount( TextField txtAccountNumber, TextField txtCustomerID, TextField txtOpeningBalance, Label lbltxtDisplayBoxMessage, int acctNum) {
 		  // message box font size
-		  String txtMessage = "18";
+		  //String txtMessage = "18";
 		  // the beginning of the style string
-		  String acctStyleFirst = "-fx-font: ";
+		  //String acctStyleFirst = "-fx-font: ";
 		  // the last pert of the style string before the color
-		  String acctStyleLast =" arial; -fx-text-fill: ";
+		  //String acctStyleLast =" arial; -fx-text-fill: ";
 		  // the blue color
-		  String acctStyleBlue = "blue;";
+		 // String acctStyleBlue = "blue;";
 		  // the red color
-		  String acctStyleRed = "red;";
+		 // String acctStyleRed = "red;";
 		  // the black color
-		  String acctStyleBlack = "black;";
+		  //String acctStyleBlack = "black;";
 
     	 // check to see if the text boxes are empty and notify user
     	 if (txtAccountNumber.getText().isEmpty()) {
     		 lbltxtDisplayBoxMessage.setText("You must enter an Accouont Number!");
-    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    		 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    		 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
     		 txtAccountNumber.requestFocus();
     	 } else if (txtCustomerID.getText().isEmpty()) {
     		 lbltxtDisplayBoxMessage.setText("You must enter a Customer ID!");
-    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    		 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    		 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
     		 txtCustomerID.requestFocus();
     	 } else if (txtOpeningBalance.getText().isEmpty()) {
-    		 lbltxtDisplayBoxMessage.setText("You must the Opening Balance!");
-    		 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    		 lbltxtDisplayBoxMessage.setText("You must enter the Opening Balance!");
+    		 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    		 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
     		 txtOpeningBalance.requestFocus();
     	 } else {
     		 int element = accounts.size();
@@ -647,7 +1142,8 @@ public class BankMethods {
 	    			 amount = Double.parseDouble(txtOpeningBalance.getText());
 	    			 if (amount < 0.0) {
 	    				 lbltxtDisplayBoxMessage.setText("Negative Opening Balances are not allow!\n\nPlease enter a positive Opening Balance!");
-	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    				 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+	    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
 	    				 txtOpeningBalance.requestFocus();
 	    			
 	    			 } else {
@@ -656,56 +1152,63 @@ public class BankMethods {
 	    			 }
 	    		 } catch (NumberFormatException h) {
 	    			 lbltxtDisplayBoxMessage.setText("I was expecting a Account Opening Balance, Please re-enter");
-    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    			 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
 	    			 txtOpeningBalance.requestFocus();
 	    		
 	    		 } catch (InputMismatchException  g) {
 	    			 lbltxtDisplayBoxMessage.setText("You must enter the Opening Balance to the Account");
-    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    			 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
 	    			 txtOpeningBalance.requestFocus();
 	    			
 	    		 } catch (NoSuchElementException f) {
     				 lbltxtDisplayBoxMessage.setText("Out of Range, Please re-enter the Opening Balance Ammount!");
-    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+    				 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
 	    		 }
     		 if (isOk) {
     			 String desc = "";
     			 Customer customer = customers.get(0);
     			 for (int x = 0; x < customers.size(); x++) {
  	    			 if (customers.get(x).getCustomerID().equals(txtCustomerID.getText())) {
-	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlack);
+ 	    				 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+	    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[2]);
 	    				 customer = customers.get(x);
 	    				 switch (acctNum) {
 	    				 case 0: // checking
 	    					 desc = "Checking Opening Balance";
 	    					 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer));
-	    					 transactions.add(new Transaction(bu.generateDate(), customer.getCustomerID(), txtAccountNumber.getText(), desc, amount, bu.generateUniqueTransNumber()));
+	    					 createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount);
 	    					 break;
 	    				 case 1: // regular
 	    					 desc = "Regular Opening Balance";
 	    					 accounts.add(new Regular(txtAccountNumber.getText(), amount, customer));
-	    					 transactions.add(new Transaction(bu.generateDate(), customer.getCustomerID(), txtAccountNumber.getText(), desc, amount, bu.generateUniqueTransNumber()));
+	    					 createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount);
 	    					 break;
 	    				 case 2: // gold
 	    					 desc = "Gold Opening Balance";
 	    					 accounts.add(new Gold(txtAccountNumber.getText(), amount, customer));
-	    					 transactions.add(new Transaction(bu.generateDate(), customer.getCustomerID(), txtAccountNumber.getText(), desc, amount, bu.generateUniqueTransNumber()));
+	    					 createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount);
 	    					 break;
 	    				 }
 	    			 } else {
 	    				 lbltxtDisplayBoxMessage.setText("Customer not fount!\n\nPlease re-enter Customer ID");
-	    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    				 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+	    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
 	    				 txtCustomerID.requestFocus();
 	    			 }
     			 }
     			 // notify the user
  	    		 if (element < accounts.size()) {
     	 			 lbltxtDisplayBoxMessage.setText("Account successfully Added!");
-    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleBlue);
+    	 			 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[0]);
     				 return true;
 	    		 } else {
 	    			 lbltxtDisplayBoxMessage.setText("Adding Checking Account Unsuccessful!");
-    				 lbltxtDisplayBoxMessage.setStyle(acctStyleFirst + txtMessage + acctStyleLast + acctStyleRed);
+	    			 lbltxtDisplayBoxMessage.setFont(arialFont[1]);
+    				 lbltxtDisplayBoxMessage.setStyle(txtFillColor[1]);
 	    		 }
     		 } else {
     			 txtOpeningBalance.requestFocus();
@@ -715,8 +1218,11 @@ public class BankMethods {
 		  return false;
 	  }
 // ************************************************************* file system *************************************************************
+	  
 	  // **************************************** load ****************************************
+	  
 	  // *************************** config ***************************
+	  
 	  public void loadConfigData() {
 		  File file = new File(filename[0]);
 		  if (!(file.exists())) {
@@ -744,6 +1250,7 @@ public class BankMethods {
 	  }
 	  
 	  // *************************** customer ***************************
+	  
 	  public void loadCustomerData() {
 		  if (customers.isEmpty()) {
 			  String custID = "", custName = "";
@@ -777,6 +1284,7 @@ public class BankMethods {
 	  }
 	  
 	  // *************************** checking ***************************
+	  
 	  public void loadCheckingData() {
 		  if (customers.isEmpty()) {
 			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Checking!", "Error Load Checking", JOptionPane.ERROR_MESSAGE);
@@ -828,6 +1336,7 @@ public class BankMethods {
 	  }
 	  
 	  // *************************** regular ***************************
+	  
 	  public void loadRegularData() {
 		  if (customers.isEmpty()) {
 			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Regular!", "Error Load Regular", JOptionPane.ERROR_MESSAGE);
@@ -880,6 +1389,7 @@ public class BankMethods {
 	  }
 	  
 	  // *************************** gold ***************************
+	  
 	  public void loadGoldData() {
 		  if (customers.isEmpty()) {
 			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Gold!", "Error Load Gold", JOptionPane.ERROR_MESSAGE);
@@ -917,8 +1427,9 @@ public class BankMethods {
 				  //JOptionPane.showMessageDialog(null, counter + " Gold Account Data Loaded successfully!", "Gold Load Data", JOptionPane.INFORMATION_MESSAGE);
 				  e.getStackTrace();
 				  return;
-			  } catch (FileNotFoundException e1) {
+			  } catch (FileNotFoundException e) {
 				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
+				  e.getStackTrace();
 				  return;
 			  } catch (IOException e) {
 				  JOptionPane.showMessageDialog(null, "Gold File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
@@ -1111,6 +1622,7 @@ public class BankMethods {
 	  // ***************************************************************** load *****************************************************************
 	  
 	  // ************************************** customer **************************************
+	  
 	@SuppressWarnings("unchecked")
 	public void loadCustomerObjectData() {
 		File info = new File(filename[7]);
@@ -1187,7 +1699,7 @@ public class BankMethods {
 		// ************************************** customer **************************************
 
 	  public void saveCustomerObjectData() {
-		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[7], true));) {
+		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[7], false));) {
 			  output.writeObject(customers);
 			  
 		  } catch (FileNotFoundException e) {
@@ -1204,7 +1716,7 @@ public class BankMethods {
 		// ************************************** accounts **************************************
 
 	  public void saveAccountObjectData() {
-		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[6], true));) {
+		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[6], false));) {
 			  output.writeObject(accounts);
 		  } catch (FileNotFoundException e) {
 			  JOptionPane.showMessageDialog(null, "File " + filename[6] + " not found!", "Account Save Error", JOptionPane.ERROR_MESSAGE);
@@ -1218,7 +1730,7 @@ public class BankMethods {
 		// ************************************** transactions **************************************
 
 	  public void saveTransactionObjectData() {
-		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[8], true));) {
+		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[8], false));) {
 			  output.writeObject(transactions);
 		  } catch (FileNotFoundException e) {
 			  JOptionPane.showMessageDialog(null, "File " + filename[7] + " not found!", "Transaction Save Error", JOptionPane.ERROR_MESSAGE);
@@ -1230,40 +1742,53 @@ public class BankMethods {
 	  }
 	  
 	  // *********************************** create new System Data *****************************************
+	  
 	  // ************* this will delete the files so be careful ****************************
 	  
 	  public void createNewSystemData() {
+		  boolean isOk = false, debug = true;
 		  try {
 			  File startOver;
-			 int x = 0; // data only
-			 startOver = new File(paths[x+1]);
-			 String[] folder = startOver.list();
-			 // make sure it is working properly. Then remove the if and its contents
-			 if (folder.length > 0) {
-				 String msg = "";
-				 for (String f: folder) {
-					 msg += f + "\n";
+			  if (debug) {
+				 int x = 0; // data only
+				 startOver = new File(paths[x+1]);
+				 String[] files = startOver.list();
+				 // make sure it is working properly. Then remove the if and its contents
+				 if (files.length > 0) {
+					 String msg = "";
+					 for (String f: files) {
+						 msg += f + "\n";
+					 }
+					 JOptionPane.showMessageDialog(null, msg, "Folder Contents", JOptionPane.INFORMATION_MESSAGE);
 				 }
-				 JOptionPane.showMessageDialog(null, msg, "Folder Contents", JOptionPane.INFORMATION_MESSAGE);
-			 }
-			 for (int y = 0; y < filename.length; y++) {
-				 copyDatToBakup(filename[y], backName[y] + bakup + ".dat");
-			 }
-			 bakup++;
+			  }
 			 for (int y = 0; y < filename.length; y++) {
 				 startOver = new File(filename[y]);
-				 startOver.delete();
+				 if (startOver.exists()) {
+					 isOk = copyDatToBakup(filename[y], backname[y] + bakup + ".dat");
+				 }
 			 }
-			  
-			  
-			  saveConfigData();
-			  JOptionPane.showMessageDialog(null, "New File System Ready For Use!", "New Files", JOptionPane.INFORMATION_MESSAGE);
-			  bankName = "";
-			  loadConfigData();
+			 if (isOk) {
+				 bakup++;
+				 for (int y = 0; y < filename.length; y++) {
+					 startOver = new File(filename[y]);
+					 if (startOver.exists()) {
+						 startOver.delete();
+					 }
+				 }
+				 bankName = JOptionPane.showInputDialog("Please Enter the Bank Name");
+				 
+				 saveConfigData();
+				 loadConfigData();
+				 JOptionPane.showMessageDialog(null, "New file System READY for use!", "New Files", JOptionPane.INFORMATION_MESSAGE);
+			 } else {
+				 JOptionPane.showMessageDialog(null, "Error copying files! New System is NOT Ready for use!", "New Files", JOptionPane.ERROR_MESSAGE);
+			 }
 		  } catch (NullPointerException e) {
+			  e.getStackTrace();
 			  
 		  } catch (SecurityException e) {
-			  
+			  e.getStackTrace();
 		  }
 	  }
 	  
@@ -1301,6 +1826,9 @@ public class BankMethods {
 	  
 	  public BorderPane generateReport(int acctNum) {
 		  Label lblReports = new Label();
+		  lblReports.setFont(arialFont[1]);
+		  lblReports.setStyle(txtFillColor[0]);
+		  
 		  switch (acctNum) {
 		  case 0:
 			  lblReports.setText("Customer Reports");
@@ -1315,125 +1843,98 @@ public class BankMethods {
 			  lblReports.setText("Statistics Report");
 			  break;
 		  }
-		 		  
-		  Font arial12 = Font.font("arial", 12);
-		  Font arial18Bold = Font.font("Arial", FontWeight.BOLD, 18);
-		  Font arial18 = Font.font("Arial", 18);
-		  @SuppressWarnings("unused")
-		  Font times12 = Font.font("rimes rew roman", 12);
-		  //Font arial25 = Font.font("Arial", 25);
-		  
-		  lblReports.setFont(arial18);
-		  lblReports.setStyle("-fx-text-fill: blue");
-		  
-		  
 		  Button btnExit = new Button("Exit");
-		  btnExit.setFont(arial18Bold);
-		  btnExit.setStyle("-fx-base: red;");
+		  btnExit.setFont(arialFont[2]);
+		  btnExit.setStyle(txtFillColor[6] + txtFillColor[3]);
 		  
 		  TextArea taOutput = new TextArea();
 		  taOutput.setPrefRowCount(15);
 		  switch (acctNum) {
 		  case 0:
-			  if (customers.isEmpty()) {
-				  JOptionPane.showMessageDialog(null, "There are no Customers to display! Terminating  view Customers!", "No Customers", JOptionPane.INFORMATION_MESSAGE);
-				  break;
-			  }
+			  taOutput.appendText("Customer ID\t Name\t\t\t\t\t\t\t Status\n");
 			  for (Customer c: customers) {
 				  taOutput.appendText(c.toString() + "\n");
 			  }
 			  break;
 		  case 1:
-			  if (accounts.isEmpty()) {
-				  JOptionPane.showMessageDialog(null, "There are no Accounts to display! Terminating  view Accounts!", "No Accounts", JOptionPane.INFORMATION_MESSAGE);
-				  break;
-			  }
 			  int counter = 0;
 			  for (Account a: accounts) {
 				  if (a instanceof Checking) {
 					  if (counter == 0) {
-						  taOutput.appendText(String.format("\n\t\t\t\t %s \t\t\t\t\t %s %s %s %s %s \n", "Customer Information","Account Number", "Balance", "# of Transactions", "Transaction Fee", "Total Fee"));
+						  taOutput.appendText(String.format("\n\t\t\t\t\t %s \t\t\t\t\t\t %s \t %s \t\t %s \t\t %s \t\t %s \n", "Customer Information","Account Number", "Balance", "# of Transactions", "Transaction Fee", "Total Fee"));
 						  counter++;
 					  }
-					  taOutput.appendText(a.toString() + "\n");
+					  taOutput.appendText(a.toString());
 				  }
 			  }
 			  counter = 0;
 			  for (Account a: accounts) {
 				  if (a instanceof Regular) {
 					  if (counter == 0) {
-						  taOutput.appendText(String.format("\n\t\t\t\t %s \t\t\t\t %s %s %s %s %s \n", "Customer Information", "Account Number", "Balance", "     Inerest Rate", "  Fixed Charge", "Total Interest"));
+						  taOutput.appendText(String.format("\n\t\t\t\t\t %s \t\t\t\t\t\t %s \t %s \t\t %s \t\t %s \t\t %s \n", "Customer Information", "Account Number", "Balance", "Inerest Rate", "Fixed Charge", "Total Interest"));
 						  counter++;
 					  }
-					  taOutput.appendText(a.toString() + "\n");
+					  taOutput.appendText(a.toString());
 				  }
 			  }
 			  counter = 0;
 			  for (Account a: accounts) {
 				  if (a instanceof Gold) {
 					  if (counter == 0) {
-						  taOutput.appendText(String.format("\n\t\t\t\t  %s \t\t\t\t %s %s %s %s\n", "Customer Information", "Account Number", "Balance", "     Interest Rate", "Interest Amount"));
+						  taOutput.appendText(String.format("\n\t\t\t\t\t  %s \t\t\t\t\t\t %s \t %s \t %s %s\n", "Customer Information", "Account Number", "Balance", "Interest Rate", "Interest Amount"));
 						  counter++;
 					  }
-					  taOutput.appendText(a.toString() + "\n");
+					  taOutput.appendText(a.toString());
 				  }
 			  }
 			  break;
 		  case 2:
-			  if (transactions.isEmpty()) {
-				  JOptionPane.showMessageDialog(null, "There are no Transactions to display! Terminating  view Transactions!", "No Customers", JOptionPane.INFORMATION_MESSAGE);
-				  break;
-			  }
+			  taOutput.setFont(arialFont[0]);
 			  for (Transaction t: transactions) {
-				  taOutput.appendText(t.toString() + "\n");
+				  taOutput.appendText(t.toString());
 			  }
 			  break;
 		  case 3:
-			  if (accounts.isEmpty()) {
-				  JOptionPane.showMessageDialog(null, "There are no Accounts to display! Terminating  view Statistics!", "No Accounts", JOptionPane.INFORMATION_MESSAGE);
-				  break;
-			  }
-			  taOutput.setFont(arial12);
+			  taOutput.setFont(arialFont[0]);
 			  generateStatistics(taOutput);
 			  break;
 		  }
-		  if (acctNum == 0) {
-			  taOutput.setPrefColumnCount(30);
-		  } else if (acctNum == 1 || acctNum == 2) {
-			  taOutput.setPrefColumnCount(75);
-		  } else if (acctNum == 3) {
-			  taOutput.setPrefColumnCount(75);
-		  }
-		  //taOutput.setFont(arial18);
-		  taOutput.setEditable(false);
-		  
-		  HBox displayPane = new HBox();
-		  displayPane.setPadding(new Insets(25,12,12,12));
-		  displayPane.getChildren().addAll(lblReports);
-		  displayPane.setAlignment(Pos.CENTER);
-		  
-		  FlowPane centerPane = new FlowPane();
-		  centerPane.setHgap(5);
-		  centerPane.setVgap(5);
-		  centerPane.getChildren().addAll(taOutput);
-		  centerPane.setAlignment(Pos.CENTER);
-		  
-		  HBox bottomPane = new HBox(1);
-		  bottomPane.setPadding(new Insets(0,0,25,0));
-		  bottomPane.getChildren().addAll(btnExit);
-		  bottomPane.setAlignment(Pos.CENTER);
-		  
-		  BorderPane mainPane = new BorderPane();
-		  mainPane.setTop(displayPane);
-		  mainPane.setCenter(centerPane);
-		  mainPane.setBottom(bottomPane);
-		  mainPane.setStyle("-fx-border-color: blue");
-		  
-		  btnExit.setOnAction(e -> {
-			 btnExit.getScene().getWindow().hide();
-		});
-	   
-		  return mainPane;
+			  if (acctNum == 0) {
+				  taOutput.setPrefColumnCount(30);
+			  } else if (acctNum == 1 || acctNum == 2) {
+				  taOutput.setPrefColumnCount(85);
+			  } else if (acctNum == 3) {
+				  taOutput.setPrefColumnCount(75);
+			  }
+			  taOutput.setEditable(false);
+			  
+			  HBox displayPane = new HBox();
+			  displayPane.setPadding(new Insets(25,12,12,12));
+			  displayPane.getChildren().addAll(lblReports);
+			  displayPane.setAlignment(Pos.CENTER);
+			  
+			  FlowPane centerPane = new FlowPane();
+			  centerPane.setHgap(5);
+			  centerPane.setVgap(5);
+			  centerPane.getChildren().addAll(taOutput);
+			  centerPane.setAlignment(Pos.CENTER);
+			  
+			  HBox bottomPane = new HBox(1);
+			  bottomPane.setPadding(new Insets(0,0,25,0));
+			  bottomPane.getChildren().addAll(btnExit);
+			  bottomPane.setAlignment(Pos.CENTER);
+			  
+			  BorderPane mainPane = new BorderPane();
+			  mainPane.setTop(displayPane);
+			  mainPane.setCenter(centerPane);
+			  mainPane.setBottom(bottomPane);
+			  mainPane.setStyle("-fx-border-color: blue");
+			  
+			  btnExit.setOnAction(e -> {
+				 btnExit.getScene().getWindow().hide();
+			});
+		   
+			  return mainPane;
 	  }
 	  
 	  public void generateStatistics(TextArea taOutput) {

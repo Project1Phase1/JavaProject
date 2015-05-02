@@ -34,6 +34,7 @@ public class AddAccount extends Application {
 		  TextField txtDisplayBoxAccounts = new TextField(" ");
 		  txtDisplayBoxAccounts.setPrefSize(0,1);
 		  txtDisplayBoxAccounts.setDisable(true);
+		  
 		  TextField txtDisplayBoxMessage = new TextField(" ");
 		  txtDisplayBoxMessage.setPrefSize(0,1);
 		  txtDisplayBoxMessage.setDisable(true);

@@ -36,7 +36,7 @@ public class NewFXBanker extends Application {
     * @param menuWidthProperty Width to be bound to menu bar width.
     * @return Menu Bar with menus included.
     */
-   private MenuBar buildMenuBarWithMenus(final ReadOnlyDoubleProperty menuWidthProperty) {
+   private MenuBar buildMenuBarWithMenus(final ReadOnlyDoubleProperty menuWidthProperty, Stage stage) {
       MenuBar menuBar = new MenuBar();
 
       // Prepare left-most 'File' drop-down menu
@@ -69,6 +69,7 @@ public class NewFXBanker extends Application {
       MenuItem accountGold = new MenuItem("Gold");
       MenuItem accountRegular = new MenuItem("Regular");
       //SubMenuItem subM = new SubMenuItem("This is it");
+      
       accountMenu.getItems().addAll(accountCustomer, new SeparatorMenuItem(), accountChecking, accountGold, accountRegular);
        menuBar.getMenus().add(accountMenu);
 
@@ -101,19 +102,38 @@ public class NewFXBanker extends Application {
      menuBar.getMenus().add(quit);
      
 // ************************************************************ File System ************************************************************
+     
+  // ************************** create new system **************************
+     fileNames[0].setOnAction(e -> {
+    	 banker.createNewSystemData();
+     	 stage.setTitle(banker.bankName);
+     });
+     
 // *************************** save config data ***************************
      fileNames[3].setOnAction(e -> {
     	banker.saveConfigData();
      });
+     
+  // *************************** save customer data ***************************
+     fileNames[4].setOnAction(e -> {
+    	 banker.saveCustomerObjectData();
+     });
+     
+// *************************** save account data ***************************
+     
+     fileNames[5].setOnAction(e -> {
+    	 banker.saveAccountObjectData();
+     });
+  
+     // ************************** save transaction data **************************
+     fileNames[6].setOnAction(e -> {
+    	 banker.saveTransactionObjectData();
+     });
+     
 // *************************** load config data ***************************
      fileNames[7].setOnAction(e -> {
      	 banker.loadConfigData();
      	 fileNames[7].setDisable(true);
-     });
-     
-// *************************** save customer data ***************************
-     fileNames[4].setOnAction(e -> {
-    	 banker.saveCustomerObjectData();
      });
      
 // *************************** load customer data ***************************
@@ -122,27 +142,11 @@ public class NewFXBanker extends Application {
     	 fileNames[8].setDisable(true);
       });
     
-// *************************** save account data ***************************
-     
-     fileNames[5].setOnAction(e -> {
-    	 banker.saveAccountObjectData();
-     });
-  
 // *************************** load account data ***************************
      fileNames[9].setOnAction(e -> {
     	 banker.loadAccountObjectData();
     	 fileNames[9].setDisable(true);
     	 
-     });
-     
- // ************************** create new system **************************
-     fileNames[0].setOnAction(e -> {
-    	 banker.createNewSystemData();
-     });
-     
-// ************************** save transaction data **************************
-     fileNames[6].setOnAction(e -> {
-    	 banker.saveTransactionObjectData();
      });
      
 // ************************** load transaction data **************************
@@ -168,20 +172,6 @@ public class NewFXBanker extends Application {
 	    	 fileNames[6].setDisable(false);
    		 
     	 }
-    	 /*
-    	 fileNames[1].setDisable(false);
-    	 fileNames[7].setDisable(false);
-    	 fileNames[8].setDisable(false);
-    	 fileNames[9].setDisable(false);
-    	 fileNames[10].setDisable(false);
-    	    	 
-	    	 fileNames[1].setDisable(true);
-	    	 fileNames[2].setDisable(true);
-	    	 fileNames[11].setDisable(true);
-	    	 fileNames[12].setDisable(true);
-	    	 fileNames[6].setDisable(true);
-	    	 fileNames[10].setDisable(true);
-	    	*/
      });
      
   // ************************************* quit and save *************************************
@@ -195,45 +185,61 @@ public class NewFXBanker extends Application {
 
 // ************************************************************ report customers ************************************************************
      rptCustomer.setOnAction(e -> {
-    	 chkAddStage.hide();
-    	 Scene myScene = new Scene(banker.generateReport(0), 500, 500);
-    	 chkAddStage.setTitle("Generate Reports");
-    	 chkAddStage.setScene(myScene);
-    	 chkAddStage.show();
+    	 if (banker.customers.isEmpty()) {
+			  JOptionPane.showMessageDialog(null, "There are no Customers to display! Terminating  view Customers!", "No Customers", JOptionPane.INFORMATION_MESSAGE);
+    	 } else {
+	    	 chkAddStage.hide();
+	    	 Scene myScene = new Scene(banker.generateReport(0), 500, 500);
+	    	 chkAddStage.setTitle("Generate Reports");
+	    	 chkAddStage.setScene(myScene);
+	    	 chkAddStage.show();
+    	 }
      });
      
 // ************************************************************ report accounts ************************************************************
      
      rptAccounts.setOnAction(e -> {
-    	 chkAddStage.hide();
-    	 Scene myScene = new Scene(banker.generateReport(1), 1300, 500);
-    	 chkAddStage.setTitle("Generate Reports");
-    	 chkAddStage.setScene(myScene);
-    	 chkAddStage.show();
+		  if (banker.accounts.isEmpty()) {
+			  JOptionPane.showMessageDialog(null, "There are no Accounts to display! Terminating  view Accounts!", "No Accounts", JOptionPane.INFORMATION_MESSAGE);
+		  } else {
+	    	 chkAddStage.hide();
+	    	 Scene myScene = new Scene(banker.generateReport(1), 1300, 500);
+	    	 chkAddStage.setTitle("Generate Reports");
+	    	 chkAddStage.setScene(myScene);
+	    	 chkAddStage.show();
+		  }
      });
      
 // ************************************************************ report transaction ************************************************************
      rptTransaction.setOnAction(e -> {
-    	chkAddStage.hide();
-    	Scene myScene = new Scene(banker.generateReport(2), 1000, 500);
-    	chkAddStage.setTitle("Generate Reports");
-    	chkAddStage.setScene(myScene);
-    	chkAddStage.show();
+		  if (banker.transactions.isEmpty()) {
+			  JOptionPane.showMessageDialog(null, "There are no Transactions to display! Terminating  view Transactions!", "No Customers", JOptionPane.INFORMATION_MESSAGE);
+		  } else {
+	    	chkAddStage.hide();
+	    	Scene myScene = new Scene(banker.generateReport(2), 1300, 500);
+	    	chkAddStage.setTitle("Generate Reports");
+	    	chkAddStage.setScene(myScene);
+	    	chkAddStage.show();
+		  }
      });
      
   // ************************************************************ report statistics ************************************************************
      rptStatistics.setOnAction(e -> {
-    	chkAddStage.hide();
-    	Scene myScene = new Scene(banker.generateReport(3), 1300, 500);
-    	chkAddStage.setTitle("Generate Reports");
-    	chkAddStage.setScene(myScene);
-    	chkAddStage.show();
+		  if (banker.accounts.isEmpty()) {
+			  JOptionPane.showMessageDialog(null, "There are no Accounts to display! Terminating  view Statistics!", "No Accounts", JOptionPane.INFORMATION_MESSAGE);
+		  } else {
+	    	chkAddStage.hide();
+	    	Scene myScene = new Scene(banker.generateReport(3), 1300, 500);
+	    	chkAddStage.setTitle("Generate Reports");
+	    	chkAddStage.setScene(myScene);
+	    	chkAddStage.show();
+		  }
      });
      
 // ************************************************************ create new customer ************************************************************
       accountCustomer.setOnAction(e -> {
     	  chkAddStage.hide();
-    	  Scene myScene = new Scene(banker.getCustPane(), 375, 200, Color.BEIGE);
+    	  Scene myScene = new Scene(banker.getCustPane(), 575, 300, Color.BEIGE);
     	  chkAddStage.setTitle("Customer Information");
     	  chkAddStage.setScene(myScene);
     	  chkAddStage.show();
@@ -280,7 +286,65 @@ public class NewFXBanker extends Application {
    		    //checkFileStatus(fileNames);
     	 }
      });
-       
+     
+// *********************************************************** Transactions ***********************************************************
+     
+     // *********************************** deposit ***********************************
+     tranDeposit.setOnAction(e -> {
+    	 if (banker.accounts.isEmpty()) {
+    		 JOptionPane.showMessageDialog(null, "There are no accounts to add Deposits too!", "Make Deposit", JOptionPane.ERROR_MESSAGE);
+    	 } else {
+		    chkAddStage.hide();
+		    Scene myScene = new Scene(banker.processTransactionsPane(0), 800, 450);
+		    chkAddStage.setTitle("Transactions"); // Set the stage title
+		    chkAddStage.setScene(myScene); // Place the scene in the stage
+		    chkAddStage.show(); // Display the stage
+    	 }
+     });
+     
+     // *********************************** withdrawal ***********************************
+     tranWithdraw.setOnAction(e -> {
+    	 if (banker.accounts.isEmpty()) {
+    		 JOptionPane.showMessageDialog(null, "There are no accounts to take withdrawals from!", "Make Withdrawal", JOptionPane.ERROR_MESSAGE);
+    	 } else {
+		    chkAddStage.hide();
+	 	    Scene myScene = new Scene(banker.processTransactionsPane(1), 800, 450);
+	 	    chkAddStage.setTitle("Transactions"); // Set the stage title
+	 	    chkAddStage.setScene(myScene); // Place the scene in the stage
+	 	    chkAddStage.show(); // Display the stage
+    	 }
+     });
+     
+  // *********************************************************** Remove ***********************************************************
+     
+     // *********************************** Remove Customer ***********************************
+     
+     removeCustomer.setOnAction(e -> {
+    	 if (banker.customers.isEmpty()) {
+    		 JOptionPane.showMessageDialog(null, "There are no Customers to remove!", "Customer Removal", JOptionPane.ERROR_MESSAGE);
+    	 } else {
+	    	 chkAddStage.hide();
+	    	 Scene myScene = new Scene(banker.removeScreen(0), 800, 450);
+	    	 chkAddStage.setTitle("Remove Customer");
+	    	 chkAddStage.setScene(myScene);
+	    	 chkAddStage.show();
+    	 }
+     });
+     
+     // *********************************** Remove Account ***********************************
+    
+     removeAccount.setOnAction(e -> {
+    	 if (banker.accounts.isEmpty()) {
+    		 JOptionPane.showMessageDialog(null, "There are no Accounts to remove!", "Account Removal", JOptionPane.ERROR_MESSAGE);
+    	 } else {
+	    	 chkAddStage.hide();
+	    	 Scene myScene = new Scene(banker.removeScreen(1), 800, 450);
+	    	 chkAddStage.setTitle("Remove Customer");
+	    	 chkAddStage.setScene(myScene);
+	    	 chkAddStage.show();
+    	 }
+     });
+     
      menuBar.prefWidthProperty().bind(menuWidthProperty);
 
       return menuBar;
@@ -310,7 +374,7 @@ public class NewFXBanker extends Application {
 	  stage.setTitle(banker.bankName);
       final Group rootGroup = new Group();
       final Scene scene = new Scene(rootGroup, 400, 25, Color.BEIGE);
-      final MenuBar menuBar = buildMenuBarWithMenus(stage.widthProperty());
+      final MenuBar menuBar = buildMenuBarWithMenus(stage.widthProperty(), stage);
       rootGroup.getChildren().add(menuBar);
       stage.setScene(scene);
       stage.show();

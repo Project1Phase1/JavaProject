@@ -96,8 +96,7 @@ public class Customer implements Serializable{
 	}
 
 	public String toString() {
-		return this.customerID + "\t\t"
-				+ this.customerName + "\t\t" + ((this.active)? "Active" : "Inactive");
+		return String.format("%-10s \t %-40s \t\t %s", this.customerID, this.customerName, ((this.active)? "Active" : "Inactive"));
 	}
 	
 	

@@ -137,7 +137,7 @@ public class Checking extends Account {
 	}
 	
 	public String toString() {
-		return String.format("%12s %-55s %-15s %12.2f %s %10d %4s %12.2f %6s %12.2f\n", "Checking", this.getCustomer(), this.getAccountNumber(), this.getAccountBalance(), "", this.getNumberOfTransactions(), "", this.getCheckingTransactionFee(), "", this.getCheckingTransactionFeeAmount());
+		return String.format("%s \t %s \t %s \t $%12.2f \t\t\t\t %d \t\t\t $%12.2f \t\t\t $%12.2f\n", "Checking", this.getCustomer(), this.getAccountNumber(), this.getAccountBalance(), this.getNumberOfTransactions(), this.getCheckingTransactionFee(), this.getCheckingTransactionFeeAmount());
 		
 	}
 }

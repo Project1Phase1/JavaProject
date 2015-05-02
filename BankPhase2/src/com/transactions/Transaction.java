@@ -155,6 +155,6 @@ public class Transaction implements Serializable{
 	}
 	
 	public String toString() {
-		return String.format("%-20d %-35s %-15s %-20s %-50s $%12.2f \n", this.transactionNumber, this.createDate, this.customerID, this.accountNumber, this.description, this.amount);
+		return String.format("%-15d%-40s%-15s%-20s%-65s\t$%12.2f \n", this.transactionNumber, this.createDate, this.customerID, this.accountNumber, this.description, this.amount);
 	}
 }
