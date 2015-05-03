@@ -14,6 +14,7 @@ package com.accounts;
 import java.io.Serializable;
 
 import com.customers.Customer;
+import com.transactions.Transaction;
 
 public abstract class Account implements Serializable {
 	private static final long serialVersionUID = 1777611210940742188L;
@@ -21,57 +22,81 @@ public abstract class Account implements Serializable {
 	private double accountBalance;
 	
 	private Customer customer;
-	public Account(String accountNumber, double accountBalance, Customer customer){
+	private Transaction transaction;
+	public Account(String accountNumber, double accountBalance, Customer customer, Transaction transaction){
 		this.accountNumber = accountNumber;
 		this.accountBalance = accountBalance;
 		this.customer = customer;
+		this.transaction = transaction;
 		this.customer.setActive(true);
 	}
 	
 	// get
 	
-	/**
+	/** get account number<br><br>
+	 * 
 	 * @return the accountNumber
 	 */
 	public String getAccountNumber() {
-		return accountNumber;
+		return this.accountNumber;
 	}
 	
-	/**
+	/** get account balance<br><br>
+	 * 
 	 * @return the accountBalance
 	 */
 	public double getAccountBalance() {
-		return accountBalance;
+		return this.accountBalance;
 	}
 	
-	/**
+	/** get customer<br><br>
+	 * 
 	 * @return the customer
 	 */
 	public Customer getCustomer() {
-		return customer;
+		return this.customer;
+		
 	}
 	
+	/** get transaction<br><br>
+	 * 
+	 * @return transaction
+	 */
+	public Transaction getTransaction() {
+		return this.transaction;
+	}
 	// set 
 	
-	/**
+	/** set account number<br><br>
+	 * 
 	 * @param accountNumber the accountNumber to set
 	 */
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
 	
-	/**
+	/** set account balance<br><br>
+	 * 
 	 * @param accountBalance the accountBalance to set
 	 */
 	public void setAccountBalance(double accountBalance) {
 		this.accountBalance = accountBalance;
 	}
 	
-	/**
+	/** set customer<br><br>
+	 * 
 	 * @param customer the customer to set
 	 */
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+	
+	/** set transaction<br><br>
+	 * 
+	 * @param transaction the transactions
+	 */
+	public void setTransaciton(Transaction transaction) {
+		this.transaction = transaction;
 	}
 	
 	// abstract methods

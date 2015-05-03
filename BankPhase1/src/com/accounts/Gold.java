@@ -12,6 +12,7 @@
 package com.accounts;
 
 import com.customers.Customer;
+import com.transactions.Transaction;
 
 public class Gold extends Account {
 	/**
@@ -26,8 +27,8 @@ public class Gold extends Account {
 	 * @param accountBalance
 	 * @param customer
 	 */
-	public Gold(String accountNumber, double accountBalance, Customer customer) {
-		super(accountNumber, accountBalance, customer);
+	public Gold(String accountNumber, double accountBalance, Customer customer, Transaction transaction) {
+		super(accountNumber, accountBalance, customer, transaction);
 		this.goldInterestAmount = 0.0;
 		this.goldInterestRate = 5.0;
 

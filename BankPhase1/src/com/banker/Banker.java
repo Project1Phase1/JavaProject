@@ -585,8 +585,10 @@ class ActualBanker {
 	 * @param description String
 	 * @param amount double
 	 */
-	public void createTransaction(String customerID, String accountNumber, String description, double amount) {
-		transactions.add(new Transaction(new java.util.Date(), customerID, accountNumber, description, amount, bu.generateUniqueTransNumber()));
+	public Transaction createTransaction(String customerID, String accountNumber, String description, double amount) {
+		Transaction transaction = new Transaction(new java.util.Date(), customerID, accountNumber, description, amount, bu.generateUniqueTransNumber());
+		transactions.add(transaction);
+		return transaction;
 	}
 	
 	/** create customer transaction<br>
@@ -681,17 +683,17 @@ class ActualBanker {
 		
 		switch (threeAcct) {
 			case 0:
-				accounts.add(new Checking(accountNumber, accountBalance, customer));
+				accounts.add(new Checking(accountNumber, accountBalance, customer,	createTransaction(customer.getCustomerID(), accountNumber, "Opening "+ typeAccount + " Account", accountBalance)));
 				break;
 			case 1:
-				accounts.add(new Regular(accountNumber, accountBalance, customer));
+				accounts.add(new Regular(accountNumber, accountBalance, customer, createTransaction(customer.getCustomerID(), accountNumber, "Opening "+ typeAccount + " Account", accountBalance)));
 				break;
 			case 2:
-				accounts.add(new Gold(accountNumber, accountBalance, customer));
+				accounts.add(new Gold(accountNumber, accountBalance, customer, createTransaction(customer.getCustomerID(), accountNumber, "Opening "+ typeAccount + " Account", accountBalance)));
 				break;
 		}
 		// add transaction to transaction tracker
-		createTransaction(customer.getCustomerID(), accountNumber, "Opening "+ typeAccount + " Account", accountBalance);
+		
 		// notify user of account creation
 		System.out.println("\n" + typeAccount + " account successfully created!\n");
 	}
