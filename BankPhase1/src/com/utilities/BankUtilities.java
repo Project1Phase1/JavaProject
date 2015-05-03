@@ -22,15 +22,32 @@ public class BankUtilities {
 	public int generateUniqueTransNumber() {
 		return Math.abs((int) Calendar.getInstance().getTimeInMillis());
 	}
+	
+	// generate unique Account Number
+	public long generateUniqueAccountNumber() {
+		return Math.abs( Calendar.getInstance().getTimeInMillis());
+	}
 
 	public java.util.Date generateDate() {
 		return new java.util.Date();
 	}
 	
+	/** generate unique account number<br><br>
+	 * 
+	 * generates two random letters 
+	 * 
+	 * @return
+	 */
 	public String generateUniqueAcctNumber() {
+		int num1 = 0, num2 = 0;
+		num1 = genRandomNumber(65, 90, 100);
+		num2 = genRandomNumber(65, 90, 100);
+		while(num1 == num2) {
+			num2 = genRandomNumber(65, 90, 100);
+		}
 		String output = "";
-		output += (char) genRandomNumber(65, 90, 100);
-		output += (char) genRandomNumber(65, 90, 100);
+		output += (char) num1;
+		output += (char) num2;
 		output += genRandomNumber(1000, 10000, 10000);
 		return output;
 	}

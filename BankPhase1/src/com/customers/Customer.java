@@ -11,7 +11,10 @@
  */
 package com.customers;
 
-public class Customer {
+import java.io.Serializable;
+
+public class Customer implements Serializable{
+	private static final long serialVersionUID = 7610536679838430520L;
 	private String customerID;
 	private String customerName;
 	private boolean active;
@@ -72,8 +75,7 @@ public class Customer {
 	}
 
 	public String toString() {
-		return "" + this.customerID + "  "
-				+ this.customerName;
+		return String.format("%-12s %-25s %15s", this.customerID, this.customerName, ((this.active)? "Active" : "Inactive"));
 	}
 	
 	

@@ -14,10 +14,8 @@
 //https://www.youtube.com/watch?v=5GsdaZWDcdY&feature=youtu.be
 package com.banker;
 
+import java.io.*;
 import java.util.*;
-
-import javax.swing.*;
-
 import com.accounts.*;
 import com.customers.*;
 import com.transactions.*;
@@ -66,6 +64,10 @@ class ActualBanker {
 	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	// utility class for holding miscellaneous methods
 	BankUtilities bu = new BankUtilities();
+	public String[] filename = new String[9];
+	public String[] backname = new String[9];
+	public String[] paths = new String[2];
+	public int bakup;
 	// this holds the number of menu items and allows for customization to occur
 	static int menuItems;
 	// change bankName to whatever the user prefers
@@ -78,6 +80,15 @@ class ActualBanker {
 	 * 
 	 */
 	public void doBanker() {
+		// load filename and paths
+		// and if the path doesn't exist, create it
+		loadFileName();
+		
+		// load data
+		loadConfigData();
+		loadCustomerObjectData();
+		loadAccountObjectData();
+		loadTransactionObjectData();
 		
 		// menu
 		
@@ -162,9 +173,14 @@ class ActualBanker {
 					break;
 				case 15:
 					// 15.  exit
-					System.out.print("\n*********************************************\n"
+					saveConfigData();
+					saveCustomerObjectData();
+					saveAccountObjectData();
+					saveTransactionObjectData();
+					
+					System.out.print("\n*********************************************************\n"
 							         + "      Thank you for using " + bankName + "\n"
-							         + "*********************************************\n");
+							         + "*********************************************************\n");
 					finished = true;
 					break;
 				default:
@@ -184,12 +200,12 @@ class ActualBanker {
 		int inputInt = 0 ;
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner( System.in );
-		if (bankName.isEmpty()) {
-			String getBankName = "";
-			System.out.print("\n\nWhat is the name of your bank? ");
-			getBankName = input.nextLine();
-			bankName = getBankName;
-		}
+//		if (bankName.isEmpty()) {
+//			String getBankName = "";
+//			System.out.print("\n\nWhat is the name of your bank? ");
+//			getBankName = input.nextLine();
+//			bankName = getBankName;
+//		}
 		// define the menu options
 		String[] dispMenu = new String[15];
 		dispMenu[0] =  "Create a Customer ";
@@ -394,13 +410,27 @@ class ActualBanker {
 			// hide the warning input not closed
 			@SuppressWarnings("resource")
 			Scanner input = new Scanner(System.in);
-			System.out.print("\nEnter customer ID ");
+			System.out.print("\nEnter customer ID\nOr enter 0 to generate one ");
 			//begin try-catch
-			boolean validateInput=true;
+			boolean validateInput=true, isFound = false;
 			while (validateInput) {
+				isFound = false;
 				try  {
 					customerID = input.nextLine();
-					validateInput=false;
+					if (customerID.equals("0")) {
+						customerID = bu.generateUniqueAcctNumber();
+						System.out.print("\n" + customerID + "\n");
+					}
+					for (Customer c: customers) {
+						if (c.getCustomerID().equals(customerID)) {
+							System.out.print("\nCustomer ID already Exists!\nPlease enter new Customer ID: ");
+							isFound = true;
+							break;
+						}
+					}
+					if (!isFound) {
+						validateInput = false;
+					}
 				} catch (InputMismatchException e) {
 					System.out.print("\nInvalid Input: Please enter String Value");
 				}
@@ -418,9 +448,6 @@ class ActualBanker {
 				}
 			}
 			//end try-catch
-		} else if (condition == 1) {
-			customerID = JOptionPane.showInputDialog("Enter customer ID");
-			customerName = JOptionPane.showInputDialog("Enter customer Name");
 		}
 		Customer customer = new Customer(customerID, customerName);
 		customers.add(customer);
@@ -597,17 +624,20 @@ class ActualBanker {
 	 */
 	public void createAccounts(int threeAcct) {
 		// declare the type of account string
-		String typeAccount = "";
+		String typeAccount = "", acctPre = "";
 		// which type of account is being created
 		switch (threeAcct) {
 			case 0:
 				typeAccount = "Checking";
+				acctPre = "CA";
 				break;
 			case 1:
 				typeAccount = "Regular";
+				acctPre = "RA";
 				break;
 			case 2:
 				typeAccount = "Gold";
+				acctPre = "GA";
 				break;
 		}
 		// declare variables
@@ -619,9 +649,27 @@ class ActualBanker {
 		}
 		// get account information from user (Account number, balance)
 		String accountNumber = "", message = "", errMessage = "";
-		message = "\nEnter " + typeAccount + " account number: ";
+		message = "\nEnter 0 to generate " + typeAccount + " account number\nOr enter the " + typeAccount + "account number: ";
 		errMessage = "\nInvalid Input: Please enter Account Number\n";
-		accountNumber = getAccountNumber(message, errMessage);
+		boolean isOk = true, validateInput = true;
+		while (validateInput) {
+			isOk = true;
+			accountNumber = getAccountNumber(message, errMessage);
+			if (accountNumber.equals("0")) {
+				accountNumber = acctPre + bu.generateUniqueAccountNumber();
+				System.out.print("\n" + accountNumber + "\n");
+			}
+			for (Account a: accounts) {
+				if (a.getAccountNumber().equals(accountNumber)) {
+					message = "\nAccount already exists!\nPlease enter " + typeAccount + "account number: ";
+					isOk = false;
+					break;
+				}
+			}
+			if (isOk) {
+				validateInput = false;
+			}
+		}
 		double accountBalance = 0.0;
 		message = "\nEnter Account Balance: ";
 		errMessage = "\n**************************************************\n"
@@ -633,15 +681,12 @@ class ActualBanker {
 		
 		switch (threeAcct) {
 			case 0:
-				customer.setActive(true);
 				accounts.add(new Checking(accountNumber, accountBalance, customer));
 				break;
 			case 1:
-				customer.setActive(true);
 				accounts.add(new Regular(accountNumber, accountBalance, customer));
 				break;
 			case 2:
-				customer.setActive(true);
 				accounts.add(new Gold(accountNumber, accountBalance, customer));
 				break;
 		}
@@ -1454,6 +1499,232 @@ class ActualBanker {
 		// account was not a checking account
 		return false;
 	}
+	public void loadFileName() {
+		loadPaths();
+		loadBackup();
+		filename[0] = paths[0] + "/config.dat"; // individually saved
+		filename[1] = paths[0] + "/customers.dat"; // individually saved
+		filename[2] = paths[0] + "/checking.dat"; // individually saved
+		filename[3] = paths[0] + "/regular.dat"; // individually saved
+		filename[4] = paths[0] + "/gold.dat"; // individually saved
+		filename[5] = paths[0] + "/transactions.dat"; // individually saved
+		filename[6] = paths[0] + "/oaccounts.dat"; // saved as an object
+		filename[7] = paths[0] + "/ocustomers.dat"; // saved as an object
+		filename[8] = paths[0] + "/otransactions.dat"; // saved as an object
+	}
+	
+	/** load backup<br><br>
+	 * 
+	 * this loads the filename that will be used to store backup copies of the files<br>
+	 * the extension will be added when the file is initially created<br><br>
+	 * 
+	 * example: config0.dat and if that is used then config1.dat<br>
+	 * 
+	 */
+	public void loadBackup() {
+		loadPaths();
+		backname[0] = paths[1] + "/config"; // individually saved
+		backname[1] = paths[1] + "/customers"; // individually saved
+		backname[2] = paths[1] + "/checking"; // individually saved
+		backname[3] = paths[1] + "/regular"; // individually saved
+		backname[4] = paths[1] + "/gold"; // individually saved
+		backname[5] = paths[1] + "/transactions"; // individually saved
+		backname[6] = paths[1] + "/oaccounts"; // saved as an object
+		backname[7] = paths[1] + "/ocustomers"; // saved as an object
+		backname[8] = paths[1] + "/otransactions"; // saved as an object
+	}
+	
+	/** load paths<br><br>
+	 * 
+	 * this loads the paths into an array that will used to create the folders<br>
+	 * for the first time and also this will add to the file names so the text<br>
+	 * files will be stored in sub folders rather in the main folder with the source code<br>
+	 * 
+	 */
+	public void loadPaths() {
+		paths[0] = "data";
+		paths[1] = "backup";
+		try {
+			File myPath;
+			for (int x = 0; x < paths.length; x++) {
+				myPath = new File(paths[x]);
+				if (myPath.isDirectory()) {
+					continue;
+				} else {
+					myPath.mkdir();
+				}
+			}
+		} catch (SecurityException e) {
+			System.out.print("Security setting for creating folders invalid! Unable to create Paths!");
+		}
+	}
+	
+	// ***************************************************************************** object file system *****************************************************************************
+	  
+		  // ***************************************************************** load *****************************************************************
+		  
+	  // *************************** config ***************************
+	  
+	  public void loadConfigData() {
+		  File file = new File(filename[0]);
+		  if (!(file.exists())) {
+			  bankName = getAccountNumber("Please Enter the Bank Name: ", "");
+			  bakup = 0;
+			  return;
+		  }
+		  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[0]));){
+			  while (true) {
+				  bankName = input.readUTF();
+				  bakup = input.readInt();
+			  }
+		  } catch (EOFException e) {
+			  e.getStackTrace();
+			  return;
+		  } catch (FileNotFoundException e) {
+			  e.getStackTrace();
+			  return;
+		  } catch (IOException e) {
+			  System.out.print("Configuration File Read Error");
+			  e.getStackTrace();
+		  }
+	  }
+
+	  
+	  // ************************************** customer **************************************
+		  
+		@SuppressWarnings("unchecked")
+		public void loadCustomerObjectData() {
+			File info = new File(filename[7]);
+			if (info.exists()) {
+				  try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename[7]));) {
+					  customers = (ArrayList<Customer>) input.readObject();
+					  
+				  } catch (EOFException e) {
+					  e.getStackTrace();
+					  return;
+					  
+				  } catch (FileNotFoundException e) {
+					  System.out.print("\nFile " + filename[7] + " not found!\n");
+					  e.getStackTrace();
+				  } catch (IOException e) {
+					  System.out.print("\nCustomer Read Error\n");
+					  e.getStackTrace();
+				  } catch (ClassNotFoundException e) {
+					  System.out.print("\nUnable to create object\n");
+					  e.getStackTrace();
+				  }
+			}
+		}
+		  
+		
+		// ************************************** account **************************************
+			
+		  @SuppressWarnings("unchecked")
+		public void loadAccountObjectData() {
+			  File info = new File(filename[6]);
+			  if (info.exists()) {
+				  try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename[6]));) {
+					  accounts = (ArrayList<Account>) input.readObject();
+					  
+				  } catch (FileNotFoundException e) {
+					  System.out.print("\nFile " + filename[6] + " not found!\n");
+					  e.getStackTrace();
+				  } catch (IOException e) {
+					  System.out.print("\nAccount Read Error\n");
+					  e.getStackTrace();
+				  } catch (ClassNotFoundException e) {
+					  System.out.print("\nUnable to create object\n");
+					  e.getStackTrace();
+				  }
+			  }
+		  }
+		  
+		// ************************************** transactions **************************************
+		  
+		  @SuppressWarnings("unchecked")
+		  public void loadTransactionObjectData() {
+			  File info = new File(filename[8]);
+			  if (info.exists()) {  
+				  try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(filename[8]));) {
+					  transactions = (ArrayList<Transaction>) input.readObject();
+					  
+				  } catch (FileNotFoundException e) {
+					  System.out.print("\nFile " + filename[8] + " not found!\n");
+					  e.getStackTrace();
+				  } catch (IOException e) {
+					  System.out.print("\nTransaction Read Error\n");
+					  e.getStackTrace();
+				  } catch (ClassNotFoundException e) {
+					  System.out.print("\nUnable to create object\n");
+					  e.getStackTrace();
+				  }
+			  } else {
+				  return;
+			  }
+		  }
+		  
+		  // ***************************************************************** save *****************************************************************
+
+		  // *************************** config ***************************
+
+		  public void saveConfigData() {
+			  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[0], false));) {
+				  output.writeUTF(bankName);
+				  output.writeInt(bakup);
+				  
+			  } catch (IOException e) {
+				  System.out.print("\nConfig File Write Error\n");
+				  e.getStackTrace();
+			  }
+		  }
+		  
+		  
+			// ************************************** customer **************************************
+
+		  public void saveCustomerObjectData() {
+			  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[7], false));) {
+				  output.writeObject(customers);
+				  
+			  } catch (FileNotFoundException e) {
+				  System.out.print("\nFile " + filename[7] + " not found!\n");
+				  e.getStackTrace();
+				  
+			  } catch (IOException e) {
+				  System.out.print("\nCustomer Write Error\n");
+				  e.getStackTrace();
+
+			  }
+		  }
+		  
+			// ************************************** accounts **************************************
+
+		  public void saveAccountObjectData() {
+			  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[6], false));) {
+				  output.writeObject(accounts);
+			  } catch (FileNotFoundException e) {
+				  System.out.print("\nFile " + filename[6] + " not found!\n");
+				  e.getStackTrace();
+			  } catch (IOException e) {
+				  System.out.print("\nAccount Read Error\n");
+				  e.getStackTrace();
+			  }
+		  }
+		  
+			// ************************************** transactions **************************************
+
+		  public void saveTransactionObjectData() {
+			  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[8], false));) {
+				  output.writeObject(transactions);
+			  } catch (FileNotFoundException e) {
+				  System.out.print("\nFile " + filename[7] + " not found!\n");
+				  e.getStackTrace();
+			  } catch (IOException e) {
+				  System.out.print("\nTransaction Read Error\n");
+				  e.getStackTrace();
+			  }
+		  }
+
+	
 } // end of ActualBanker class
 
 

@@ -14,6 +14,7 @@ package com.accounts;
 import com.customers.Customer;
 
 public class Checking extends Account {
+	private static final long serialVersionUID = -7963257644808097220L;
 	private double checkingTransactionFee;
 	private double checkingTransactionFeeAmount;
 	private int numberOfTransactions;
