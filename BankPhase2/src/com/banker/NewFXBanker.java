@@ -315,6 +315,20 @@ public class NewFXBanker extends Application {
     	 }
      });
      
+     // *********************************** process EOM ***********************************
+     tranEOM.setOnAction(e -> {
+    	 if (banker.accounts.isEmpty()) {
+    		 JOptionPane.showMessageDialog(null, "There are no Accounts to remove!", "Account Removal", JOptionPane.ERROR_MESSAGE);
+    	 } else {
+    		 chkAddStage.hide();
+    		 Scene myScene = new Scene(banker.processTransactionsPane(2), 800, 450);
+    		 chkAddStage.setTitle("Calculate EOM interest and fees");
+    		 chkAddStage.setScene(myScene);
+    		 chkAddStage.show();
+    	 }
+     });
+
+     
   // *********************************************************** Remove ***********************************************************
      
      // *********************************** Remove Customer ***********************************
@@ -344,6 +358,7 @@ public class NewFXBanker extends Application {
 	    	 chkAddStage.show();
     	 }
      });
+     
      
      menuBar.prefWidthProperty().bind(menuWidthProperty);
 

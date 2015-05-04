@@ -621,7 +621,7 @@ public class BankMethods {
 	     });
 	     
 	     // if the user pressed enter on the add button, call the create account method
-	     btnAdd.setOnKeyPressed(e -> {
+	     btnAdd.setOnKeyTyped(e -> {
 	    	 btnAdd.getOnKeyTyped();
 	    	 boolean isAcctOk = false;
 	    	 isAcctOk = createAccount( txtAccountNumber, txtCustomerID, txtOpeningBalance, lbltxtDisplayBoxMessage, acctNum);
@@ -1226,7 +1226,21 @@ public class BankMethods {
 	  public void loadConfigData() {
 		  File file = new File(filename[0]);
 		  if (!(file.exists())) {
+			  boolean isOk = false;
 			  bankName = JOptionPane.showInputDialog("Please Enter the Bank Name");
+			  if (bankName.isEmpty()){
+				  isOk = false;
+			  } else {
+				  isOk = true;
+			  }
+			  while (!isOk) {
+				  bankName = JOptionPane.showInputDialog("Bank Name cannot be blank!\n\nPlease Enter the Bank Name");
+				  if (bankName.isEmpty()){
+					  isOk = false;
+				  } else {
+					  isOk = true;
+				  }
+			  }
 			  bakup = 0;
 			  return;
 		  }

@@ -791,7 +791,7 @@ class ActualBanker {
 		amount = getDoubleAmount(message, errMessage);
 		switch (dw) {
 			case 0:
-				// deposit
+// ******************************************* deposit *******************************************
 				// add deposit and notify user
 				System.out.print(((account.makeDeposit(amount))? "\n       ******\nDeposit Successful!\n       ******\n" : "\n       ******\nDeposit Unsuccessful!\n       ******\n"));
 				break;
