@@ -395,15 +395,15 @@ public class BankMethods {
 		  switch (acctNum) {
 			case 0: // checking
 				acctType = "Checking Account";
-				autoAcctNum = "CA" + bu.generateUniqueAccountNumber();
+				autoAcctNum = "CA";
 				break;
 			case 1:// regular
 				acctType = "Regular Account";
-				autoAcctNum = "RA" + bu.generateUniqueAccountNumber();
+				autoAcctNum = "RA";
 				break;
 			case 2: // gold
 				acctType = "Gold Account";
-				autoAcctNum = "GA" + bu.generateUniqueAccountNumber();
+				autoAcctNum = "GA";
 				break;
 			default:
 				//autoAcctNum = "";
@@ -530,11 +530,10 @@ public class BankMethods {
 		  
 		  // if the enter key is pressed in the account number move to the next box
 		  txtAccountNumber.setOnAction(e -> {
+			  boolean isOk = true;
 			  if (txtAccountNumber.getText().equals("0")) {
-				  txtAccountNumber.setText(autoAcctNum);
-				  //txtAccountNumber.setDisable(true);
+				  txtAccountNumber.setText(autoAcctNum + bu.generateUniqueAccountNumber());
 			  } else {
-				  boolean isOk = true;
 				  for (Account a: accounts) {
 					  if (a.getAccountNumber().equals(txtAccountNumber.getText())) {
 						  isOk = false;
@@ -556,16 +555,15 @@ public class BankMethods {
 		  
 		  // if the enter key is pressed in the customerID move to the next box
 		  txtCustomerID.setOnAction(e -> {
+				 boolean isOk = false;
 				 if (txtCustomerID.getText().equals("0")) {
 					 listCust.clear();
-					 listCust.setText("");
 					 for (Customer c: customers) {
 						  listCust.appendText(c.toString() + "\n");
 					  }
 					 listCust.setFont(arialFont[1]);
 					 listCust.setStyle(txtFillColor[0]);
 				  } else {
-					  boolean isOk = false;
 					  for (Customer c: customers) {
 						  if (c.getCustomerID().equals(txtCustomerID.getText())) {
 							  isOk = true;
@@ -1459,6 +1457,12 @@ public class BankMethods {
 		  }
 	  }
 	  
+	  /** copy data to backup<br><br>
+	   * 
+	   * @param fromFile
+	   * @param toFile
+	   * @return
+	   */
 	  public boolean copyDatToBakup(String fromFile, String toFile) {
 		  if (fromFile.isEmpty()) {
 			  return false;
@@ -1491,6 +1495,17 @@ public class BankMethods {
 		  return false;
 	  }
 	  
+	  /** generate report<br><br>
+	   * 
+	   * 0 - Customer<br>
+	   * 1 - Account<br>
+	   * 2 - Transactions<br>
+	   * 3 - Statistics
+	   * 4 - EOM calculations
+	   * 
+	   * @param acctNum
+	   * @return
+	   */
 	  public BorderPane generateReport(int acctNum) {
 		  Label lblReports = new Label();
 		  lblReports.setFont(arialFont[1]);
@@ -1616,6 +1631,11 @@ public class BankMethods {
 			  return mainPane;
 	  }
 	  
+	  /** generate statistics<br><br>
+	   * 
+	   * 
+	   * @param taOutput
+	   */
 	  public void generateStatistics(TextArea taOutput) {
 			// number of accounts
 			int numAccounts = 0, numRegularAccounts = 0, numCheckingAccounts = 0, numGoldAccounts = 0;
