@@ -395,15 +395,15 @@ public class BankMethods {
 		  switch (acctNum) {
 			case 0: // checking
 				acctType = "Checking Account";
-				autoAcctNum = "CA" + bu.generateUniqueAccountNumber();
+				autoAcctNum = "CA";
 				break;
 			case 1:// regular
 				acctType = "Regular Account";
-				autoAcctNum = "RA" + bu.generateUniqueAccountNumber();
+				autoAcctNum = "RA";
 				break;
 			case 2: // gold
 				acctType = "Gold Account";
-				autoAcctNum = "GA" + bu.generateUniqueAccountNumber();
+				autoAcctNum = "GA";
 				break;
 			default:
 				//autoAcctNum = "";
@@ -531,7 +531,7 @@ public class BankMethods {
 		  // if the enter key is pressed in the account number move to the next box
 		  txtAccountNumber.setOnAction(e -> {
 			  if (txtAccountNumber.getText().equals("0")) {
-				  txtAccountNumber.setText(autoAcctNum);
+				  txtAccountNumber.setText(autoAcctNum + bu.generateUniqueAccountNumber());
 				  //txtAccountNumber.setDisable(true);
 			  } else {
 				  boolean isOk = true;
