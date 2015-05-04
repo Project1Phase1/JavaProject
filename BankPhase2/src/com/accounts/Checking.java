@@ -12,6 +12,7 @@
 package com.accounts;
 
 import com.customers.Customer;
+import com.transactions.Transaction;
 
 public class Checking extends Account {
 	private static final long serialVersionUID = -8807798234473395749L;
@@ -36,8 +37,8 @@ public class Checking extends Account {
 	 * @param accountBalance double
 	 * @param customer Customer
 	 */
-	public Checking(String accountNumber, double accountBalance, Customer customer) {
-		super(accountNumber, accountBalance, customer);
+	public Checking(String accountNumber, double accountBalance, Customer customer, Transaction transaction) {
+		super(accountNumber, accountBalance, customer, transaction);
 		this.checkingTransactionFee = 3.00;
 		this.checkingTransactionFeeAmount = 0.0;
 		this.numberOfTransactions = 0;
@@ -51,8 +52,8 @@ public class Checking extends Account {
 	 * @param checkingTransactionFee
 	 * @param checkingTransactionFeeAmount
 	 */
-	public Checking(String accountNumber, double accountBalance, Customer customer, double checkingTransactionFee, double checkingTransactionFeeAmount) {
-		super(accountNumber, accountBalance, customer);
+	public Checking(String accountNumber, double accountBalance, Customer customer, Transaction transaction, double checkingTransactionFee, double checkingTransactionFeeAmount) {
+		super(accountNumber, accountBalance, customer, transaction);
 		this.checkingTransactionFee = checkingTransactionFee;
 		this.checkingTransactionFeeAmount = checkingTransactionFeeAmount;
 		if (checkingTransactionFeeAmount > 0) {

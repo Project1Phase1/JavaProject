@@ -108,6 +108,23 @@ public class NewFXBanker extends Application {
     	 banker.createNewSystemData();
      	 stage.setTitle(banker.bankName);
      });
+
+// ************************** load all data **************************
+     fileNames[1].setOnAction(e -> {
+    	 banker.loadConfigData();
+    	 banker.loadCustomerObjectData();
+    	 banker.loadAccountObjectData();
+    	 banker.loadTransactionObjectData();
+    	 stage.setTitle(banker.bankName);
+     });
+     
+// ************************** save all data **************************
+     fileNames[2].setOnAction(e -> {
+    	 banker.saveConfigData();
+    	 banker.saveCustomerObjectData();
+    	 banker.saveAccountObjectData();
+    	 banker.saveTransactionObjectData();
+     });
      
 // *************************** save config data ***************************
      fileNames[3].setOnAction(e -> {
@@ -156,6 +173,8 @@ public class NewFXBanker extends Application {
      });
      
      files.setOnMenuValidation(e -> {
+    	 fileNames[11].setDisable(true);
+    	 fileNames[12].setDisable(true);
     	 if (banker.transactions.isEmpty() || banker.customers.isEmpty() || banker.accounts.isEmpty()) {
 	    	 fileNames[0].setDisable(true);
 	    	 fileNames[1].setDisable(true);
@@ -163,6 +182,10 @@ public class NewFXBanker extends Application {
 	    	 fileNames[4].setDisable(true);
 	    	 fileNames[5].setDisable(true);
 	    	 fileNames[6].setDisable(true);
+	    	 fileNames[7].setDisable(false);
+	    	 fileNames[8].setDisable(false);
+	    	 fileNames[9].setDisable(false);
+	    	 fileNames[10].setDisable(false);
     	 } else {
     		 fileNames[0].setDisable(false);
     		 fileNames[1].setDisable(false);
@@ -170,6 +193,10 @@ public class NewFXBanker extends Application {
 	    	 fileNames[4].setDisable(false);
 	    	 fileNames[5].setDisable(false);
 	    	 fileNames[6].setDisable(false);
+	    	 fileNames[7].setDisable(true);
+	    	 fileNames[8].setDisable(true);
+	    	 fileNames[9].setDisable(true);
+	    	 fileNames[10].setDisable(true);
    		 
     	 }
      });
@@ -226,7 +253,7 @@ public class NewFXBanker extends Application {
   // ************************************************************ report statistics ************************************************************
      rptStatistics.setOnAction(e -> {
 		  if (banker.accounts.isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "There are no Accounts to display! Terminating  view Statistics!", "No Accounts", JOptionPane.INFORMATION_MESSAGE);
+			  JOptionPane.showMessageDialog(null, "There are no Accounts to display! Terminating view Statistics!", "No Accounts", JOptionPane.INFORMATION_MESSAGE);
 		  } else {
 	    	chkAddStage.hide();
 	    	Scene myScene = new Scene(banker.generateReport(3), 1300, 500);
@@ -235,6 +262,25 @@ public class NewFXBanker extends Application {
 	    	chkAddStage.show();
 		  }
      });
+    
+     // *********************************** process EOM ***********************************
+     tranEOM.setOnAction(e -> {
+    	 if (banker.accounts.isEmpty()) {
+    		 JOptionPane.showMessageDialog(null, "There are no Accounts to calculate! Terminating calculate EOM!", "Account EOM", JOptionPane.ERROR_MESSAGE);
+    	 } else {
+    		 chkAddStage.hide();
+    		 Scene myScene = new Scene(banker.generateReport(4), 1300, 500);
+    		 chkAddStage.setTitle("Calculate EOM interest and fees");
+    		 chkAddStage.setScene(myScene);
+    		 chkAddStage.show();
+    	 }
+     });
+
+
+     
+	//case 2:
+		//strTitle = "Calculate EOM interest and fees";
+		//break;
      
 // ************************************************************ create new customer ************************************************************
       accountCustomer.setOnAction(e -> {
@@ -315,19 +361,6 @@ public class NewFXBanker extends Application {
     	 }
      });
      
-     // *********************************** process EOM ***********************************
-     tranEOM.setOnAction(e -> {
-    	 if (banker.accounts.isEmpty()) {
-    		 JOptionPane.showMessageDialog(null, "There are no Accounts to remove!", "Account Removal", JOptionPane.ERROR_MESSAGE);
-    	 } else {
-    		 chkAddStage.hide();
-    		 Scene myScene = new Scene(banker.processTransactionsPane(2), 800, 450);
-    		 chkAddStage.setTitle("Calculate EOM interest and fees");
-    		 chkAddStage.setScene(myScene);
-    		 chkAddStage.show();
-    	 }
-     });
-
      
   // *********************************************************** Remove ***********************************************************
      

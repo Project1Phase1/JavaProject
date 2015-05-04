@@ -1,7 +1,6 @@
 package com.utilities;
 
 import java.io.*;
-import java.text.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -31,18 +30,22 @@ import com.transactions.Transaction;
 // http://docs.oracle.com/javase/tutorial/essential/io/index.html
 
 public class BankMethods {
+	// file names for regular files and backup files and their paths
 	public String[] filename = new String[9]; // contains the path and file names of data files
 	public String[] backname = new String[9]; // contains the path and file name of the backup data files
 	public String[] paths = new String[2];
+	// text fill color and base color
 	public String[] txtFillColor = new String[7];
+	// fonts used
 	public Font[] arialFont = new Font[4];
 	public String bankName; // bank name that will be stored in the config dat file
 	public int bakup; // a backup token that will keep track of the backup number so backups will never over write each other
+	// in order to make a variable active for a individual form
 	public String autoAcctNum;
 	// the general bank containers
 	public ArrayList<Customer> customers = new ArrayList<Customer>();
 	public ArrayList<Account> accounts = new ArrayList<Account>();
-	public ArrayList<Account> rejects = new ArrayList<Account>();
+	public ArrayList<Account> eomErrors = new ArrayList<Account>();
 	public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	// instance of the BankUtilities class
 	public BankUtilities bu = new BankUtilities();
@@ -621,17 +624,16 @@ public class BankMethods {
 	     });
 	     
 	     // if the user pressed enter on the add button, call the create account method
-	     btnAdd.setOnKeyTyped(e -> {
-	    	 btnAdd.getOnKeyTyped();
-	    	 boolean isAcctOk = false;
-	    	 isAcctOk = createAccount( txtAccountNumber, txtCustomerID, txtOpeningBalance, lbltxtDisplayBoxMessage, acctNum);
-	    	 if (isAcctOk) {
-	    		 txtAccountNumber.setDisable(false);
-	    		 txtCustomerID.setText("");
-	    		 txtAccountNumber.setText("");
-	    		 txtOpeningBalance.setText("");
-	    	 }
-	     });
+//	     btnAdd.setOnKeyTyped(e -> {
+//	    	 boolean isAcctOk = false;
+//	    	 isAcctOk = createAccount( txtAccountNumber, txtCustomerID, txtOpeningBalance, lbltxtDisplayBoxMessage, acctNum);
+//	    	 if (isAcctOk) {
+//	    		 txtAccountNumber.setDisable(false);
+//	    		 txtCustomerID.setText("");
+//	    		 txtAccountNumber.setText("");
+//	    		 txtOpeningBalance.setText("");
+//	    	 }
+//	     });
 
 	     // if the user clicks the add button, call the create account method
 	     btnAdd.setOnAction(e -> {
@@ -646,11 +648,6 @@ public class BankMethods {
 	    	 }
 	     });
 	     
-	     // if the user presses enter on the exit button, close the window
-	     btnExit.setOnKeyTyped(e -> {
-	    	 btnExit.getScene().getWindow().hide();
-	    });		     
-
 	     // if the user clicks the exit button close the window
 	     btnExit.setOnAction(e -> {
 	    	 btnExit.getScene().getWindow().hide();
@@ -1082,8 +1079,10 @@ public class BankMethods {
 		 * @param description String
 		 * @param amount double
 		 */
-		public void createTransaction(String customerID, String accountNumber, String description, double amount) {
-			transactions.add(new Transaction(new java.util.Date(), customerID, accountNumber, description, amount, bu.generateUniqueTransNumber()));
+		public Transaction createTransaction(String customerID, String accountNumber, String description, double amount) {
+			Transaction transaction = new Transaction(new java.util.Date(), customerID, accountNumber, description, amount, bu.generateUniqueTransNumber());
+			transactions.add(transaction);
+			return transaction;
 		}
 		
 
@@ -1178,18 +1177,15 @@ public class BankMethods {
 	    				 switch (acctNum) {
 	    				 case 0: // checking
 	    					 desc = "Checking Opening Balance";
-	    					 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer));
-	    					 createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount);
+	    					 accounts.add(new Checking(txtAccountNumber.getText(), amount, customer, createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount)));
 	    					 break;
 	    				 case 1: // regular
 	    					 desc = "Regular Opening Balance";
-	    					 accounts.add(new Regular(txtAccountNumber.getText(), amount, customer));
-	    					 createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount);
+	    					 accounts.add(new Regular(txtAccountNumber.getText(), amount, customer, createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount)));
 	    					 break;
 	    				 case 2: // gold
 	    					 desc = "Gold Opening Balance";
-	    					 accounts.add(new Gold(txtAccountNumber.getText(), amount, customer));
-	    					 createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount);
+	    					 accounts.add(new Gold(txtAccountNumber.getText(), amount, customer, createTransaction(customer.getCustomerID(), txtAccountNumber.getText(), desc, amount)));
 	    					 break;
 	    				 }
 	    			 } else {
@@ -1217,10 +1213,11 @@ public class BankMethods {
     	 }
 		  return false;
 	  }
-// ************************************************************* file system *************************************************************
 	  
-	  // **************************************** load ****************************************
+// ***************************************************************************** object file system *****************************************************************************
 	  
+	  // ***************************************************************** load *****************************************************************
+
 	  // *************************** config ***************************
 	  
 	  public void loadConfigData() {
@@ -1262,379 +1259,7 @@ public class BankMethods {
 			  e.getStackTrace();
 		  }
 	  }
-	  
-	  // *************************** customer ***************************
-	  
-	  public void loadCustomerData() {
-		  if (customers.isEmpty()) {
-			  String custID = "", custName = "";
-			  @SuppressWarnings("unused")
-			int counter = 0;
-			  boolean active = false;
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[1]));){
-				  while (true) {
-					  custID = input.readUTF();
-					  custName = input.readUTF();
-					  active = input.readBoolean();
-					  customers.add(new Customer(custID, custName, active));
-					  counter++;
-				  }
-			  } catch (EOFException e) {
-				 // JOptionPane.showMessageDialog(null, counter + " Customer(s) Data Loaded successfully!", "Customer Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  e.getStackTrace();
-				 return;
-			  } catch (FileNotFoundException e) {
-				  //JOptionPane.showMessageDialog(null, "Customer file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (IOException e) {
-				  JOptionPane.showMessageDialog(null, "Customer File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Customers have already been loaded!", "Load Customer Error", JOptionPane.INFORMATION_MESSAGE);
-			  
-		  }
-	  }
-	  
-	  // *************************** checking ***************************
-	  
-	  public void loadCheckingData() {
-		  if (customers.isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Checking!", "Error Load Checking", JOptionPane.ERROR_MESSAGE);
-			  return;
-		  }
-		  boolean isOk = true;
-		  for (Account a: accounts) {
-			  if (a instanceof Checking) {
-				  isOk = false;
-			  }
-		  }
-		  if (isOk) {
-			  String custID = "", custName = "", acctNum = "";
-			  double acctBal = 0.0, acctFee = 0.0, acctFeeAmount = 0.0;
-			  @SuppressWarnings("unused")
-			int counter = 0;
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[2]));) {
-				  while (true) {
-					  custID = input.readUTF();
-					  custName = input.readUTF();
-					  acctNum = input.readUTF();
-					  acctBal = input.readDouble();
-					  acctFee = input.readDouble();
-					  acctFeeAmount = input.readDouble();
-					  Customer customer = customers.get(0);
-					  for (Customer c: customers) {
-						  if (c.getCustomerID().equals(custID) && c.getCustomerName().equals(custName)) {
-							  customer = c;
-						  }
-					  }
-					  accounts.add(new Checking(acctNum, acctBal, customer, acctFee, acctFeeAmount));
-					  counter++;
-				  }
-			  } catch (EOFException e) {
-				  //JOptionPane.showMessageDialog(null, counter + " Checking Account Data Loaded successfully!", "Checking Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (FileNotFoundException e) {
-				  //JOptionPane.showMessageDialog(null, "Account file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (IOException e) {
-				  JOptionPane.showMessageDialog(null, "Account File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Checking Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
-		  }
-	  }
-	  
-	  // *************************** regular ***************************
-	  
-	  public void loadRegularData() {
-		  if (customers.isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Regular!", "Error Load Regular", JOptionPane.ERROR_MESSAGE);
-			  return;
-		  }
-		  boolean isOk = true;
-		  for (Account a: accounts) {
-			  if (a instanceof Regular) {
-				  isOk = false;
-			  }
-		  }
-		  if (isOk) {
-			  String custID = "", custName = "", acctNum = "";
-			  double acctBal = 0.0, acctIntRate = 0.0, acctIntAmount = 0.0, acctFixed = 0.0;
-			  @SuppressWarnings("unused")
-			int counter = 0;
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[3]));) {
-				  while (true) {
-					  custID = input.readUTF();
-					  custName = input.readUTF();
-					  acctNum = input.readUTF();
-					  acctBal = input.readDouble();
-					  acctIntRate = input.readDouble();
-					  acctIntAmount = input.readDouble();
-					  acctFixed = input.readDouble();
-					  Customer customer = customers.get(0);
-					  for (Customer c: customers) {
-						  if (c.getCustomerID().equals(custID) && c.getCustomerName().equals(custName)) {
-							  customer = c;
-						  }
-					  }
-					  accounts.add(new Regular(acctNum, acctBal, customer, acctIntRate, acctIntAmount, acctFixed));
-					  counter++;
-				  }
-			  } catch (EOFException e) {
-				  //JOptionPane.showMessageDialog(null, counter + " Regular Account Data Loaded successfully!", "Regular Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (FileNotFoundException e) {
-				  //JOptionPane.showMessageDialog(null, "Regular file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (IOException e) {
-				  JOptionPane.showMessageDialog(null, "Regular File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Regular Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
-		  }
-	  }
-	  
-	  // *************************** gold ***************************
-	  
-	  public void loadGoldData() {
-		  if (customers.isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "There are no Customers! Terminating Load Gold!", "Error Load Gold", JOptionPane.ERROR_MESSAGE);
-			  return;
-		  }
-		  boolean isOk = true;
-		  for (Account a: accounts) {
-			  if (a instanceof Gold) {
-				  isOk = false;
-			  }
-		  }
-		  if (isOk) {
-			  String custID = "", custName = "", acctNum = "";
-			  double acctBal = 0.0, acctIntRate = 0.0, acctIntAmount = 0.0;
-			  @SuppressWarnings("unused")
-			int counter = 0;
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[4]));) {
-				  while (true) {
-					  custID = input.readUTF();
-					  custName = input.readUTF();
-					  acctNum = input.readUTF();
-					  acctBal = input.readDouble();
-					  acctIntAmount = input.readDouble();
-					  acctIntRate = input.readDouble();
-					  Customer customer = customers.get(0);
-					  for (Customer c: customers) {
-						  if (c.getCustomerID().equals(custID) && c.getCustomerName().equals(custName)) {
-							  customer = c;
-						  }
-					  }
-					  accounts.add(new Gold(acctNum, acctBal, customer, acctIntAmount, acctIntRate));
-					  counter++;
-				  }
-			  } catch (EOFException e) {
-				  //JOptionPane.showMessageDialog(null, counter + " Gold Account Data Loaded successfully!", "Gold Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (FileNotFoundException e) {
-				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (IOException e) {
-				  JOptionPane.showMessageDialog(null, "Gold File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Gold Accounts have already been loaded!", "Load Accounts Error", JOptionPane.INFORMATION_MESSAGE);
-		  }
-	  }
 
-	  // *************************** transactions ***************************
-
-	  public void loadTransactionData() {
-		  if (transactions.isEmpty()) {
-			  String custID = "", acctNum = "", desc = "";
-			  double amount = 0.0;
-			  long tranID = 0;
-			  Date date = new Date();
-			  SimpleDateFormat strDate = new SimpleDateFormat();
-			  try (DataInputStream input = new DataInputStream(new FileInputStream(filename[5]));) {
-				  while (true) {
-					  custID = input.readUTF();
-					  acctNum = input.readUTF();
-					  desc = input.readUTF();
-					  amount = input.readDouble();
-					  tranID = input.readLong();
-					  date = strDate.parse(input.readUTF());
-					  transactions.add(new Transaction(date, custID, acctNum, desc, amount, tranID));
-				  }
-			  } catch (EOFException e) {
-				  //JOptionPane.showMessageDialog(null, counter + " Gold Account Data Loaded successfully!", "Gold Load Data", JOptionPane.INFORMATION_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (FileNotFoundException e) {
-				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (IOException e) {
-				  JOptionPane.showMessageDialog(null, "Transaction File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-			  } catch (ParseException e) {
-				  e.getStackTrace();
-			  }
-		  } else {
-			  JOptionPane.showMessageDialog(null, "Transactions have already been loaded! Terminating Load Transactions!", "Load Transacitons", JOptionPane.INFORMATION_MESSAGE);
-		  }
-	  }
-	  
-	  
-// **************************************** save ****************************************
-	  
-	  // *************************** config ***************************
-
-	  public void saveConfigData() {
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[0], false));) {
-			  output.writeUTF(bankName);
-			  output.writeInt(bakup);
-			  
-		  } catch (IOException e) {
-			  JOptionPane.showMessageDialog(null, "Config File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  e.getStackTrace();
-		  }
-		  // JOptionPane.showMessageDialog(null, "Config Data Saved successfully!", "Config Save Data", JOptionPane.INFORMATION_MESSAGE);
-	  }
-	  
-	  
-	  // *************************** customer ***************************
-	  
-	  public void saveCustomerData() {
-		  int counter = 0;
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[1], ((counter==0)?false:true)));) {
-			  for (Customer c: customers) {
-				  output.writeUTF(c.getCustomerID());
-				  output.writeUTF(c.getCustomerName());
-				  output.writeBoolean(c.getActive());
-				  counter++;
-			  }
-		  } catch (IOException e) {
-			  JOptionPane.showMessageDialog(null, "Customer File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  e.getStackTrace();
-		  }
-		  JOptionPane.showMessageDialog(null, counter + " Customer Data Saved successfully!", "Customer Save Data", JOptionPane.INFORMATION_MESSAGE);
-		  
-	  }
-	  
-	  // *************************** checking ***************************
-	  
-	  public void saveCheckingData() {
-		  int counter = 0;
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[2], ((counter==0)?false:true)));) {
-			  for (Account a: accounts) {
-				  if (a instanceof Checking) {
-					  output.writeUTF(a.getCustomer().getCustomerID());
-					  output.writeUTF(a.getCustomer().getCustomerName());
-					  output.writeUTF(a.getAccountNumber());
-					  output.writeDouble(a.getAccountBalance());
-					  output.writeDouble(((Checking) a).getCheckingTransactionFee());
-					  output.writeDouble(((Checking) a).getCheckingTransactionFeeAmount());
-					  counter++;
-				  }
-			  }
-		  } catch (IOException e) {
-			  JOptionPane.showMessageDialog(null, "Checking File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  e.getStackTrace();
-		  }
-		  JOptionPane.showMessageDialog(null, counter + " Checking Data Saved successfully!", "Checking Save Data", JOptionPane.INFORMATION_MESSAGE);
-		  
-	  }
-	  
-	  // *************************** regular ***************************
-	  
-	  public void saveRegularData() {
-		  int counter = 0;
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[3], ((counter==0)?false:true)));) {
-			  for (Account a: accounts) {
-				  if (a instanceof Regular) {
-					  output.writeUTF(a.getCustomer().getCustomerID());
-					  output.writeUTF(a.getCustomer().getCustomerName());
-					  output.writeDouble(a.getAccountBalance());
-					  output.writeDouble(((Regular) a).getRegularInterestRate());
-					  output.writeDouble(((Regular) a).getRegularInterestAmount());
-					  output.writeDouble(((Regular) a).getRegularFixedCharge());
-					  counter++;
-				  }
-			  }
-		  } catch (IOException e) {
-			  JOptionPane.showMessageDialog(null, "Regular File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  e.getStackTrace();
-		  }
-		  JOptionPane.showMessageDialog(null, counter + " Regular Data Saved successfully!", "Regular Save Data", JOptionPane.INFORMATION_MESSAGE);
-	  }
-	
-	  // *************************** gold ***************************
-
-	  public void saveGoldData() {
-		  int counter = 0;
-		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[4], ((counter==0)?false:true)));) {
-			  for (Account a: accounts) {
-				  if (a instanceof Gold) {
-					  output.writeUTF(a.getCustomer().getCustomerID());
-					  output.writeUTF(a.getCustomer().getCustomerName());
-					  output.writeUTF(a.getAccountNumber());
-					  output.writeDouble(a.getAccountBalance());
-					  output.writeDouble(((Gold) a).getGoldInterestAmount());
-					  output.writeDouble(((Gold) a).getGoldInterestRate());
-					  counter++;
-				  }
-			  }
-		  } catch (IOException e) {
-			  JOptionPane.showMessageDialog(null, "Gold File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
-			  e.getStackTrace();
-			  
-		  }
-		  JOptionPane.showMessageDialog(null, counter + " Gold Data Saved successfully!", "Gold Save Data", JOptionPane.INFORMATION_MESSAGE);
-	  }
-	
-	  
-	  // *************************** transactions ***************************
-
-	  
-	  public void saveTransactionData() {
-		  if (transactions.isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "There are no Transacitons to save! Terminating Save Transactions!", "No Transactions", JOptionPane.ERROR_MESSAGE);
-			  return;
-		  } else {
-			 try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[5]));) {
-				 for (Transaction t: transactions) {
-					 output.writeUTF(t.getCustomerID());
-					 output.writeUTF(t.getAccountNumber());
-					 output.writeUTF(t.getDescription());
-					 output.writeDouble(t.getAmount());
-					 output.writeLong(t.getTransactionNumber());
-					 output.writeUTF(t.getCreateDate().toString());
-				 }
-			  } catch (FileNotFoundException e) {
-				  //JOptionPane.showMessageDialog(null, "Gold file " + filename[0] + " does not exist!", "File Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-				  return;
-			  } catch (IOException e) {
-				  JOptionPane.showMessageDialog(null, "Transaction File Read Error", "File Read Error", JOptionPane.ERROR_MESSAGE);
-				  e.getStackTrace();
-			  }
-		  }
-	  }
-
-	  
-	  
-// ***************************************************************************** object file system *****************************************************************************
-	  
-	  // ***************************************************************** load *****************************************************************
-	  
 	  // ************************************** customer **************************************
 	  
 	@SuppressWarnings("unchecked")
@@ -1710,7 +1335,21 @@ public class BankMethods {
 	  
 	  // ***************************************************************** save *****************************************************************
 
-		// ************************************** customer **************************************
+	  // *************************** config ***************************
+
+	  public void saveConfigData() {
+		  try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename[0], false));) {
+			  output.writeUTF(bankName);
+			  output.writeInt(bakup);
+			  
+		  } catch (IOException e) {
+			  JOptionPane.showMessageDialog(null, "Config File Write Error", "File Write Error", JOptionPane.ERROR_MESSAGE);
+			  e.getStackTrace();
+		  }
+		  // JOptionPane.showMessageDialog(null, "Config Data Saved successfully!", "Config Save Data", JOptionPane.INFORMATION_MESSAGE);
+	  }
+
+	  // ************************************** customer **************************************
 
 	  public void saveCustomerObjectData() {
 		  try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename[7], false));) {
@@ -1760,7 +1399,7 @@ public class BankMethods {
 	  // ************* this will delete the files so be careful ****************************
 	  
 	  public void createNewSystemData() {
-		  boolean isOk = false, debug = true;
+		  boolean isOk = false, debug = false;
 		  try {
 			  File startOver;
 			  if (debug) {
@@ -1790,7 +1429,21 @@ public class BankMethods {
 						 startOver.delete();
 					 }
 				 }
-				 bankName = JOptionPane.showInputDialog("Please Enter the Bank Name");
+				  boolean isNameOK = false;
+				  bankName = JOptionPane.showInputDialog("Please Enter the Bank Name");
+				  if (bankName.isEmpty()){
+					  isNameOK = false;
+				  } else {
+					  isNameOK = true;
+				  }
+				  while (!isNameOK) {
+					  bankName = JOptionPane.showInputDialog("Bank Name cannot be blank!\n\nPlease Enter the Bank Name");
+					  if (bankName.isEmpty()){
+						  isNameOK = false;
+					  } else {
+						  isNameOK = true;
+					  }
+				  }
 				 
 				 saveConfigData();
 				 loadConfigData();
@@ -1856,6 +1509,9 @@ public class BankMethods {
 		  case 3:
 			  lblReports.setText("Statistics Report");
 			  break;
+		  case 4:
+			  lblReports.setText("Calculate EOM interest and fees");
+			  break;
 		  }
 		  Button btnExit = new Button("Exit");
 		  btnExit.setFont(arialFont[2]);
@@ -1912,12 +1568,21 @@ public class BankMethods {
 			  taOutput.setFont(arialFont[0]);
 			  generateStatistics(taOutput);
 			  break;
+		  case 4:
+			  taOutput.setFont(arialFont[0]);
+			  eomCalculations(taOutput);
+			  if (!eomErrors.isEmpty()) {
+				  
+			  }
+			  break;
 		  }
 			  if (acctNum == 0) {
 				  taOutput.setPrefColumnCount(30);
 			  } else if (acctNum == 1 || acctNum == 2) {
 				  taOutput.setPrefColumnCount(85);
 			  } else if (acctNum == 3) {
+				  taOutput.setPrefColumnCount(75);
+			  } else if (acctNum == 4) {
 				  taOutput.setPrefColumnCount(75);
 			  }
 			  taOutput.setEditable(false);
@@ -2077,4 +1742,190 @@ public class BankMethods {
 			}
 			return avgNum;
 		}
-}
+		
+		/** end of month calculations<br><br>
+		 * 
+		 * process accounts and calculate interest for accounts that<br>
+		 * have the ability to generate interest only if the balance is positive<br><br>
+		 * 
+		 * apply transaction fees to the balance of Checking accounts only<br>
+		 * if there is enough funds to do so<br>
+		 * Will not allow the balance to go into a negative state<br>
+		 * if there are not enough funds, the account will be added to a<br>
+		 * error table and processed later allow the user to<br>
+		 * add funds<br><br>
+		 * 
+		 * also keep track of the number of account and how many errors<br>
+		 * and display a formated report at the end of the run<br>
+		 * 
+		 */
+		public void eomCalculations(TextArea taOutput) {
+			
+			String description = "";
+			if (accounts.isEmpty()) {
+				System.out.print("\n\nThere are no accounts to process!\n\nTerminating EOM Calculations!\n\n");
+				return;
+			}
+			// declare counting variables
+			int counter = 0;
+			int goodCounter = 0;
+			int badCounter = 0;
+			int errorCounter = 0;
+			int checkCounter = 0;
+			int goldCounter = 0;
+			int regCounter = 0;
+			int checkErrorCounter = 0;
+			int goldErrorCounter = 0;
+			int regErrorCounter = 0;
+			// set up account types variables
+			Checking chk;
+			Gold gold;
+			Regular reg;
+			// loop through accounts and prcess each one
+			for (Account a: accounts) {
+				counter++;
+				// checking accounts
+				if (a instanceof Checking) {
+					checkCounter++;
+					chk = (Checking) a;
+					// determine if transactions are zero and increment bad counter and loop back
+					if (chk.getNumberOfTransactions() == 0) {
+						badCounter++;
+						continue;
+					}
+					// check to see if the amount of the fees don't match the number of transaction times the fees (remember the first two are fee)
+					if (((chk.getNumberOfTransactions() - 2) * chk.getCheckingTransactionFee()) != chk.getCheckingTransactionFeeAmount()) {
+						// there is an error
+						errorCounter++;
+						checkErrorCounter++;
+						description = "EOM Checking Fees Don't Match";
+						// display message to user
+						// displayDescription(description);
+						// add transaction to tracker
+						createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, 0.0);
+						// add account to error table
+						eomErrors.add(chk);
+					} else {
+					 // calculated fees and fee amount are equal
+						// now check to see if there are enough available funds to process
+						if (chk.getAccountBalance() < chk.getCheckingTransactionFeeAmount()) {
+							// there are not enough funds to process
+							errorCounter++;
+							checkErrorCounter++;
+							description = "EOM Checking - Insufficient Funds";
+							// add account to error table
+							eomErrors.add(chk);
+							// display message to user
+							// displayDescription(description);
+							// add transaction to tracker
+							createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, 0.0);
+						} else {
+							// there are enough funds to process
+							goodCounter++;
+							description = "EOM Checking - Transaction Fees";
+							// update account balance
+							chk.setAccountBalance(chk.getAccountBalance() - chk.getCheckingTransactionFeeAmount());
+							// display message to user
+							// displayDescription(description);
+							// add transaction to tracker
+							createTransaction(chk.getCustomer().getCustomerID(), chk.getAccountNumber(), description, (chk.getCheckingTransactionFeeAmount() * -1));
+							// reset transaction number and fee amount
+							chk.setNumberOfTransactions(0);
+							chk.setCheckingTransactionFeeAmount(0.0);
+						}
+					}
+				} else if (a instanceof Gold) {
+					goldCounter++;
+					gold = (Gold) a;
+					if(gold.getAccountBalance() <= 0.0) {
+						// the account has no funds to calculate interest
+						badCounter++;
+						continue;
+					} else {
+						// account is able to add interest calculations
+						goodCounter++;
+						description = "EOM Gold - Interest Calculation";
+						// display message to user
+						// displayDescription(description);
+						// calculate interest
+						double interest = calculateInterest(gold, (gold.getGoldInterestRate() / 100.0));
+						// apply interest to account
+						gold.setAccountBalance(gold.getAccountBalance() + interest);
+						// add transaction to tracker
+						createTransaction(gold.getCustomer().getCustomerID(), gold.getAccountNumber(), description, interest);
+						// add interest to interest field
+						gold.setGoldInterestAmount(gold.getGoldInterestAmount() + interest);
+					}
+				} else {
+					regCounter++;
+					reg = (Regular) a;
+					if (reg.getAccountBalance() <= 0.0) {
+						// the account has no funds to calculate interest
+						badCounter++;
+						continue;
+					} else {
+						// account is able to add interest calculations
+						if (reg.getAccountBalance() >= reg.getRegularFixedCharge()) {
+							goodCounter++;
+							description = "EOM Regular - Interest Calculation";
+							// calculate interest
+							double interest = calculateInterest(reg, (reg.getRegularInterestRate() / 100.0));
+							// display message to user
+							// displayDescription(description);
+							// apply interest to account
+							reg.setAccountBalance(reg.getAccountBalance() + (interest - reg.getRegularFixedCharge()));
+							// add transaction to tracker
+							createTransaction(reg.getCustomer().getCustomerID(), reg.getAccountNumber(), description, interest);
+							// add interest to interest field
+							reg.setRegularInterestAmount(reg.getRegularInterestAmount() + interest);
+						} else {
+							// there is not enough funds available to calculate interest and apply the fixed Charge
+							regErrorCounter++;
+							errorCounter++;
+							description = "EOM Regular - Insufficient funds to apply fixed cost";
+							// display message to user
+							// displayDescription(description);
+						}
+					}
+				}
+			}
+			// display report
+			// all accounts
+			taOutput.appendText("There were " + counter + " accounts processed!\n");
+			taOutput.appendText("\nThere were " + errorCounter + " errors accounted for!\n");
+			taOutput.appendText("\nThere were " + goodCounter + " accounts processed successfully!\n");
+			// show those with zero balance
+			taOutput.appendText("\nThere were " + badCounter + " accounts processed unsuccessfully! (zero balance or no transactions)\n\n");
+			// out of all the accounts
+			taOutput.appendText("\nOf the " + counter + " accounts processed, " + checkCounter + " were Checking accounts!\n");
+			taOutput.appendText("\nOf the " + counter + " accounts processed, " + goldCounter + " were Gold accounts!\n");
+			taOutput.appendText("\nOf the " + counter + " accounts processed, " + regCounter + " were Regular accounts!\n\n");
+			// of the accounts how many of those were errors
+			taOutput.appendText("\nOf the " + checkCounter + " Checking accounts processed, there were " + checkErrorCounter + " errors\n");
+			taOutput.appendText("\nOf the " + goldCounter + " Gold accounts processed, there were " + goldErrorCounter + " errors\n");
+			taOutput.appendText("\nOf the " + regCounter + " Regular accounts processed, there were " + regErrorCounter + " errors\n");
+			
+			
+		}
+
+		/** calculate interest<br><br>
+		 * 
+		 * @param account the account to calculate the interest for
+		 * @param rate the rate in decimal form
+		 * 
+		 * @return the amount of the interest
+		 */
+		public double calculateInterest(Account account, double rate) {
+			// calculate interest for 1 year compounded monthly7
+			// I = P x (1 + r/n)^(n x t)
+			// P = accountBalance : Principle
+			// r = rate : interest rate (in decimal)
+			// t = year : number of years, months, days, etc in this case it is years
+			// n = numTimes : how often : months, quarters, days etc. in this case it is one month
+			double years = 1.0;
+			double numTimes = 1.0/12.0;
+			double interest = ((account.getAccountBalance() * (Math.pow((1.0 + (rate / numTimes)), (numTimes * years)))) - account.getAccountBalance());
+			return interest;
+		}
+		
+} // end of BankMethods class

@@ -12,6 +12,7 @@
 package com.accounts;
 
 import com.customers.Customer;
+import com.transactions.Transaction;
 
 public class Gold extends Account {
 	private static final long serialVersionUID = -144957960012585567L;
@@ -27,15 +28,15 @@ public class Gold extends Account {
 	 * @param accountBalance
 	 * @param customer
 	 */
-	public Gold(String accountNumber, double accountBalance, Customer customer) {
-		super(accountNumber, accountBalance, customer);
+	public Gold(String accountNumber, double accountBalance, Customer customer, Transaction transaction) {
+		super(accountNumber, accountBalance, customer, transaction);
 		this.goldInterestAmount = 0.0;
 		this.goldInterestRate = 5.0;
 
 	}
 
-	public Gold(String accountNumber, double accountBalance, Customer customer, double goldInterestAmount, double goldInterestRate) {
-		super(accountNumber, accountBalance, customer);
+	public Gold(String accountNumber, double accountBalance, Customer customer, Transaction transaction, double goldInterestAmount, double goldInterestRate) {
+		super(accountNumber, accountBalance, customer, transaction);
 		this.goldInterestAmount = goldInterestAmount;
 		this.goldInterestRate = goldInterestRate;
 	}

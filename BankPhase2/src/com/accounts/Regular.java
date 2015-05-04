@@ -12,6 +12,7 @@
 package com.accounts;
 
 import com.customers.Customer;
+import com.transactions.Transaction;
 
 public class Regular extends Account {
 	private static final long serialVersionUID = 8082267220118547343L;
@@ -40,8 +41,8 @@ public class Regular extends Account {
 	 * @param customer the owner of the account
 	 * 
 	 */
-	public Regular(String accountNumber, double accountBalance,	Customer customer) {
-		super(accountNumber, accountBalance, customer);
+	public Regular(String accountNumber, double accountBalance,	Customer customer, Transaction transaction) {
+		super(accountNumber, accountBalance, customer, transaction);
 		this.regularInterestRate = 6.0;
 		this.regularInterestAmount = 0.0;
 		this.regularFixedCharge = 10.0;
@@ -57,8 +58,8 @@ public class Regular extends Account {
 	 * @param regularFixedCharge the amount of the fixed charge when interest is calculated
 	 * 
 	 */
-	public Regular(String accountNumber, double accountBalance, Customer customer, double regularInterestRate, double regularInterestAmount, double regularFixedCharge) {
-		super(accountNumber, accountBalance, customer);
+	public Regular(String accountNumber, double accountBalance, Customer customer, Transaction transaction, double regularInterestRate, double regularInterestAmount, double regularFixedCharge) {
+		super(accountNumber, accountBalance, customer, transaction);
 		this.regularInterestRate = regularInterestRate;
 		this.regularInterestAmount = regularInterestAmount;
 		this.regularFixedCharge = regularFixedCharge;

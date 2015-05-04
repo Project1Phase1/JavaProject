@@ -14,6 +14,7 @@ package com.accounts;
 import java.io.Serializable;
 
 import com.customers.Customer;
+import com.transactions.Transaction;
 
 public abstract class Account implements Serializable{
 	private static final long serialVersionUID = 2983907122991279834L;
@@ -21,7 +22,7 @@ public abstract class Account implements Serializable{
 	private double accountBalance;
 	
 	private Customer customer;
-	
+	private Transaction transaction;
 	/** default constructor <br><br>
 	 * 
 	 * 
@@ -39,7 +40,7 @@ public abstract class Account implements Serializable{
 	 * @param customer the owner of the account
 	 * 
 	 */
-	public Account(String accountNumber, double accountBalance, Customer customer){
+	public Account(String accountNumber, double accountBalance, Customer customer, Transaction transaction){
 		this.accountNumber = accountNumber;
 		this.accountBalance = accountBalance;
 		this.customer = customer;
@@ -69,6 +70,9 @@ public abstract class Account implements Serializable{
 		return customer;
 	}
 	
+	public Transaction getTransaction() {
+		return this.transaction;
+	}
 	// set 
 	
 	/**
@@ -92,6 +96,9 @@ public abstract class Account implements Serializable{
 		this.customer = customer;
 	}
 	
+	public void setTransation(Transaction transaction) {
+		this.transaction = transaction;
+	}
 	// abstract methods
 	
 	abstract public boolean makeDeposit(double amount);
